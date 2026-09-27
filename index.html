@@ -80,6 +80,12 @@
 .zo-sv{line-height:1.05;font-size:16px}.zo-sv small{display:block;font-size:12px;color:var(--muted);font-weight:400}.zo-row.ours .zo-sv small{color:var(--c1);font-weight:600}.zo-row.fo .zo-sv small{color:var(--lane-adam)}.zo-row.fo .zo-sv{color:var(--lane-adam)}
 .zo-head2,.zo-row{grid-template-columns:200px minmax(0,1fr) 90px minmax(0,1.2fr) 140px}.zo-mh{position:relative;display:block;text-align:right}#zo-h100.flip b{left:auto;right:5px}#zo-h100{position:absolute;top:14px;border-left:1px dashed color-mix(in srgb,var(--c1) 70%,transparent);transition:left .35s cubic-bezier(.2,.8,.2,1),opacity .3s;pointer-events:none}#zo-h100 b{position:absolute;left:5px;top:-14px;font-weight:600;color:var(--c1);letter-spacing:.04em;white-space:nowrap}
 .sk-row{height:21px}.sk-row>span{display:flex;align-items:center;gap:6px}.sk-row .mark{width:8px;height:8px;border-radius:2px;background:var(--hue)}.sk-row.ours{background:linear-gradient(90deg,color-mix(in srgb,var(--hue) 14%,transparent),transparent 60%);border-radius:4px}.sk-row.ours>span{font-weight:650}.sk-row.other .mark{opacity:.6}.sk-fill{background:var(--hue)}.sk-row.other .sk-fill{opacity:.7}.sk-row.other .sk-fill.imp{opacity:.35}
+.zo-top{grid-template-columns:auto 110px minmax(0,1fr);gap:26px;margin:0 0 6px}.zo-title{margin:0;font-size:17px;font-weight:500;line-height:1.2}.zo-title small{display:block;font-size:12px;color:var(--muted);font-weight:400}.zo-big-n{font-size:30px}
+.zo-body2{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}.zo-wins{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0 0}.zo-wins .win{padding:10px 14px}.zo-wins .win strong{font-size:24px}
+.zo-row{height:28px}.zo-row.ours span{font-size:15px}.zo-sv{font-size:15px;white-space:nowrap}.zo-sv small{display:inline;font-size:12px}.zo-head2,.zo-row{grid-template-columns:180px minmax(0,1fr) 84px minmax(0,1fr) 190px}.zo-qt,.zo-st{height:16px}
+.sk-row{height:19px}.sk-chart{height:50px}.sk-top{margin:6px 0 8px}.sk-value{font-size:30px}
+.ft-dock{padding:8px 22px}.ft-dock-row{align-items:center}.ft-dock-row input{flex:1;margin:0!important}.ft-ring-wrap{margin:0 10px 0 16px}.ft-ring{width:70px;height:70px}.ft-ring>div{width:54px;height:54px}.ft-ring strong{font-size:14px}.ft-big{font-size:36px}
+.zo-row{height:25px}.zo-wins{gap:8px;margin-top:16px}.zo-wins .win{padding:8px 12px}.zo-wins .win strong{font-size:21px}.zo-wins .win .tag{font-size:13px}.sk-chart{height:42px}
 </style>
 </head>
 <body>
@@ -481,10 +487,10 @@ function drawZO(){
   const q=el.querySelector('.zo-q');q.style.left=Math.min(x(0),x(r.gain))+'%';q.style.width=Math.max(.6,Math.abs(x(r.gain)-x(0)))+'%';
   el.querySelector('.zo-qv').textContent=r.m.base?'база':(r.gain>=0?'+':'−')+fmt(Math.abs(r.gain),1)+' п.п.';
   el.querySelector('.zo-s').style.width=Math.max(.8,w(r.gb))+'%';
-  el.querySelector('.zo-sv').innerHTML=`${fmt(r.gb,r.gb<10?1:0)} ГБ<small>${r.m.fo?gpuText(r.gb):'в '+times(r.save)+' меньше'}</small>`;});
- $('zo-list').style.height=`calc(${rows.length} * 34px)`;
+  el.querySelector('.zo-sv').innerHTML=`${fmt(r.gb,r.gb<10?1:0)} ГБ <small>${r.m.fo?gpuText(r.gb):'в '+times(r.save)+' меньше'}</small>`;});
+ $('zo-list').style.height=`calc(${rows.length} * 25px)`;
  document.querySelectorAll('.zo-q-zero').forEach(z=>z.style.left=x(0)+'%');
- const h=$('zo-h100');h.style.left=w(80)+'%';h.style.height=rows.length*34+14+'px';h.style.opacity=w(80)<98?1:0;h.classList.toggle('flip',w(80)>70);
+ const h=$('zo-h100');h.style.left=w(80)+'%';h.style.height=rows.length*25+14+'px';h.style.opacity=w(80)<98?1:0;h.classList.toggle('flip',w(80)>70);
  const ours=all.filter(r=>r.m.ours),best=ours.reduce((a,b)=>b.gain>a.gain?b:a),minGB=Math.min(...ours.map(r=>r.gb)),lightest=ours.filter(r=>r.gb<minGB*1.005),light=lightest.find(r=>r!==best)||lightest[0];
  const gbs=gb=>fmt(gb,gb<10?1:0)+' ГБ';
  zoWin('mem',light.m,'в '+times(light.save)+' меньше',`${gbs(light.gb)} на ${gpuText(light.gb)} вместо ${gbs(adam.gb)} на ${gpuText(adam.gb)}`);
@@ -496,20 +502,18 @@ function zoSection(){
  const ticks=ZO_SIZES.map(([n,t])=>`<button class="landmark" data-zo="${Math.log10(n)}" style="left:${(Math.log10(n)-Math.log10(.35))/(Math.log10(70)-Math.log10(.35))*100}%">${t}</button>`).join('');
  const row=(m,i)=>`<div class="zo-row gone ${m.ours?'ours':''} ${m.fo?'fo':''} ${m.base?'base':''} ${zoTone(m)}" id="zo-r-${i}"><span title="${m.info}"><i class="mark"></i>${m.fo?'Обычное дообучение':m.name}</span><div class="zo-qt"><div class="zo-q-zero"></div><div class="zo-q"></div></div><em class="zo-qv"></em><div class="zo-st"><div class="zo-s"></div></div><em class="zo-sv"></em></div>`;
  const win=(id,title,tag)=>`<div class="win" id="zw-${id}"><span class="eyebrow">${title}</span><div>${tag?'<span class="tag"></span>':''}<strong></strong></div><small></small></div>`;
- return `<section class="board zo2 below-fold"><div class="board-head"><h3>Нулевой порядок: дообучение без обратного прохода</h3></div>
- <div class="zo-top"><div class="zo-size"><span class="eyebrow">Размер модели</span><strong id="zo-n" class="zo-big-n"></strong></div><div class="zo-slider"><input type="range" id="zo-size" min="${Math.log10(.35)}" max="${Math.log10(70)}" step="any" value="${zoState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div></div></div>
- <div class="wins zo-wins">${win('mem','Меньше всего памяти',true)}${win('q','Лучшее качество',true)}${win('money','Экономия',false)}</div>
- <div class="zo-head2"><span></span><span>качество: прирост к MeZO</span><span></span><span class="zo-mh">память под дообучение<i id="zo-h100"><b>1 H100</b></i></span><span></span></div>
- <div class="zo-list" id="zo-list">${ZO_METHODS.map(row).join('')}</div></section>`;
+ return `<section class="board zo2"><div class="zo-top"><h3 class="zo-title">Нулевой порядок<small>дообучение без обратного прохода</small></h3><div class="zo-size"><span class="eyebrow">Размер модели</span><strong id="zo-n" class="zo-big-n"></strong></div><div class="zo-slider"><input type="range" id="zo-size" min="${Math.log10(.35)}" max="${Math.log10(70)}" step="any" value="${zoState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div></div></div>
+ <div class="zo-body2"><div><div class="zo-head2"><span></span><span>качество: прирост к MeZO</span><span></span><span class="zo-mh">память под дообучение<i id="zo-h100"><b>1 H100</b></i></span><span></span></div>
+ <div class="zo-list" id="zo-list">${ZO_METHODS.map(row).join('')}</div></div><div class="zo-wins">${win('mem','Меньше всего памяти',true)}${win('q','Лучшее качество',true)}${win('money','Экономия',false)}</div></div></section>`;
 }
 function renderFinetune(){
  const {skills}=ftTable(ftRank());
  const bar=m=>{const c=FT_METHODS[m]?FT_METHODS[m].color:'other';return `<div class="sk-row ${FT_METHODS[m]?'ours':'other'} ${c}" data-m="${m}"><span><i class="mark"></i>${m}</span><div class="sk-track"><div class="sk-fill"></div></div><em class="sk-v"></em></div>`;};
- const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs">чем <span class="sk-base"></span></span></div><svg class="sk-chart" viewBox="0 0 400 70" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${FT_ALL.length} * 21px)"><div class="sk-zero"></div>${FT_ALL.map(bar).join('')}</div></section>`;
+ const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs">чем <span class="sk-base"></span></span></div><svg class="sk-chart" viewBox="0 0 400 70" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${FT_ALL.length} * 19px)"><div class="sk-zero"></div>${FT_ALL.map(bar).join('')}</div></section>`;
  const heat=`<section class="board hm below-fold"><div class="board-head"><h3>По задачам</h3><span class="meta">насколько лучше базового метода из той же статьи</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th><i class="mark ${FT_METHODS[m].color}"></i>${m}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${t.name}<small>${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?t.rows.filter(r=>r.m===m).map(r=>r.model).join(', '):'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table></section>`;
  const zo=zoSection();
  $('controls').innerHTML='';
- $('result').innerHTML=`<div class="scale-dock ft-dock"><div class="ft-dock-row"><div><span class="eyebrow" style="display:block;margin:0">Ранг адаптера LoRA</span><strong id="ft-r" class="ft-big"></strong></div><div class="ft-ring-wrap"><div class="ft-ring" id="ft-ring"><div><strong id="ft-share"></strong><small>весов 8B</small></div></div><dl><dt>Обучаемых параметров</dt><dd id="ft-count"></dd><dt>Размер адаптера</dt><dd id="ft-size"></dd><dt>WLoRA оставляет</dt><dd id="ft-wlora"></dd></dl></div></div><input type="range" id="ft-rank" min="0" max="7" step="any" value="${ftState.position}" aria-label="Ранг адаптера"></div>
+ $('result').innerHTML=`<div class="scale-dock ft-dock"><div class="ft-dock-row"><div><span class="eyebrow" style="display:block;margin:0">Ранг адаптера LoRA</span><strong id="ft-r" class="ft-big"></strong></div><div class="ft-ring-wrap"><div class="ft-ring" id="ft-ring"><div><strong id="ft-share"></strong><small>весов 8B</small></div></div><dl><dt>Обучаемых параметров</dt><dd id="ft-count"></dd><dt>Размер адаптера</dt><dd id="ft-size"></dd><dt>WLoRA оставляет</dt><dd id="ft-wlora"></dd></dl></div><input type="range" id="ft-rank" min="0" max="7" step="any" value="${ftState.position}" aria-label="Ранг адаптера"></div></div>
  <div class="sk-grid">${skills.map(skill).join('')}</div>${zo}${heat}`;
  $('ft-rank').addEventListener('input',e=>{ftState.position=Number(e.target.value);drawFinetune();});
  $('zo-size').addEventListener('input',e=>{zoState.position=Number(e.target.value);drawZO();});
@@ -574,21 +578,26 @@ document.querySelectorAll('[data-domain]').forEach(b=>b.addEventListener('click'
 $('theme').addEventListener('click',()=>{const light=document.body.classList.toggle('light');$('theme').textContent=light?'Тёмная тема':'Светлая тема';$('theme').setAttribute('aria-label',light?'Переключить тёмную тему':'Переключить светлую тему');});
 $('sources-button').addEventListener('click',()=>{const open=$('sources-panel').hidden;$('sources-panel').hidden=!open;$('workspace').hidden=open;$('sources-button').setAttribute('aria-expanded',String(open));if(open)$('source-list').innerHTML=D.sources.map(s=>`<article class="source-item"><div class="eyebrow">${esc(s.domain)}</div><span class="source-state">${esc(s.status)}</span><h3><a target="_blank" rel="noopener noreferrer" href="${esc(s.url)}">${esc(s.name)} ↗</a></h3><p>${esc(s.detail)}</p></article>`).join('');});
 // Desktop: lay the page out on a fixed 1600px canvas and zoom it to fit the window, so nothing scrolls.
+let fitKey='';
 function fitToScreen(){
  const root=document.documentElement,desktop=innerWidth>=800;
  document.body.classList.toggle('fit',desktop);root.style.zoom='';document.querySelector('.shell').style.width='';
  if(!desktop)return;
- // Try a few canvas widths and keep the one that fills the window best: wide windows get a wider, lower layout.
- const shell=document.querySelector('.shell');let best={zoom:0,width:1600};
+ const shell=document.querySelector('.shell');
  const visible=()=>{const cut=shell.querySelector('.below-fold');return cut?cut.offsetTop-shell.offsetTop:shell.scrollHeight;};
- for(const width of [1600,1800,2000,2200]){shell.style.width=width+'px';const zoom=Math.min(innerWidth/width,innerHeight/visible());if(zoom>best.zoom+.01)best={zoom,width};}
- shell.style.width=best.width+'px';root.style.zoom=best.zoom;
+ // Scan canvas widths and keep the one with the largest zoom that fits both the window width and the fold height.
+ const fit=w=>{shell.style.width=w+'px';const f={w,zw:innerWidth/w,zh:innerHeight/visible()};f.z=Math.min(f.zw,f.zh);return f;};
+ let best=fit(1100);for(let w=1150;w<=2600;w+=50){const f=fit(w);if(f.z>best.z+1e-4)best=f;}
+ // Ties (height-bound, height flat in width): widen to fill the window.
+ const wide=Math.min(2600,Math.floor(innerWidth/best.z));if(wide>best.w){const f=fit(wide);if(f.z>=best.z-.002)best=f;}
+ fit(best.w);root.style.zoom=best.z;fitKey=best.w+':'+visible();
 }
 addEventListener('resize',fitToScreen);
 render();
 fitToScreen();
 // Values fill in on the first animation frames; refit whenever the page's own height changes.
-new ResizeObserver(()=>requestAnimationFrame(fitToScreen)).observe(document.querySelector('.shell'));
+// Our own width changes also trigger the observer: refit only when the height at the chosen width actually changed.
+new ResizeObserver(()=>requestAnimationFrame(()=>{const shell=document.querySelector('.shell'),cut=shell.querySelector('.below-fold'),key=shell.style.width.replace('px','')+':'+(cut?cut.offsetTop-shell.offsetTop:shell.scrollHeight);if(key!==fitKey)fitToScreen();})).observe(document.querySelector('.shell'));
 </script>
 </body>
 </html>
