@@ -591,8 +591,10 @@ function fitToScreen(){
  // Ties (height-bound, height flat in width): widen to fill the window.
  const wide=Math.min(2600,Math.floor(innerWidth/best.z));if(wide>best.w){const f=fit(wide);if(f.z>=best.z-.002)best=f;}
  fit(best.w);root.style.zoom=best.z;fitKey=best.w+':'+visible();
+ // Safety net: if the rendered page still overflows the window (no fold marker), shrink by the overflow.
+ if(!shell.querySelector('.below-fold')){const over=root.scrollHeight/innerHeight;if(over>1.002)root.style.zoom=best.z/over;}
 }
-addEventListener('resize',fitToScreen);
+addEventListener('resize',fitToScreen);addEventListener('load',fitToScreen);document.fonts&&document.fonts.ready.then(fitToScreen);
 render();
 fitToScreen();
 // Values fill in on the first animation frames; refit whenever the page's own height changes.
