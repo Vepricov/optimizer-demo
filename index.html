@@ -55,24 +55,27 @@
 .sk-rows{position:relative}.sk-zero{position:absolute;top:-4px;bottom:-4px;left:calc(110px + (100% - 110px - 64px) * .18);border-left:1px solid var(--muted);opacity:.5}.sk-row{position:absolute;left:0;right:0;top:0;height:26px;display:grid;grid-template-columns:104px minmax(0,1fr) 58px;gap:6px;align-items:center;font-size:13px;transition:transform .6s cubic-bezier(.2,.8,.2,1)}.sk-row span{white-space:nowrap}.sk-track{position:relative;height:14px}.sk-fill{position:absolute;top:0;bottom:0;background:var(--hue);border-radius:3px;transition:left .15s,width .15s}.sk-fill.neg{background:var(--lane-adam)}.sk-fill.est,.hm-fill.est{background:repeating-linear-gradient(135deg,var(--hue) 0 4px,color-mix(in srgb,var(--hue) 35%,transparent) 4px 8px)}.sk-v{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}
 .hm{padding:12px 16px}.hm-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:12px;table-layout:fixed}.hm-table thead th{font-weight:500;text-align:left;color:var(--muted);font-size:11px;padding:0 6px 6px;white-space:nowrap;overflow:hidden}.hm-table thead th:first-child{width:130px}.hm-table thead .mark{display:inline-block;width:8px;height:8px;margin-right:5px}.hm-table tbody th{text-align:left;font-weight:500;padding:3px 6px;white-space:nowrap}.hm-table tbody th small{display:block;font-size:9px;color:var(--muted);font-weight:400;letter-spacing:.06em;text-transform:uppercase}.hm-table td{padding:3px 6px;border-top:1px solid color-mix(in srgb,var(--line) 60%,transparent)}.hm-table td b{font-weight:400;font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted)}.hm-table td.top b{color:var(--text);font-weight:650}.hm-bar{height:7px;border-radius:3px;background:color-mix(in srgb,var(--muted) 14%,transparent);overflow:hidden}.hm-fill{height:100%;background:var(--hue);border-radius:3px;transition:width .15s}.hm-fill.neg{background:var(--lane-adam)}.hm-empty{color:var(--muted);text-align:center}
 .sk-chart{width:100%;height:84px;display:block;margin:0 0 8px}.sk-chart text{fill:var(--muted);font-size:9px}.sk-axis{stroke:var(--muted);opacity:.4}.sk-line{fill:none;stroke:var(--hue);stroke-width:2;vector-effect:non-scaling-stroke}.sk-cursor{stroke:var(--text);stroke-dasharray:3 3;opacity:.5;vector-effect:non-scaling-stroke}.sk-pt{fill:var(--hue);stroke:var(--panel);stroke-width:1.5}
-.hm-table td.imp .hm-fill{background:transparent;box-shadow:inset 0 0 0 1.5px var(--hue)}.hm-table td.imp b{font-style:italic;opacity:.75}.sk-fill.imp{background:transparent;box-shadow:inset 0 0 0 1.5px var(--hue)}
+.hm-table td.imp .hm-fill{background:transparent;box-shadow:inset 0 0 0 1.5px var(--hue)}.hm-table td.imp b{font-style:italic;opacity:.75}.sk-fill.imp{opacity:.55}
 .sk-row{height:22px;font-size:12px}.sk-row.other span{color:var(--muted)}.sk-fill.other{background:var(--other)}.sk-line.imp{stroke-dasharray:4 3;opacity:.6}.sk-chart{height:60px}
 .zo2{padding:14px 18px;margin-bottom:12px}
-.zo-row.ours .zo-row.fo .zo-row.ours 
-.below-fold{margin-top:12px}
+
 .zo-big-n{font-size:36px;font-weight:500;color:var(--c1);letter-spacing:-.03em}.zo2 input[type=range]{display:block;width:100%;height:30px;margin:6px 0 0;accent-color:var(--c1)}.zo2 .landmarks{height:22px;margin-bottom:6px}
-.zo-row.ours .zo-row.fo .zo-row.ours .zo-row.fo 
-.zo-slider{width:100%}.zo-slider input{margin:0;width:100%}
+.zo-slider input{margin:0;width:100%}
 
 
 
 
 
 
-.zo-top{display:grid;grid-template-columns:120px minmax(0,1fr) 430px;gap:22px;align-items:center;margin:8px 0 12px}.zo-size .eyebrow{display:block;margin:0}.zo-big-n{font-size:34px}.zo-slider input{width:100%;margin:0}
-.zo-gpus{border-left:1px solid var(--line);padding-left:18px}.zo-gpu-row{display:grid;grid-template-columns:118px minmax(0,1fr) 70px;gap:8px;align-items:center;font-size:13px;margin:3px 0}.zo-gpu-row em{font-style:normal;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}.zo-chips{display:flex;flex-wrap:wrap;gap:3px}.zo-chips i{width:14px;height:14px;border-radius:3px;background:var(--c1);animation:chip .35s cubic-bezier(.2,1.6,.4,1)}.zo-chips.fo i{background:var(--lane-adam)}.zo-chips[data-more]:not([data-more=""])::after{content:attr(data-more);font-size:11px;color:var(--muted);margin-left:3px}.zo-ratio{display:block;font-size:22px;font-weight:500;color:var(--c1);margin-top:4px}
-.zo-bars{position:relative}.zo-row{position:absolute;left:0;top:0;width:calc(50% - 14px);height:26px;display:grid;grid-template-columns:150px minmax(0,1fr) 72px;gap:10px;align-items:center;font-size:14px;transition:transform .6s cubic-bezier(.2,.8,.2,1)}.zo-row span{white-space:nowrap;color:var(--muted)}.zo-row.ours span{color:var(--text);font-weight:650}.zo-row.base span{color:var(--text)}.zo-track{position:relative;height:14px}.zo-fill{position:absolute;top:0;bottom:0;background:var(--hue);border-radius:3px;transition:left .15s,width .15s}.zo-fill.other{background:var(--other)}.zo-zero-line{position:absolute;top:-6px;bottom:-6px;border-left:1px solid var(--muted);opacity:.6}.zo-ref{position:absolute;top:-6px;bottom:-6px;border-left:1.5px dashed var(--lane-adam);opacity:.8}.zo-v{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;font-size:13px}.zo-row.ours .zo-v{font-weight:650}
-.zo-heads{display:grid;grid-template-columns:1fr 1fr;gap:28px;height:16px;margin-bottom:4px}.zo-head{position:relative}.zo-hlabel,.zo-hzero{position:absolute;top:0;transform:translateX(-50%);font-size:11px;white-space:nowrap;transition:left .15s}.zo-hlabel{color:var(--lane-adam)}.zo-hzero{color:var(--muted)}
+.zo-size .eyebrow{display:block;margin:0}.zo-big-n{font-size:34px}.zo-slider input{width:100%;margin:0}
+
+
+
+.zo-top{display:grid;grid-template-columns:120px minmax(0,1fr) 330px;gap:22px;align-items:center;margin:8px 0 14px}.zo-mem{border-left:1px solid var(--line);padding-left:18px;display:grid;gap:4px}.zo-mem div{display:flex;justify-content:space-between;font-size:14px}.zo-mem span{color:var(--muted)}.zo-mem b{font-weight:500;font-variant-numeric:tabular-nums}.zo-mem div:first-child b{color:var(--lane-adam)}.zo-mem div:last-child b{color:var(--c1)}
+.zo-head2,.zo-row{display:grid;grid-template-columns:190px minmax(0,1fr) 90px minmax(0,1fr) 130px;gap:14px;align-items:center}.zo-head2{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.zo-list{position:relative}.zo-row{position:absolute;left:0;right:0;top:0;height:30px;font-size:15px;transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .4s}.zo-row.gone{opacity:0;pointer-events:none}.zo-row span{white-space:nowrap;color:var(--muted)}.zo-row.ours span{color:var(--text);font-weight:650}.zo-row.fo span{color:var(--lane-adam)}.zo-row.base span{color:var(--text)}
+.zo-qt,.zo-st{position:relative;height:16px}.zo-q,.zo-s{position:absolute;top:0;bottom:0;background:var(--hue);border-radius:3px;transition:left .15s,width .15s}.zo-s{left:0}.zo-q.other,.zo-s.other{background:var(--other)}.zo-q-zero{position:absolute;top:-5px;bottom:-5px;border-left:1px solid var(--muted);opacity:.6}.zo-qv,.zo-sv{font-style:normal;font-variant-numeric:tabular-nums;white-space:nowrap}.zo-qv{text-align:right}.zo-row.ours .zo-qv,.zo-row.ours .zo-sv{font-weight:650}
+
+.ft-legend{font-size:12px;color:var(--muted);margin:-6px 0 10px}
 </style>
 </head>
 <body>
@@ -329,35 +332,35 @@ const FT_SKILLS=[...new Set(FT_TASKS.map(t=>t.skill))];
 const ftShare=r=>.57*r/8;
 // Rank model. Each method has its own trend of gain versus rank, fitted on all of its rows measured at several ranks: the
 // median relative change of the gain per doubling of r (WLoRA+ ≈ flat, SimplexLoRA falls with r). Methods measured at one rank
-// get the pooled median trend. A row is g(r) = G·2^{q·(log2 r − c)}, G fitted by least squares to the row's points, c = mean
-// measured log2 r. Past r = 32 every curve also saturates as (r/32)^−0.3: LoRA approaches full fine-tuning.
-const FT_SAT=32,FT_BETA=.3;
+// follow the saturation law r^−0.3 (LoRA approaches full fine-tuning, so every gain shrinks with rank). A row is
+// g(r) = G·2^{q·(log2 r − c)} with G fitted by least squares; beyond the largest measured rank it decays as (r/r_max)^−0.3.
+const FT_BETA=.3;
 const gainAt=(row,r)=>(row.pts[r][0]-row.pts[r][1])/row.pts[r][1]*100;
 function rowSlope(row){const rs=Object.keys(row.pts).map(Number);if(rs.length<3)return null;const xs=rs.map(Math.log2),ys=rs.map(r=>gainAt(row,r)),mx=xs.reduce((a,b)=>a+b)/xs.length,my=ys.reduce((a,b)=>a+b)/ys.length;if(Math.abs(my)<.3)return null;return xs.reduce((a,x,i)=>a+(x-mx)*(ys[i]-my),0)/xs.reduce((a,x)=>a+(x-mx)**2,0)/my;}
 const FT_TREND=(()=>{const per={};for(const t of FT_TASKS)for(const row of t.rows){const s=rowSlope(row);if(s!==null)(per[row.m]=per[row.m]||[]).push(s);}
  const pooled=median(Object.values(per).flat()),q=s=>Math.log2(1+Math.max(-.5,Math.min(.5,s)));
- return Object.fromEntries([...FT_NAMES,...Object.keys(FT_OTHERS)].map(m=>[m,q(per[m]?median(per[m]):pooled)]));})();
-const ftSat=r=>r>FT_SAT?(r/FT_SAT)**-FT_BETA:1;
+ return Object.fromEntries([...FT_NAMES,...Object.keys(FT_OTHERS)].map(m=>[m,per[m]?q(median(per[m])):-FT_BETA]));})();
 function ftRowFit(row){
  if(row.fit_)return row.fit_;
  const rs=Object.keys(row.pts).map(Number),q=FT_TREND[row.m],c=rs.reduce((a,r)=>a+Math.log2(r),0)/rs.length,w=rs.map(r=>2**(q*(Math.log2(r)-c)));
  const G=rs.reduce((a,r,i)=>a+gainAt(row,r)*w[i],0)/w.reduce((a,v)=>a+v*v,0);
  return row.fit_={G,c,q,lo:Math.min(...rs),hi:Math.max(...rs)};
 }
-function ftGain(row,rank){const f=ftRowFit(row);return {gain:f.G*2**(f.q*(Math.log2(rank)-f.c))*ftSat(rank),est:rank<f.lo/1.05||rank>f.hi*1.05};}
+function ftGain(row,rank){const f=ftRowFit(row),r=Math.min(rank,f.hi);return {gain:f.G*2**(f.q*(Math.log2(r)-f.c))*(rank>f.hi?(rank/f.hi)**-FT_BETA:1),est:rank<f.lo/1.05||rank>f.hi*1.05};}
 function ftMeasured(rows,rank){const g=rows.map(r=>ftGain(r,rank));return g.length?{gain:g.reduce((a,x)=>a+x.gain,0)/g.length,est:g.every(x=>x.est)}:null;}
 // Missing task × method cells: gain ≈ strength(method) × response(task) at r = 8, strength shrunk toward the overall median with
-// weight n/(n+6), response clipped to [0.5, 2.5]; the cell then follows the method's own rank trend.
+// weight n/(n+10), response clipped to [0.5, 1.2] so an estimate never runs far above the method's typical gain; the cell
+// then follows the saturation law r^−0.3.
 const FT_FILL=(()=>{
  const at8=FT_TASKS.map(t=>Object.fromEntries(FT_NAMES.map(m=>[m,ftMeasured(t.rows.filter(r=>r.m===m),8)]).filter(([,c])=>c).map(([m,c])=>[m,c.gain])));
  const all=median(at8.flatMap(o=>Object.values(o)));
- const strength=Object.fromEntries(FT_NAMES.map(m=>{const v=at8.map(o=>o[m]).filter(x=>x!==undefined),n=v.length;return [m,(n*median(v)+6*all)/(n+6)];}));
- const response=at8.map(o=>{const r=Object.entries(o).filter(([m])=>strength[m]>.2).map(([m,g])=>g/strength[m]);return r.length?Math.min(2.5,Math.max(.5,median(r))):1;});
+ const strength=Object.fromEntries(FT_NAMES.map(m=>{const v=at8.map(o=>o[m]).filter(x=>x!==undefined),n=v.length;return [m,(n*median(v)+10*all)/(n+10)];}));
+ const response=at8.map(o=>{const r=Object.entries(o).filter(([m])=>strength[m]>.2).map(([m,g])=>g/strength[m]);return r.length?Math.min(1.2,Math.max(.5,median(r))):1;});
  return {strength,response};
 })();
 function ftCell(task,t,m,rank){
  const c=ftMeasured(task.rows.filter(r=>r.m===m),rank);if(c)return c;
- return {gain:FT_FILL.strength[m]*FT_FILL.response[t]*2**(FT_TREND[m]*(Math.log2(rank)-3))*ftSat(rank),est:true,imputed:true};
+ return {gain:FT_FILL.strength[m]*FT_FILL.response[t]*(rank/8)**-FT_BETA,est:true,imputed:true};
 }
 // Skill score of a method: median over the skill's tasks (robust to a single large result). Other groups' methods: measured only.
 function ftTable(rank){
@@ -380,7 +383,7 @@ function drawFinetune(){
  $('ft-ring').style.setProperty('--p',track('fring',Math.min(100,Math.log2(ftShare(rank)/.05)/Math.log2(9.2/.05)*100)));
  skills.forEach((s,i)=>{
   const card=$('ft-skill-'+i),shown=[...card.querySelectorAll('.sk-row.other')].map(r=>r.dataset.m),all={...s.methods,...Object.fromEntries(Object.entries(s.others).filter(([m])=>shown.includes(m)))};
-  const order=Object.entries(all).sort((a,b)=>(!!a[1].imputed-!!b[1].imputed)||(b[1].gain-a[1].gain)),[top,best]=order.find(([m,v])=>FT_METHODS[m]&&!v.imputed);
+  const order=Object.entries(all).sort((a,b)=>b[1].gain-a[1].gain),[top,best]=order.find(([m,v])=>FT_METHODS[m]&&!v.imputed);
   const scale=Math.max(3,...order.map(([,v])=>Math.max(v.gain,-v.gain*4.4)));
   card.querySelector('.tag').textContent=top;card.querySelector('.tag').className='tag '+FT_METHODS[top].color;
   card.querySelector('.sk-value').textContent=`на ${fmt(Math.abs(track('sk'+i,best.gain)),1)}% ${best.gain>=0?'лучше':'хуже'}`;
@@ -444,33 +447,34 @@ const zoSize=()=>10**zoState.position;
 const gpuCount=gb=>Math.max(1,Math.ceil(gb/80));
 const gpuText=gb=>{const n=gpuCount(gb);return n===1?'1 H100':n+'×H100';};
 const ZO_COLORS={'JAGUAR SignSGD':'c1','JAGUAR Muon':'c2','ZO-Muon':'c3','ZO-LDSD':'c5'};
-// Ranked bars of the gain over MeZO for every zero-order method (ours in colour, others grey), in two columns;
-// first-order SGD and Adam fine-tuning are dashed reference lines on the same axis.
+// Zero-order table: quality gain over MeZO on the left, how many times less memory than ordinary fine-tuning (Adam) on the right.
+// Rows: Adam as reference, MeZO, our methods and the five strongest other methods at the current size, sorted by quality.
+function zoRows(N){const rows=ZO_METHODS.map((m,i)=>({m,i,gain:m.gain(N),gb:m.mem(N)})),adam=rows.find(r=>r.m.fo&&r.m.gb);
+ for(const r of rows)r.save=adam.gb/r.gb;
+ const others=rows.filter(r=>!r.m.fo&&!r.m.ours&&!r.m.base).sort((a,b)=>b.gain-a.gain).slice(0,5);
+ return {adam,all:rows,rows:[adam,...rows.filter(r=>r.m.base||r.m.ours),...others].sort((a,b)=>b.gain-a.gain)};}
 function drawZO(){
  if(!$('zo-size'))return;
- const N=zoSize(),rows=ZO_METHODS.map((m,i)=>({m,i,gain:m.gain(N),gb:m.mem(N)}));
- const mezo=rows.find(r=>r.m.base),adam=rows.find(r=>r.m.fo&&r.m.gb),zo=rows.filter(r=>!r.m.fo).sort((a,b)=>b.gain-a.gain),half=Math.ceil(zo.length/2);
- const fo=rows.filter(r=>r.m.fo),hi=Math.max(...fo.map(r=>r.gain),...zo.map(r=>r.gain))+.5,lo=Math.min(-1,...zo.map(r=>r.gain)),x=v=>(v-lo)/(hi-lo)*100;
+ const N=zoSize(),{adam,all,rows}=zoRows(N),mezo=all.find(r=>r.m.base);
+ const gmax=Math.max(1,...rows.map(r=>r.gain)),gmin=Math.min(0,...rows.map(r=>r.gain)),smax=Math.max(...rows.map(r=>r.save)),x=v=>(v-gmin)/(gmax-gmin)*100;
  $('zo-n').textContent=N>=1?fmt(N,N<10?1:0)+'B':fmt(N*1000,0)+'M';
- zo.forEach((r,k)=>{const row=$('zo-r-'+r.i),col=k<half?0:1;row.style.left=col?'calc(50% + 14px)':'0';row.style.transform=`translateY(${(k-col*half)*100}%)`;
-  const f=row.querySelector('.zo-fill');f.style.left=Math.min(x(0),x(r.gain))+'%';f.style.width=Math.abs(x(r.gain)-x(0))+'%';row.querySelector('.zo-v').textContent=r.m.base?'база':pct(r.gain).replace('%',' п.п.');});
- document.querySelectorAll('.zo-zero-line').forEach(l=>l.style.left=x(0)+'%');
- fo.forEach(r=>document.querySelectorAll('.zo-ref-'+r.i).forEach(l=>{l.style.left=x(r.gain)+'%';}));
- document.querySelectorAll('.zo-hlabel').forEach(l=>{const r=rows[Number(l.dataset.i)];l.style.left=`calc(160px + (100% - 242px) * ${x(r.gain)/100})`;});
- document.querySelectorAll('.zo-hzero').forEach(l=>l.style.left=`calc(160px + (100% - 242px) * ${x(0)/100})`);
- const chips=(id,gb)=>{const box=$(id),n=gpuCount(gb),shown=Math.min(n,24);while(box.children.length<shown)box.appendChild(document.createElement('i'));while(box.children.length>shown)box.lastChild.remove();box.dataset.more=n>24?'+'+(n-24):'';};
- chips('zo-chips-fo',adam.gb);chips('zo-chips-zo',mezo.gb);
- $('zo-fo-gb').textContent=gpuText(adam.gb);$('zo-zo-gb').textContent=gpuText(mezo.gb);
- $('zo-ratio').textContent=`в ${fmt(adam.gb/mezo.gb,0)} раз меньше памяти`;
+ document.querySelectorAll('.zo-row').forEach(el=>el.classList.add('gone'));
+ rows.forEach((r,k)=>{const el=$('zo-r-'+r.i);el.classList.remove('gone');el.style.transform=`translateY(${k*100}%)`;
+  const q=el.querySelector('.zo-q');q.style.left=Math.min(x(0),x(r.gain))+'%';q.style.width=Math.max(.6,Math.abs(x(r.gain)-x(0)))+'%';
+  el.querySelector('.zo-qv').textContent=r.m.base?'база':(r.gain>=0?'+':'−')+fmt(Math.abs(r.gain),1)+' п.п.';
+  el.querySelector('.zo-s').style.width=Math.max(1,r.save/smax*100)+'%';el.querySelector('.zo-sv').textContent=r.m.fo?'эталон':'в '+times(r.save)+' меньше';});
+ $('zo-list').style.height=`calc(${rows.length} * 30px)`;
+ document.querySelectorAll('.zo-q-zero').forEach(z=>z.style.left=x(0)+'%');
+ $('zo-fo-gb').textContent=`${fmt(adam.gb,0)} ГБ · ${gpuText(adam.gb)}`;$('zo-zo-gb').textContent=`${fmt(mezo.gb,0)} ГБ · ${gpuText(mezo.gb)}`;
 }
 function zoSection(){
  const ticks=ZO_SIZES.map(([n,t])=>`<button class="landmark" data-zo="${Math.log10(n)}" style="left:${(Math.log10(n)-Math.log10(.35))/(Math.log10(70)-Math.log10(.35))*100}%">${t}</button>`).join('');
- const zo=ZO_METHODS.map((m,i)=>m.fo?'':`<div class="zo-row ${m.ours?'ours':''} ${m.base?'base':''}" id="zo-r-${i}"><span title="${m.info}">${m.name}</span><div class="zo-track"><div class="zo-zero-line"></div>${ZO_METHODS.map((f,j)=>f.fo?`<div class="zo-ref zo-ref-${j}"></div>`:'').join('')}<div class="zo-fill ${m.ours?ZO_COLORS[m.name]:'other'}"></div></div><em class="zo-v"></em></div>`).join('');
- const rows=Math.ceil(ZO_METHODS.filter(m=>!m.fo).length/2);
- return `<section class="board zo2"><div class="board-head"><h3>Нулевой порядок: дообучение без обратного прохода</h3><span class="meta">качество относительно MeZO · пунктир — обычное дообучение</span></div>
+ const row=(m,i)=>`<div class="zo-row gone ${m.ours?'ours':''} ${m.fo?'fo':''} ${m.base?'base':''}" id="zo-r-${i}"><span title="${m.info}">${m.fo?'Обычное дообучение':m.name}</span><div class="zo-qt"><div class="zo-q-zero"></div><div class="zo-q ${m.ours?ZO_COLORS[m.name]:m.fo?'adam':'other'}"></div></div><em class="zo-qv"></em><div class="zo-st"><div class="zo-s ${m.ours?ZO_COLORS[m.name]:m.fo?'adam':'other'}"></div></div><em class="zo-sv"></em></div>`;
+ return `<section class="board zo2"><div class="board-head"><h3>Нулевой порядок: дообучение без обратного прохода</h3></div>
  <div class="zo-top"><div class="zo-size"><span class="eyebrow">Размер модели</span><strong id="zo-n" class="zo-big-n"></strong></div><div class="zo-slider"><input type="range" id="zo-size" min="${Math.log10(.35)}" max="${Math.log10(70)}" step="any" value="${zoState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div></div>
- <div class="zo-gpus"><div class="zo-gpu-row"><span>Обычное</span><div class="zo-chips fo" id="zo-chips-fo"></div><em id="zo-fo-gb"></em></div><div class="zo-gpu-row"><span>Нулевой порядок</span><div class="zo-chips" id="zo-chips-zo"></div><em id="zo-zo-gb"></em></div><strong class="zo-ratio" id="zo-ratio"></strong></div></div>
- <div class="zo-heads">${[0,1].map(c=>`<div class="zo-head">${ZO_METHODS.map((m,i)=>m.fo?`<span class="zo-hlabel" data-i="${i}">${m.name.replace(', обычное','')}</span>`:'').join('')}<span class="zo-hzero">MeZO</span></div>`).join('')}</div><div class="zo-bars" style="height:calc(${rows} * 26px)">${zo}</div></section>`;
+ <div class="zo-mem"><div><span>Обычное дообучение</span><b id="zo-fo-gb"></b></div><div><span>Нулевой порядок</span><b id="zo-zo-gb"></b></div></div></div>
+ <div class="zo-head2"><span></span><span>качество: прирост к MeZO</span><span></span><span>памяти меньше, чем у обычного дообучения</span><span></span></div>
+ <div class="zo-list" id="zo-list">${ZO_METHODS.map(row).join('')}</div></section>`;
 }
 function renderFinetune(){
  const {skills}=ftTable(ftRank());
@@ -481,7 +485,7 @@ function renderFinetune(){
  const stops=[1,4,16,64,128].map(r=>`<button class="ft-stop" data-pos="${Math.log2(r)}">r=${r}<small>${fmt(ftShare(r),2)}%</small></button>`).join('');
  $('controls').innerHTML='';
  $('result').innerHTML=`<div class="scale-dock ft-dock"><div class="ft-dock-row"><div><span class="eyebrow" style="display:block;margin:0">Ранг адаптера LoRA</span><strong id="ft-r" class="ft-big"></strong></div><div class="ft-ring-wrap"><div class="ft-ring" id="ft-ring"><div><strong id="ft-share"></strong><small>весов 8B</small></div></div><dl><dt>Обучаемых параметров</dt><dd id="ft-count"></dd><dt>Размер адаптера</dt><dd id="ft-size"></dd><dt>WLoRA оставляет</dt><dd id="ft-wlora"></dd></dl></div><div class="ft-stops">${stops}</div></div><input type="range" id="ft-rank" min="0" max="7" step="any" value="${ftState.position}" aria-label="Ранг адаптера"></div>
- <div class="sk-grid">${skills.map(skill).join('')}</div>${zo}${heat}`;
+ <div class="sk-grid">${skills.map(skill).join('')}</div><p class="ft-legend">Бледные полосы — оценка для задач, где метод не измеряли.</p>${zo}${heat}`;
  $('ft-rank').addEventListener('input',e=>{ftState.position=Number(e.target.value);drawFinetune();});
  document.querySelectorAll('.ft-stop').forEach(b=>b.addEventListener('click',()=>{ftState.position=Number(b.dataset.pos);$('ft-rank').value=ftState.position;drawFinetune();}));
  $('zo-size').addEventListener('input',e=>{zoState.position=Number(e.target.value);drawZO();});
