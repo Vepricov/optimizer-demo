@@ -62,13 +62,17 @@
 .below-fold{margin-top:12px}
 .zo-big-n{font-size:36px;font-weight:500;color:var(--c1);letter-spacing:-.03em}.zo2 input[type=range]{display:block;width:100%;height:30px;margin:6px 0 0;accent-color:var(--c1)}.zo2 .landmarks{height:22px;margin-bottom:6px}
 .zo-row.ours .zo-row.fo .zo-row.ours .zo-row.fo 
-.zo-dock{display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;align-items:center;margin:6px 0 4px}.zo-slider{width:100%}.zo-slider input{margin:0;width:100%}
-.zo-body{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}.zo-chart{width:100%;height:auto;display:block}.zo-chart text{fill:var(--muted);font-size:12px}.zo-axis-y,.zo-axis-x{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.zo-axis-x{text-align:right;margin-right:150px}
-.zo-p{transition:transform .5s cubic-bezier(.2,.8,.2,1)}.zo-p circle{fill:var(--hue);stroke:var(--panel);stroke-width:2}.zo-p.est circle{opacity:.45}.zo-p.base circle{fill:var(--text)}.zo-guide{stroke:var(--muted);stroke-dasharray:4 4;opacity:.6}.zo-chart .zo-guide-t{font-size:11px}.zo-zero{stroke:var(--muted);opacity:.7}
-.zo-chart .zo-lbl{font-size:13px;fill:var(--text);transition:x .5s,y .5s}.zo-chart .zo-lbl.ours{font-weight:650;font-size:14px}.zo-chart .zo-lbl.fo{fill:var(--lane-adam)}.zo-chart .zo-lbl.minor{opacity:0;font-size:11px;fill:var(--muted);transition:opacity .3s}.zo-chart:hover .zo-lbl.minor{opacity:.9}
-.zo-cards{display:flex;flex-direction:column;gap:12px}.zo-card{border:1px solid var(--line);border-radius:10px;padding:12px 14px}.zo-card .eyebrow{display:block;margin:0 0 8px;font-size:10px}.zo-gpu-row{display:flex;justify-content:space-between;font-size:13px;margin-top:6px}.zo-gpu-row em{font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums}.zo-chips{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 4px;min-height:16px}.zo-chips i{width:16px;height:16px;border-radius:3px;background:var(--c1);animation:chip .35s cubic-bezier(.2,1.6,.4,1)}.zo-chips.fo i{background:var(--lane-adam)}.zo-chips[data-more]:not([data-more=""])::after{content:attr(data-more);font-size:11px;color:var(--muted);align-self:center;margin-left:4px}.zo-ratio{display:block;font-size:26px;font-weight:500;color:var(--c1);margin-top:8px;letter-spacing:-.02em}
-.zo-ours{position:relative}.zo-our{position:absolute;left:0;right:0;top:0;height:38px;display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:10px;align-items:center;transition:transform .5s cubic-bezier(.2,.8,.2,1)}.zo-our span{font-size:14px;font-weight:600;line-height:1.15}.zo-our small{display:block;font-weight:400;font-size:11px;color:var(--muted)}.zo-our b{font-size:20px;font-weight:500;font-variant-numeric:tabular-nums}
-.zo-fo line{stroke:var(--lane-adam);stroke-dasharray:6 5;stroke-width:1.5}.zo-fo{transition:transform .5s}.zo-leader{stroke:var(--muted);opacity:.35;stroke-width:1}.zo-chart .zo-lbl.base{fill:var(--muted)}.zo-body{grid-template-columns:minmax(0,1fr) 420px}
+.zo-slider{width:100%}.zo-slider input{margin:0;width:100%}
+
+
+
+
+
+
+.zo-top{display:grid;grid-template-columns:120px minmax(0,1fr) 430px;gap:22px;align-items:center;margin:8px 0 12px}.zo-size .eyebrow{display:block;margin:0}.zo-big-n{font-size:34px}.zo-slider input{width:100%;margin:0}
+.zo-gpus{border-left:1px solid var(--line);padding-left:18px}.zo-gpu-row{display:grid;grid-template-columns:118px minmax(0,1fr) 70px;gap:8px;align-items:center;font-size:13px;margin:3px 0}.zo-gpu-row em{font-style:normal;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}.zo-chips{display:flex;flex-wrap:wrap;gap:3px}.zo-chips i{width:14px;height:14px;border-radius:3px;background:var(--c1);animation:chip .35s cubic-bezier(.2,1.6,.4,1)}.zo-chips.fo i{background:var(--lane-adam)}.zo-chips[data-more]:not([data-more=""])::after{content:attr(data-more);font-size:11px;color:var(--muted);margin-left:3px}.zo-ratio{display:block;font-size:22px;font-weight:500;color:var(--c1);margin-top:4px}
+.zo-bars{position:relative}.zo-row{position:absolute;left:0;top:0;width:calc(50% - 14px);height:26px;display:grid;grid-template-columns:150px minmax(0,1fr) 72px;gap:10px;align-items:center;font-size:14px;transition:transform .6s cubic-bezier(.2,.8,.2,1)}.zo-row span{white-space:nowrap;color:var(--muted)}.zo-row.ours span{color:var(--text);font-weight:650}.zo-row.base span{color:var(--text)}.zo-track{position:relative;height:14px}.zo-fill{position:absolute;top:0;bottom:0;background:var(--hue);border-radius:3px;transition:left .15s,width .15s}.zo-fill.other{background:var(--other)}.zo-zero-line{position:absolute;top:-6px;bottom:-6px;border-left:1px solid var(--muted);opacity:.6}.zo-ref{position:absolute;top:-6px;bottom:-6px;border-left:1.5px dashed var(--lane-adam);opacity:.8}.zo-v{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;font-size:13px}.zo-row.ours .zo-v{font-weight:650}
+.zo-heads{display:grid;grid-template-columns:1fr 1fr;gap:28px;height:16px;margin-bottom:4px}.zo-head{position:relative}.zo-hlabel,.zo-hzero{position:absolute;top:0;transform:translateX(-50%);font-size:11px;white-space:nowrap;transition:left .15s}.zo-hlabel{color:var(--lane-adam)}.zo-hzero{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -194,7 +198,7 @@ const race={start:0,duration:3600,running:false};
 function startRace(){race.start=performance.now();race.running=true;costState.raced=true;document.querySelectorAll('#money .lane').forEach(l=>l.classList.remove('finished','pop'));tick();}
 function tick(){cancelAnimationFrame(frame);frame=requestAnimationFrame(drawEconomy);}
 const place=(id,order)=>order.forEach((r,i)=>{$(id+'-'+r.name).style.transform=`translateY(${i*100}%)`;});
-function setWinner(id,row,value,note){const el=$('win-'+id);el.querySelector('.tag').textContent=row.name+(LAB[row.name]&&LAB[row.name].preliminary?'*':'');el.querySelector('.tag').className='tag '+COLORS[row.name];el.querySelector('strong').textContent=value;el.querySelector('small').textContent=note;}
+function setWinner(id,row,value,note){const el=$('win-'+id);el.querySelector('.tag').textContent=row.name;el.querySelector('.tag').className='tag '+COLORS[row.name];el.querySelector('strong').textContent=value;el.querySelector('small').textContent=note;}
 function drawEconomy(){
  if(!$('scale'))return;
  const p=project(costState);
@@ -256,7 +260,7 @@ function drawEconomy(){
 // Russian count form for a multiplier: «в 2,5 раза», «в 3 раза», «в 61 раз».
 const times=x=>{const n=Math.round(x),whole=x>=10||Math.abs(x-n)<.05,v=whole?n:x,last=n%10,teen=n%100>10&&n%100<15;return fmt(v,whole?0:1)+(whole&&(teen||last<2||last>4)?' раз':' раза');};
 const easeRace=t=>t<.5?2*t*t:1-(-2*t+2)**2/2;
-const mark=name=>`<i class="mark ${COLORS[name]||'other'}"></i><b>${esc(name)}</b>${LAB[name]&&LAB[name].preliminary?'<sup title="Предварительный результат">*</sup>':''}`;
+const mark=name=>`<i class="mark ${COLORS[name]||'other'}"></i><b>${esc(name)}</b>`;
 const lane=(id,name,body,extra='')=>`<div class="lane ${id==='mem'?'mem-lane':''} ${OURS.includes(name)?'ours':''} ${name==='AdamW'?'base':''}" id="${id}-${esc(name)}"><div class="lane-name">${mark(name)}${extra}<span class="k"></span></div>${body}<div class="lane-money"><span class="value"></span></div></div>`;
 const bar=name=>`<div class="lane-track"><div class="fill ${COLORS[name]||'other'}"></div><div class="gap"></div></div>`;
 const panel=(id,title,legend,rows,note,extra='')=>`<section class="board quad"><div class="board-head"><h3>${title}</h3>${extra}</div><div class="lane-legend quad-legend">${legend}</div><div class="lanes" id="${id}" style="height:calc(${rows} * var(--row))">${note}</div></section>`;
@@ -375,10 +379,10 @@ function drawFinetune(){
  $('ft-count').textContent=fmt(ftShare(rank)/100*8e9/1e6,0)+' млн';$('ft-size').textContent=fmt(ftShare(rank)/100*8e9*2/1e6,0)+' МБ';$('ft-wlora').textContent=fmt(ftShare(rank)/2,2)+'%';
  $('ft-ring').style.setProperty('--p',track('fring',Math.min(100,Math.log2(ftShare(rank)/.05)/Math.log2(9.2/.05)*100)));
  skills.forEach((s,i)=>{
-  const card=$('ft-skill-'+i),all={...s.methods,...s.others};
+  const card=$('ft-skill-'+i),shown=[...card.querySelectorAll('.sk-row.other')].map(r=>r.dataset.m),all={...s.methods,...Object.fromEntries(Object.entries(s.others).filter(([m])=>shown.includes(m)))};
   const order=Object.entries(all).sort((a,b)=>(!!a[1].imputed-!!b[1].imputed)||(b[1].gain-a[1].gain)),[top,best]=order.find(([m,v])=>FT_METHODS[m]&&!v.imputed);
   const scale=Math.max(3,...order.map(([,v])=>Math.max(v.gain,-v.gain*4.4)));
-  card.querySelector('.tag').textContent=top+(FT_METHODS[top].preliminary?'*':'');card.querySelector('.tag').className='tag '+FT_METHODS[top].color;
+  card.querySelector('.tag').textContent=top;card.querySelector('.tag').className='tag '+FT_METHODS[top].color;
   card.querySelector('.sk-value').textContent=`на ${fmt(Math.abs(track('sk'+i,best.gain)),1)}% ${best.gain>=0?'лучше':'хуже'}`;
   card.querySelector('.sk-base').textContent=FT_METHODS[top].base;
   order.forEach(([m,v],j)=>{const row=card.querySelector(`.sk-row[data-m="${m}"]`);row.style.transform=`translateY(${j*100}%)`;
@@ -427,7 +431,6 @@ const ZO_METHODS=[
  {name:'DiZO',ratio:1.22,pts:[[2.7,3.6],[6.7,.9]],info:'послойная адаптация шага'},
  {name:'JAGUAR SignSGD',ours:true,ratio:1,pts:[[.35,2.8],[.35,1.4],[1.3,3.2],[1.3,2.4],[6.7,2],[6.7,.6],[13,2],[13,1.1]],info:'момент по координатам и знак'},
  {name:'JAGUAR Muon',ours:true,ratio:1.1,pts:[[.35,-4.4],[.35,1.4],[1.3,-6.8],[1.3,3.9],[6.7,2],[6.7,-1.5],[13,0],[13,-.3]],info:'момент по координатам и ортогонализация'},
- {name:'ZO-Muon',ours:true,ratio:1.09,pts:[[.35,-17.4],[.35,-4.8],[1.3,-4.3],[1.3,3.4],[6.7,-1],[6.7,-2.7],[13,0],[13,-.7]],info:'ортогонализация оценки градиента'},
  {name:'ZO-LDSD',ours:true,preliminary:true,ratio:1,pts:[[1.3,.7],[1.3,6.2],[6.7,4],[6.7,1.8]],info:'обучаемое распределение направлений'}];
 for(const m of ZO_METHODS){
  const x=m.pts.map(p=>Math.log10(p[0])),y=m.pts.map(p=>p[1]),n=x.length,mx=x.reduce((a,b)=>a+b)/n,my=y.reduce((a,b)=>a+b)/n,sxx=x.reduce((a,v)=>a+(v-mx)**2,0);
@@ -441,54 +444,39 @@ const zoSize=()=>10**zoState.position;
 const gpuCount=gb=>Math.max(1,Math.ceil(gb/80));
 const gpuText=gb=>{const n=gpuCount(gb);return n===1?'1 H100':n+'×H100';};
 const ZO_COLORS={'JAGUAR SignSGD':'c1','JAGUAR Muon':'c2','ZO-Muon':'c3','ZO-LDSD':'c5'};
-// Quality ladder: y is the gain over MeZO; zero-order methods are packed sideways so dots never overlap, ours large and labelled,
-// the rest grey (name on hover); first-order SGD and Adam are horizontal reference lines.
-const ZC={w:760,h:290,l:44,r:190,t:14,b:14,cx:300};
-function zoScaleY(rows){const v=rows.map(r=>r.gain);return {lo:Math.min(-2,...v)-1,hi:Math.max(4,...v)+1};}
+// Ranked bars of the gain over MeZO for every zero-order method (ours in colour, others grey), in two columns;
+// first-order SGD and Adam fine-tuning are dashed reference lines on the same axis.
 function drawZO(){
  if(!$('zo-size'))return;
- const N=zoSize(),rows=ZO_METHODS.map((m,i)=>({m,i,gain:m.gain(N),gb:m.mem(N),est:N<m.range[0]/1.15||N>m.range[1]*1.15}));
- const mezo=rows.find(r=>r.m.base),adam=rows.find(r=>r.m.fo),ours=rows.filter(r=>r.m.ours).sort((a,b)=>b.gain-a.gain),zo=rows.filter(r=>!r.m.fo).sort((a,b)=>b.gain-a.gain);
+ const N=zoSize(),rows=ZO_METHODS.map((m,i)=>({m,i,gain:m.gain(N),gb:m.mem(N)}));
+ const mezo=rows.find(r=>r.m.base),adam=rows.find(r=>r.m.fo&&r.m.gb),zo=rows.filter(r=>!r.m.fo).sort((a,b)=>b.gain-a.gain),half=Math.ceil(zo.length/2);
+ const fo=rows.filter(r=>r.m.fo),hi=Math.max(...fo.map(r=>r.gain),...zo.map(r=>r.gain))+.5,lo=Math.min(-1,...zo.map(r=>r.gain)),x=v=>(v-lo)/(hi-lo)*100;
  $('zo-n').textContent=N>=1?fmt(N,N<10?1:0)+'B':fmt(N*1000,0)+'M';
- // quality ladder
- const sc=zoScaleY(rows),zy=v=>ZC.t+(sc.hi-v)/(sc.hi-sc.lo)*(ZC.h-ZC.t-ZC.b),placed=[];
- for(const r of rows.filter(r=>!r.m.fo).sort((a,b)=>b.m.ours-a.m.ours||b.gain-a.gain)){
-  const y=zy(r.gain),rad=r.m.ours?9:6;let x=ZC.cx;
-  for(let k=0;k<40;k++){const cand=ZC.cx+(k%2?1:-1)*Math.ceil(k/2)*13;if(placed.every(p=>Math.hypot(p.x-cand,p.y-y)>=p.rad+rad+2)){x=cand;break;}}
-  placed.push({x,y,rad});const g=$('zo-p-'+r.i);g.setAttribute('transform',`translate(${x.toFixed(1)},${y.toFixed(1)})`);g.classList.toggle('est',r.est);
-  const t=$('zo-l-'+r.i);t.setAttribute('x',r.m.ours||r.m.base?ZC.w-ZC.r+14:x+10);t.setAttribute('y',y+4);
-  const lead=$('zo-lead-'+r.i);if(lead){lead.setAttribute('x1',x+rad);lead.setAttribute('x2',ZC.w-ZC.r+10);lead.setAttribute('y1',y);lead.setAttribute('y2',y);}
- }
- const labelled=rows.filter(r=>r.m.ours||r.m.base).sort((a,b)=>b.gain-a.gain);let last=-99;
- for(const r of labelled){const t=$('zo-l-'+r.i);let y=Math.max(zy(r.gain)+4,last+15);last=y;t.setAttribute('y',y);const lead=$('zo-lead-'+r.i);if(lead)lead.setAttribute('y2',y-4);}
- for(const r of rows.filter(r=>r.m.fo)){const y=zy(r.gain),line=$('zo-p-'+r.i);line.setAttribute('transform',`translate(0,${y.toFixed(1)})`);$('zo-l-'+r.i).setAttribute('y',y-6);}
- $('zo-axis').innerHTML=[-5,0,5,10].filter(v=>v>sc.lo&&v<sc.hi).map(v=>`<line class="${v?'sc-grid':'zo-zero'}" x1="${ZC.l}" x2="${ZC.w-ZC.r}" y1="${zy(v)}" y2="${zy(v)}"/><text x="${ZC.l-8}" y="${zy(v)+4}" text-anchor="end">${v>0?'+':''}${v}</text>`).join('');
- // memory card: GPU chips for first-order Adam vs zero order
- const chips=(id,gb)=>{const box=$(id),n=gpuCount(gb),shown=Math.min(n,32);while(box.children.length<shown)box.appendChild(document.createElement('i'));while(box.children.length>shown)box.lastChild.remove();box.dataset.more=n>32?'+'+(n-32):'';};
+ zo.forEach((r,k)=>{const row=$('zo-r-'+r.i),col=k<half?0:1;row.style.left=col?'calc(50% + 14px)':'0';row.style.transform=`translateY(${(k-col*half)*100}%)`;
+  const f=row.querySelector('.zo-fill');f.style.left=Math.min(x(0),x(r.gain))+'%';f.style.width=Math.abs(x(r.gain)-x(0))+'%';row.querySelector('.zo-v').textContent=r.m.base?'база':pct(r.gain).replace('%',' п.п.');});
+ document.querySelectorAll('.zo-zero-line').forEach(l=>l.style.left=x(0)+'%');
+ fo.forEach(r=>document.querySelectorAll('.zo-ref-'+r.i).forEach(l=>{l.style.left=x(r.gain)+'%';}));
+ document.querySelectorAll('.zo-hlabel').forEach(l=>{const r=rows[Number(l.dataset.i)];l.style.left=`calc(160px + (100% - 242px) * ${x(r.gain)/100})`;});
+ document.querySelectorAll('.zo-hzero').forEach(l=>l.style.left=`calc(160px + (100% - 242px) * ${x(0)/100})`);
+ const chips=(id,gb)=>{const box=$(id),n=gpuCount(gb),shown=Math.min(n,24);while(box.children.length<shown)box.appendChild(document.createElement('i'));while(box.children.length>shown)box.lastChild.remove();box.dataset.more=n>24?'+'+(n-24):'';};
  chips('zo-chips-fo',adam.gb);chips('zo-chips-zo',mezo.gb);
- $('zo-fo-gb').textContent=`${fmt(adam.gb,0)} ГБ · ${gpuText(adam.gb)}`;$('zo-zo-gb').textContent=`${fmt(mezo.gb,0)} ГБ · ${gpuText(mezo.gb)}`;
+ $('zo-fo-gb').textContent=gpuText(adam.gb);$('zo-zo-gb').textContent=gpuText(mezo.gb);
  $('zo-ratio').textContent=`в ${fmt(adam.gb/mezo.gb,0)} раз меньше памяти`;
- // our methods card
- ours.forEach((r,k)=>{const el=$('zo-o-'+r.i);el.style.transform=`translateY(${k*100}%)`;el.querySelector('b').textContent=(r.gain>=0?'+':'−')+fmt(Math.abs(r.gain),1)+' п.п.';el.querySelector('small').textContent=`${zo.indexOf(r)+1}-й из ${zo.length} · ${fmt(r.gb,0)} ГБ`;});
 }
 function zoSection(){
  const ticks=ZO_SIZES.map(([n,t])=>`<button class="landmark" data-zo="${Math.log10(n)}" style="left:${(Math.log10(n)-Math.log10(.35))/(Math.log10(70)-Math.log10(.35))*100}%">${t}</button>`).join('');
- const pts=ZO_METHODS.map((m,i)=>m.fo?`<g class="zo-fo" id="zo-p-${i}"><line x1="${ZC.l}" x2="${ZC.w-ZC.r}" y1="0" y2="0"/></g>`:`<g class="zo-p ${m.ours?'ours':''} ${m.base?'base':''}" id="zo-p-${i}"><circle r="${m.ours?9:6}" class="${m.ours?ZO_COLORS[m.name]:'other'}"><title>${m.name}${m.preliminary?'*':''}: ${m.info}</title></circle></g>`).join('');
- const leads=ZO_METHODS.map((m,i)=>m.ours||m.base?`<line class="zo-leader" id="zo-lead-${i}"/>`:'').join('');
- const labels=ZO_METHODS.map((m,i)=>`<text class="zo-lbl ${m.ours?'ours':''} ${m.fo?'fo':''} ${m.base?'base':''} ${!(m.ours||m.fo||m.base)?'minor':''}" id="zo-l-${i}" ${m.fo?`x="${ZC.l+6}"`:''}>${m.fo?m.name.replace(', обычное',' — обычное дообучение'):m.name+(m.preliminary?'*':'')}</text>`).join('');
- const ours=ZO_METHODS.map((m,i)=>m.ours?`<div class="zo-our" id="zo-o-${i}"><i class="mark ${ZO_COLORS[m.name]}"></i><span>${m.name}${m.preliminary?'*':''}<small></small></span><b></b></div>`:'').join('');
- return `<section class="board zo2"><div class="board-head"><h3>Нулевой порядок: дообучение без обратного прохода</h3><span class="meta">градиент по двум прямым проходам — ни активаций, ни состояний</span></div>
- <div class="zo-dock"><div><span class="eyebrow" style="display:block;margin:0">Размер модели</span><strong id="zo-n" class="zo-big-n"></strong></div><div class="zo-slider"><input type="range" id="zo-size" min="${Math.log10(.35)}" max="${Math.log10(70)}" step="any" value="${zoState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div></div></div>
- <div class="zo-body"><div><div class="zo-axis-y">качество: прирост к MeZO, п.п. ↑</div><svg class="zo-chart" viewBox="0 0 ${ZC.w} ${ZC.h}" role="img" aria-label="Прирост качества методов нулевого порядка к MeZO"><g id="zo-axis"></g>${leads}${pts}${labels}</svg></div>
- <div class="zo-cards"><div class="zo-card"><span class="eyebrow">Сколько видеокарт</span><div class="zo-gpu-row"><span>Обычное дообучение</span><em id="zo-fo-gb"></em></div><div class="zo-chips fo" id="zo-chips-fo"></div><div class="zo-gpu-row"><span>Нулевой порядок</span><em id="zo-zo-gb"></em></div><div class="zo-chips" id="zo-chips-zo"></div><strong class="zo-ratio" id="zo-ratio"></strong></div>
- <div class="zo-card"><span class="eyebrow">Наши методы: прирост к MeZO</span><div class="zo-ours" style="height:calc(4 * 38px)">${ours}</div></div></div></div>
- <p class="step-note">Серые точки — 13 методов нулевого порядка из литературы (ZO-Bench, HiZOO, SubZero+, LOZO, FZOO, LeZO, AdaMeZO, ZO-Act, ZO-AdaMU, DiZO и др.), наведите на график, чтобы увидеть названия. Пунктир — обычное дообучение: потолок качества при памяти в 2–11 раз больше. Память: MeZO Table 22 и отношения к MeZO из статей методов. Качество подогнано по log N; бледные точки — размер вне замеров. * — не опубликовано.</p></section>`;
+ const zo=ZO_METHODS.map((m,i)=>m.fo?'':`<div class="zo-row ${m.ours?'ours':''} ${m.base?'base':''}" id="zo-r-${i}"><span title="${m.info}">${m.name}</span><div class="zo-track"><div class="zo-zero-line"></div>${ZO_METHODS.map((f,j)=>f.fo?`<div class="zo-ref zo-ref-${j}"></div>`:'').join('')}<div class="zo-fill ${m.ours?ZO_COLORS[m.name]:'other'}"></div></div><em class="zo-v"></em></div>`).join('');
+ const rows=Math.ceil(ZO_METHODS.filter(m=>!m.fo).length/2);
+ return `<section class="board zo2"><div class="board-head"><h3>Нулевой порядок: дообучение без обратного прохода</h3><span class="meta">качество относительно MeZO · пунктир — обычное дообучение</span></div>
+ <div class="zo-top"><div class="zo-size"><span class="eyebrow">Размер модели</span><strong id="zo-n" class="zo-big-n"></strong></div><div class="zo-slider"><input type="range" id="zo-size" min="${Math.log10(.35)}" max="${Math.log10(70)}" step="any" value="${zoState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div></div>
+ <div class="zo-gpus"><div class="zo-gpu-row"><span>Обычное</span><div class="zo-chips fo" id="zo-chips-fo"></div><em id="zo-fo-gb"></em></div><div class="zo-gpu-row"><span>Нулевой порядок</span><div class="zo-chips" id="zo-chips-zo"></div><em id="zo-zo-gb"></em></div><strong class="zo-ratio" id="zo-ratio"></strong></div></div>
+ <div class="zo-heads">${[0,1].map(c=>`<div class="zo-head">${ZO_METHODS.map((m,i)=>m.fo?`<span class="zo-hlabel" data-i="${i}">${m.name.replace(', обычное','')}</span>`:'').join('')}<span class="zo-hzero">MeZO</span></div>`).join('')}</div><div class="zo-bars" style="height:calc(${rows} * 26px)">${zo}</div></section>`;
 }
 function renderFinetune(){
  const {skills}=ftTable(ftRank());
- const bar=(m,other)=>`<div class="sk-row ${other?'other':''}" data-m="${m}"><span>${m}${FT_METHODS[m]&&FT_METHODS[m].preliminary?'*':''}</span><div class="sk-track"><div class="sk-fill ${other?'other':FT_METHODS[m].color}"></div></div><em class="sk-v"></em></div>`;
- const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs">чем <span class="sk-base"></span></span></div><svg class="sk-chart" viewBox="0 0 400 70" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${FT_NAMES.length+Object.keys(s.others).length} * 22px)"><div class="sk-zero"></div>${FT_NAMES.map(m=>bar(m,false)).join('')}${Object.keys(s.others).map(m=>bar(m,true)).join('')}</div></section>`;
- const heat=`<section class="board hm below-fold"><div class="board-head"><h3>По задачам</h3><span class="meta">насколько лучше базового метода из той же статьи</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th><i class="mark ${FT_METHODS[m].color}"></i>${m}${FT_METHODS[m].preliminary?'*':''}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${t.name}<small>${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?t.rows.filter(r=>r.m===m).map(r=>r.model).join(', '):'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table><p class="step-note">Контур — клетки без замера, оценка «сила метода × отзывчивость задачи». Модель рангов: у каждого метода свой наклон прироста по рангу, подогнанный по его замерам (WLoRA+ почти ровный, SimplexLoRA сильнее на малых рангах); после r=32 все выигрыши затухают ∝ r<sup>−0,3</sup>. Штриховка — ранг вне замеров. * — не опубликовано.</p></section>`;
+ const bar=(m,other)=>`<div class="sk-row ${other?'other':''}" data-m="${m}"><span>${m}</span><div class="sk-track"><div class="sk-fill ${other?'other':FT_METHODS[m].color}"></div></div><em class="sk-v"></em></div>`;
+ const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs">чем <span class="sk-base"></span></span></div><svg class="sk-chart" viewBox="0 0 400 70" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${FT_NAMES.length+Math.min(3,Object.keys(s.others).length)} * 22px)"><div class="sk-zero"></div>${FT_NAMES.map(m=>bar(m,false)).join('')}${Object.entries(s.others).sort((a,b)=>b[1].gain-a[1].gain).slice(0,3).map(([m])=>bar(m,true)).join('')}</div></section>`;
+ const heat=`<section class="board hm below-fold"><div class="board-head"><h3>По задачам</h3><span class="meta">насколько лучше базового метода из той же статьи</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th><i class="mark ${FT_METHODS[m].color}"></i>${m}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${t.name}<small>${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?t.rows.filter(r=>r.m===m).map(r=>r.model).join(', '):'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table></section>`;
  const zo=zoSection();
  const stops=[1,4,16,64,128].map(r=>`<button class="ft-stop" data-pos="${Math.log2(r)}">r=${r}<small>${fmt(ftShare(r),2)}%</small></button>`).join('');
  $('controls').innerHTML='';
