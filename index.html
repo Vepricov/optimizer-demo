@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Optimizer Atlas — экономия на обучении</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23191c1b'/%3E%3Cpath d='M12 45L30 17L48 45M21 33H40' fill='none' stroke='%2380d6be' stroke-width='5'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:dark;--bg:#191c1b;--panel:#212624;--deep:#151917;--text:#f4f1e9;--muted:#acb6ae;--line:#3b4540;--adam:#f3ad79;--new:#80d6be;--soap:#c3b5e3;--radius:12px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 "Avenir Next","Helvetica Neue",sans-serif;text-wrap:pretty}button,input,select{font:inherit}button,select,a,input{touch-action:manipulation}button,select{color:inherit}button,a,select,input{outline-offset:5px}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--new)}button{cursor:pointer}button:disabled{opacity:.45;cursor:default}a{color:var(--new);text-underline-offset:4px}button{transition:background .2s,border-color .2s}button:hover{border-color:var(--muted)}button:active{transform:translateY(1px)}.shell{max-width:1480px;margin:auto;padding:26px 40px 34px}.topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:22px;border-bottom:1px solid var(--line);gap:16px}.wordmark{font-size:14px;letter-spacing:.18em;font-weight:600}.wordmark span{color:var(--new)}.top-actions{display:flex;align-items:center;gap:20px}.quiet{border:1px solid var(--line);background:transparent;border-radius:6px;padding:9px 15px;font-size:14px}.dot{display:inline-block;width:7px;height:7px;background:var(--new);border-radius:50%;margin-right:9px}.meta{font-size:12px;color:var(--muted);letter-spacing:.07em}.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;padding:34px 0 30px}.eyebrow{font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);margin-bottom:13px}h1{font-size:clamp(34px,4vw,58px);font-weight:500;letter-spacing:-.045em;line-height:1.08;margin:0;max-width:760px}.intro-note{max-width:310px;font-size:15px;color:var(--muted);margin:0 0 5px}.domain-nav{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:26px}.domain{border:0;border-bottom:2px solid transparent;background:none;padding:15px 22px;font-size:16px;color:var(--muted);margin-bottom:-1px}.domain.active{color:var(--text);border-color:var(--new)}.domain small{font:11px monospace;margin-right:14px;opacity:.65}.workspace{display:grid;grid-template-columns:282px minmax(0,1fr);gap:26px}.controls{border-right:1px solid var(--line);padding-right:26px}.step{font:11px monospace;color:var(--new);letter-spacing:.08em;margin:3px 0 18px}.field{margin:0 0 20px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}select{width:100%;border:1px solid var(--line);border-radius:7px;background:var(--panel);padding:12px 10px;min-height:48px;font-size:14px}.control-description{font-size:13px;color:var(--muted);margin-top:20px}.protocol-badge{display:inline-block;padding:5px 9px;font-size:11px;border:1px solid var(--line);border-radius:5px;margin-top:5px}.stats-foot{border-top:1px solid var(--line);margin-top:26px;padding-top:18px;display:flex;gap:24px}.stats-foot strong{display:block;font-size:23px;font-weight:500;color:var(--text)}.stats-foot span{font-size:11px;color:var(--muted)}.result-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:20px}.result-head h2{font-size:24px;letter-spacing:-.025em;font-weight:500;margin:3px 0 5px}.result-head p{font-size:13px;color:var(--muted);margin:0}.source-link{font-size:12px;white-space:nowrap;margin-top:7px}.comparison{display:grid;grid-template-columns:1fr 1fr;gap:12px}.score-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:21px 24px 19px;min-width:0}.score-card.new{background:#263730;border-color:#547769}.method-name{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:500}.swatch{height:3px;width:22px;background:var(--adam);display:inline-block}.new .swatch{background:var(--new)}.number{font-variant-numeric:tabular-nums;font-size:clamp(30px,4vw,59px);line-height:1.16;letter-spacing:-.045em;margin:17px 0 2px;white-space:nowrap}.number-unit{font-size:15px;color:var(--muted);letter-spacing:0}.uncertainty{font-size:12px;color:var(--muted);min-height:20px}.bar-track{height:5px;background:#111713;border-radius:4px;margin-top:23px;overflow:hidden}.bar-fill{height:100%;background:var(--adam);transition:width .25s}.new .bar-fill{background:var(--new)}.score-detail{font-size:12px;color:var(--muted);margin-top:12px}.effect{display:flex;align-items:center;gap:18px;margin:17px 0 22px;padding:4px 0}.effect-number{font-size:34px;letter-spacing:-.04em;color:var(--new);font-variant-numeric:tabular-nums;white-space:nowrap}.effect-number.negative{color:var(--adam)}.effect-label{font-size:14px;max-width:590px}.subtle{font-size:12px;color:var(--muted);margin:4px 0 0}.evidence{border-top:1px solid var(--line);padding-top:20px}.evidence-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:15px}.evidence-head h3{font-size:14px;margin:0;font-weight:500}.legend{font-size:11px;display:flex;gap:14px;color:var(--muted)}.legend i{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px}.metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.metric-button{text-align:left;border:1px solid var(--line);border-radius:7px;background:transparent;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:44px}.metric-button.active{background:#2b3c33;border-color:#668d78}.metric-button span{font-size:12px;overflow-wrap:anywhere}.metric-button b{font:12px monospace;color:var(--new);white-space:nowrap}.metric-button b.negative{color:var(--adam)}.note{margin-top:17px;font-size:12px;color:var(--muted);max-width:840px}.seed-plot{width:100%;height:135px;display:block}.chart{width:100%;height:210px;display:block}.chart text,.seed-plot text{fill:var(--muted);font:12px "Helvetica Neue",sans-serif}.slider-row{display:flex;align-items:center;gap:18px;margin-top:13px}input[type=range]{width:100%;accent-color:var(--new);cursor:pointer;height:36px}.slider-value{font:14px monospace;min-width:105px;text-align:right}.slider-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:-5px}.footer{display:flex;align-items:center;justify-content:space-between;gap:18px;border-top:1px solid var(--line);padding-top:18px;margin-top:30px;color:var(--muted);font-size:11px}.footer strong{color:var(--text);font-weight:500}.source-list{display:grid;grid-template-columns:1fr 1fr;gap:14px}.source-item{padding:21px;border:1px solid var(--line);border-radius:var(--radius);min-width:0}.source-item h3{font-size:17px;font-weight:500;margin:10px 0}.source-item p{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.source-state{font-size:11px;color:var(--new)}[hidden]{display:none!important}.light{--bg:#eeeee6;--panel:#fafbf6;--deep:#fff;--text:#23332b;--muted:#53665b;--line:#bdc9bc;--adam:#9c4d18;--new:#1f7057;--soap:#66518a;color-scheme:light}.light .score-card.new,.light .metric-button.active{background:#dce8db}.light .bar-track{background:#d9ddd3}.light .bar-fill{background:var(--adam)}.light .new .bar-fill{background:var(--new)}
+@media(min-width:1800px){.shell{max-width:1680px;padding-top:40px}body{font-size:18px}.workspace{grid-template-columns:310px minmax(0,1fr)}.result-head h2{font-size:30px}.number{font-size:72px}.metric-button{padding:14px}.metric-button span,.metric-button b{font-size:15px}.effect-label{font-size:18px}.control-description,.note,.score-detail,.uncertainty{font-size:14px}}
+@media(max-width:1000px){.shell{padding:22px}.workspace{grid-template-columns:235px minmax(0,1fr);gap:20px}.controls{padding-right:20px}.intro-note{max-width:245px}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.score-card{padding:18px}.domain{padding:13px 14px}.domain small{margin-right:7px}.number{font-size:40px}}
+@media(max-width:700px){.shell{padding:18px}.top-actions{gap:9px}.top-actions .meta{display:none}.wordmark{font-size:11px}.quiet{padding:8px 10px}.intro{display:block;padding:27px 0 24px}.intro-note{max-width:none;margin:18px 0 0}.intro h1{font-size:38px}.domain-nav{overflow-x:auto}.domain{white-space:nowrap;padding:12px;font-size:13px}.domain small{display:none}.workspace{display:block}.controls{border-right:0;border-bottom:1px solid var(--line);padding:0 0 15px;margin-bottom:22px;display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.step,.control-description,.stats-foot,.protocol-badge{grid-column:1/-1}.step{margin-bottom:12px}.field{margin-bottom:10px}.control-description{margin:8px 0}.stats-foot{display:none}.result-head h2{font-size:21px}.comparison{gap:8px}.score-card{padding:16px 12px}.number{font-size:34px}.number-unit{font-size:12px}.method-name{font-size:13px}.effect{gap:12px;align-items:flex-start}.effect-number{font-size:28px}.effect-label{font-size:12px}.source-list{grid-template-columns:1fr}.footer{align-items:flex-start}.footer>span{max-width:55%}.metric-button{padding:10px}.metric-button span{font-size:11px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.economy .controls{align-self:start}.economy .field input[type=number]{width:100%;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--text);padding:11px 10px;min-height:46px}.assumptions{font-size:12px;color:var(--muted);margin-top:18px}.assumptions summary{cursor:pointer;color:var(--text);padding:10px 0}.assumptions .field{margin-top:12px}.case-tag{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:5px 11px;font-size:11px;color:var(--new)}.saving-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:20px;margin:18px 0 25px}.saving-label{font-size:14px;color:var(--muted)}.saving-amount{font-size:clamp(46px,6.5vw,90px);line-height:1.12;letter-spacing:-.055em;color:var(--new);font-variant-numeric:tabular-nums;margin:8px 0}.saving-amount.negative{color:var(--adam)}.saving-percent{font-size:18px;color:var(--text)}.factor-box{padding-left:25px;border-left:1px solid var(--line);max-width:200px}.factor-box strong{font-size:40px;line-height:1.2;font-weight:500;letter-spacing:-.03em;display:block}.factor-box span{font-size:12px;color:var(--muted);display:block;margin:5px 0 14px}.cost-row{margin:17px 0}.cost-row-head{display:flex;justify-content:space-between;align-items:baseline;gap:15px;margin-bottom:8px;font-size:14px}.cost-row-head strong{font-weight:500}.cost-track{height:32px;background:var(--deep);border:1px solid var(--line);border-radius:6px;overflow:hidden}.cost-fill{height:100%;background:var(--adam);transition:width .18s ease}.cost-fill.method{background:var(--new)}.cost-caption{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;gap:15px}.budget-dock{margin-top:24px;padding:21px 24px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}.budget-head{display:flex;justify-content:space-between;align-items:center;gap:15px}.budget-head label{font-size:14px;font-weight:500}.budget-head output{font-size:22px;font-variant-numeric:tabular-nums}.budget-dock input{display:block;margin:12px 0 5px;height:40px}.budget-dock .slider-labels{margin-top:0}.economy-note{font-size:12px;color:var(--muted);margin:13px 0}.method-picks{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}.method-picks button{border:1px solid var(--line);border-radius:20px;padding:7px 13px;background:transparent;color:var(--muted);font-size:12px;min-height:36px}.method-picks button.active{color:var(--new);border-color:var(--new)}.calculation{border-top:1px solid var(--line);margin-top:20px;padding-top:15px;font-size:12px;color:var(--muted)}.calculation summary{cursor:pointer;color:var(--text)}.calculation p{max-width:800px}.source-table{width:100%;border-collapse:collapse;margin:14px 0;font-variant-numeric:tabular-nums}.source-table th,.source-table td{border-bottom:1px solid var(--line);padding:8px;text-align:right;white-space:nowrap}.source-table th:first-child{text-align:left}.table-scroll{overflow-x:auto}.formula{font:13px/1.8 monospace;color:var(--text)}
+@media(min-width:1800px){.saving-amount{font-size:106px}.cost-track{height:40px}.cost-row-head{font-size:18px}.cost-caption,.economy-note,.case-tag{font-size:14px}.budget-head output{font-size:28px}.budget-dock{padding:24px 30px}}
+@media(max-width:700px){.economy .assumptions{grid-column:1/-1;margin-top:0}.saving-hero{gap:12px;grid-template-columns:minmax(0,1fr) 94px}.saving-amount{font-size:42px}.saving-percent{font-size:14px}.factor-box{padding-left:12px}.factor-box strong{font-size:26px}.factor-box span{font-size:10px}.budget-dock{padding:16px}.budget-head{align-items:flex-start}.budget-head output{font-size:18px;text-align:right}.cost-row-head{font-size:13px}.cost-caption{font-size:11px}.method-picks button{min-height:44px}.topbar{flex-wrap:wrap}.top-actions{margin-left:auto}.number{white-space:normal}.economy .field{min-width:0}}
+@media(min-width:701px){.economy-view .shell{padding-top:20px}.economy-view .intro{padding:20px 0}.economy-view .intro .eyebrow{display:none}.economy-view h1{font-size:40px}.economy-view .domain-nav{margin-bottom:18px}.economy .result-head{margin-bottom:12px}.economy .saving-hero{margin:12px 0}.economy .saving-amount{font-size:clamp(46px,5vw,76px)}.economy .factor-box strong{font-size:32px}.economy .factor-box span{margin:4px 0 8px}.economy .cost-track{height:28px}.economy .cost-row{margin:14px 0}.economy .budget-dock{padding:16px 24px;margin-top:18px}}
+:root{--lane-adam:#cf6f33;--c1:#22a684;--c2:#b08717;--c3:#5b8fe0;--c4:#c1609e;--other:#66736c;--row:31px}.light{--lane-adam:#c0642a;--c1:#12876a;--c2:#9a7400;--c3:#2f63c8;--c4:#a8407f;--other:#9aa69e}
+.economy{display:block}.economy .controls{display:none}.adam{--hue:var(--lane-adam)}.c1{--hue:var(--c1)}.c2{--hue:var(--c2)}.c3{--hue:var(--c3)}.c4{--hue:var(--c4)}.other{--hue:var(--other)}
+.scale-dock{padding:18px 24px 6px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}.scale-read{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}.scale-read .eyebrow{display:block;margin:0 0 2px;font-size:10px}.scale-read strong{font-size:26px;font-weight:500;letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap}.scale-read div:first-child strong{font-size:40px;line-height:1.1;color:var(--c1)}.scale-dock input{display:block;width:100%;height:44px;margin:10px 0 0;accent-color:var(--c1)}.landmarks{position:relative;height:34px;margin:0 9px}.landmark{position:absolute;transform:translateX(-50%);border:0;background:none;color:var(--muted);font-size:12px;padding:6px 4px;white-space:nowrap}.landmark:hover{color:var(--text)}.landmark:before{content:'';position:absolute;left:50%;top:-4px;width:1px;height:7px;background:var(--line)}
+.tag{display:inline-block;padding:3px 11px;border-radius:20px;background:color-mix(in srgb,var(--hue) 22%,transparent);border:1px solid var(--hue);font-size:18px;color:var(--text);vertical-align:middle}.play{border:1px solid var(--c1);background:color-mix(in srgb,var(--c1) 18%,transparent);border-radius:8px;padding:9px 16px;font-size:14px}
+.boards{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px}.board{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px 18px;min-width:0}.board-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}.board-head h3{margin:0;font-size:17px;font-weight:500}.lane-legend{display:grid;grid-template-columns:150px minmax(0,1fr) 150px;gap:14px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}.lane-legend span:last-child{text-align:right}.lanes{position:relative}.lanes{margin-bottom:22px}
+.lane{position:absolute;left:0;right:0;top:0;height:var(--row);display:grid;grid-template-columns:200px minmax(0,1fr) 130px;gap:14px;align-items:center;transition:transform .7s cubic-bezier(.2,.8,.2,1)}.lane.ours{background:linear-gradient(90deg,color-mix(in srgb,var(--c1) 7%,transparent),transparent 60%)}.lane.base{border-bottom:1px dashed var(--line)}.lane-name{display:flex;align-items:center;gap:8px;font-size:14px;min-width:0}.lane-name b{font-weight:500;white-space:nowrap}.ours .lane-name b{font-weight:650}.lane-name .k{margin-left:auto;font:12px monospace;color:var(--muted)}.mark{width:10px;height:10px;border-radius:3px;background:var(--hue);flex:none}
+.lane-track{position:relative;height:18px}.fill{position:absolute;left:0;top:0;bottom:0;border-radius:0 4px 4px 0;background:var(--hue)}.other.fill{opacity:.75}.gap{position:absolute;top:2px;bottom:2px;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--text) 38%,transparent) 0 2px,transparent 2px 6px);transition:width .5s ease;border-radius:3px}.gap.over{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--lane-adam) 70%,transparent) 0 2px,transparent 2px 6px)}
+.lane-money{text-align:right;font-variant-numeric:tabular-nums;line-height:1.15}.lane-money{white-space:nowrap}.lane-money .cost{font-size:14px}.lane-money .saved{font-size:15px;color:var(--c1)}.lane-money .saved.negative{color:var(--lane-adam)}.lane:not(.finished) .saved{color:var(--muted)}.base .saved{color:var(--muted)}.lane.pop .lane-money{animation:pop .6s ease}@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+.lane-grid{position:absolute;top:0;bottom:0;left:214px;right:144px;pointer-events:none}.finish{position:absolute;top:-6px;bottom:0;border-left:2px solid var(--lane-adam);transform:translateX(-1px)}.finish span{position:absolute;top:-16px;right:5px;font-size:10px;color:var(--lane-adam);white-space:nowrap;letter-spacing:.06em;text-transform:uppercase}
+.mem-body{display:flex;flex-direction:column;gap:4px;min-width:0}.chips{display:flex;flex-wrap:wrap;gap:3px;height:13px;overflow:hidden}.chips i{width:13px;height:13px;border-radius:3px;background:var(--hue);animation:chip .35s cubic-bezier(.2,1.6,.4,1)}.chips.other i{opacity:.75}@keyframes chip{from{transform:scale(0)}}.delta{font:12px monospace;min-width:30px;text-align:right}.delta.good{color:var(--c1)}.delta.bad{color:var(--lane-adam)}
+
+@media(min-width:1800px){.lane-name,.lane-money .cost,}@media(min-width:1800px) and (min-height:1300px){:root{--row:46px}}
+@media(min-width:701px){.economy-view .intro{display:none}.economy-view h1{font-size:28px;max-width:none}.economy-view h1 br{display:none}.economy-view .intro-note{font-size:13px;max-width:560px}.economy-view .topbar{padding-bottom:14px;margin-bottom:0}.economy-view .domain-nav{margin-top:4px}.economy-view .shell{padding-top:14px}.scale-dock{padding-top:12px}.scale-dock input{height:34px;margin-top:4px}.landmarks{height:24px}.board{padding-top:12px}.lanes{margin-bottom:6px}.economy-view .domain-nav{margin-bottom:14px}.economy-view .footer{margin-top:10px}}
+@media(max-width:1100px){.boards{grid-template-columns:1fr}.scale-read{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){:root{--row:44px}.scale-dock{padding:14px}.scale-read{grid-template-columns:1fr 1fr;gap:10px}.scale-read div:first-child{grid-column:1/-1}.scale-read strong{font-size:18px}.landmark{font-size:10px}.landmark:nth-child(1){display:none}.lane,.lane-legend{grid-template-columns:96px minmax(0,1fr) 96px;gap:8px}.lane-grid{left:104px;right:104px}.lane-name{font-size:12px;gap:5px}.lane-name .k{display:none}.lane-money .cost{font-size:12px}.lane-money .saved{font-size:10px}.chips i{width:9px;height:9px}.chips{height:9px}.board{padding:12px}}
+
+.stack{display:flex;gap:2px;height:20px}.stack span{height:100%;transition:width .3s}.stack .base{background:color-mix(in srgb,var(--muted) 45%,transparent);border-radius:4px 0 0 4px}.stack .state{background:var(--hue);border-radius:0 4px 4px 0}.key{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px;margin-right:4px}.key.base{background:color-mix(in srgb,var(--muted) 45%,transparent)}.key.st{background:var(--lane-adam)}
+
+@media(max-width:700px){.finish span{display:none}}
+.lane-name .steptag{font:10px monospace;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 4px;white-space:nowrap}.lane-name sup{color:var(--c2)}.scale-hint{font-size:13px;color:var(--muted);margin:6px 0 0}.scale-hint b{color:var(--text);font-weight:500}
+@media(max-width:700px){.lane{grid-template-columns:110px minmax(0,1fr) 84px}.lane-grid{left:118px;right:92px}.lane-name .steptag{display:none}}
+.sc-chart{width:100%;height:auto;display:block;margin-top:6px}.sc-chart text{fill:var(--muted);font:11px "Helvetica Neue",sans-serif}.sc-chart .sc-label{fill:var(--text);font-size:12px}.sc-line{fill:none;stroke:var(--hue)}.sc-line.other{opacity:.55}.sc-dot{fill:var(--hue)}.sc-dot.other{opacity:.6}.sc-ring{fill:var(--panel);stroke:var(--hue);stroke-width:2}.sc-pt{fill:var(--hue);stroke:var(--panel);stroke-width:2;}.sc-cursor{stroke:var(--text);stroke-dasharray:3 4;opacity:.6}.sc-grid{stroke:var(--line);stroke-dasharray:2 5}.sc-base{stroke:var(--lane-adam);stroke-width:1.5}
+:root{--c5:#8a5cf0}.light{--c5:#6d45d6}.c5{--hue:var(--c5)}.soft .fill,.state.soft,.chips.soft i,.mark.soft,.sc-line.soft{opacity:.55}.mem-lane .stack{height:11px}.mem-lane .chips{height:8px;margin-top:3px}.mem-lane .chips i{width:8px;height:8px;border-radius:2px}.mem-lane .mem-body{gap:0}.lane-money .saved.muted{color:var(--muted)}.domain-nav{display:none}
+.wins{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:10px 0}.win{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:8px 14px}.win .eyebrow{display:block;margin:0 0 4px;font-size:10px}.win>div{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.win .tag{font-size:15px;transition:background .4s,border-color .4s}.win strong{font-size:26px;font-weight:500;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.win small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.quads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.quad{padding:12px 16px 14px}.quad .board-head h3{font-size:15px}.quad .board-head{align-items:center}.quad-legend{display:grid;grid-template-columns:170px minmax(0,1fr) 120px;gap:12px;margin:8px 0 4px}.quad-legend span:last-child{text-align:right}.quad .lane{grid-template-columns:170px minmax(0,1fr) 120px;gap:12px}.quad .lane-name .k{white-space:nowrap}.quad .lane-grid{left:182px;right:132px}.quad .lanes{margin-bottom:0}.quad .lane-money .value{font-size:14px;color:var(--c1);font-variant-numeric:tabular-nums}.quad .base .lane-money .value{color:var(--text)}.quad .lane:not(.finished) .value{color:var(--muted)}#mem .lane .value,#step .lane .value{color:var(--text)}#money .lane.finished .value{color:var(--c1)}#money .lane.base .value{color:var(--text)}.quad .play{padding:5px 11px;font-size:12px}.quad .board-head .meta{margin-left:auto;margin-right:10px}.quad .sc-chart{margin-top:4px}
+@media(max-width:1100px){.quads{grid-template-columns:1fr}.wins{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.quad-legend,.quad .lane{grid-template-columns:100px minmax(0,1fr) 84px;gap:8px}.quad .lane-grid{left:108px;right:92px}.win strong{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="shell">
+ <header class="topbar"><div class="wordmark">OPTIMIZER <span>/</span> ATLAS</div><div class="top-actions"><span class="meta"><i class="dot"></i>ОТКРЫТЫЕ ИССЛЕДОВАНИЯ</span><button class="quiet" id="theme" aria-label="Переключить светлую тему">Светлая тема</button><button class="quiet" id="sources-button" aria-expanded="false">Источники ↗</button></div></header>
+ <section class="intro"><div><div class="eyebrow">Интерактивный обзор исследований</div><h1 id="page-title">То же качество.<br>Меньше затрат на обучение.</h1></div><p class="intro-note" id="intro-note">Двигайте размер модели. Все оптимизаторы обучаются одновременно до качества AdamW: видно, кто финиширует раньше, сколько это стоит и сколько GPU нужно под память.</p></section>
+ <nav class="domain-nav" aria-label="Область применения"><button class="domain active" data-domain="economy" aria-pressed="true"><small>00</small>Экономия на pretraining</button><button class="domain" data-domain="llm" aria-pressed="false"><small>01</small>Качество LLM</button><button class="domain" data-domain="tabular" aria-pressed="false"><small>02</small>Табличные задачи</button><button class="domain" data-domain="diffusion" aria-pressed="false"><small>03</small>Научная диффузия</button></nav>
+ <main>
+  <section class="workspace" id="workspace"><aside class="controls" id="controls" aria-label="Параметры сравнения"></aside><div id="result"></div></section>
+  <section id="sources-panel" hidden aria-label="Источники данных"><div class="result-head"><div><h2>Каждое число можно проверить</h2><p>Таблицы и кривые авторов. В калькуляторе коэффициенты получены интерполяцией, денежные затраты рассчитаны по введённым условиям.</p></div></div><div class="source-list" id="source-list"></div></section>
+ </main>
+ <footer class="footer"><span></span><span>Локальный прототип <strong>v0.2</strong> · Работает офлайн</span></footer>
+</div>
+<script src="data.js"></script>
+<script>
+'use strict';
+const D = window.DEMO_DATA;
+const state = {domain:'economy', metric:'MMLU PRO CoT', model:'nano', batch:'1', dataset:'california', method:'muon', epoch:1024};
+const $ = id => document.getElementById(id);
+const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = (value,digits=2) => new Intl.NumberFormat('ru-RU',{minimumFractionDigits:digits,maximumFractionDigits:digits}).format(value);
+const signed = (value,digits=2) => (value>0?'+':value<0?'−':'')+fmt(Math.abs(value),digits);
+const field = (label,id,options,value,disabled=false) => `<div class="field"><label for="${id}">${label}</label><select id="${id}" ${disabled?'disabled':''}>${options.map(([v,t])=>`<option value="${esc(v)}" ${String(v)===String(value)?'selected':''}>${esc(t)}</option>`).join('')}</select></div>`;
+const link = url => `<a class="source-link" target="_blank" rel="noopener noreferrer" href="${esc(url)}">Источник ↗</a>`;
+function header(title,subtitle,url){return `<div class="result-head"><div><div class="eyebrow">${state.domain==='diffusion' && state.epoch<1024?'Промежуточная оценка':'Качество итоговой модели'}</div><h2>${esc(title)}</h2><p>${esc(subtitle)}</p></div>${link(url)}</div>`;}
+function card(name,value,unit,uncertainty,detail,width,isNew){return `<section class="score-card ${isNew?'new':''}"><div class="method-name"><i class="swatch"></i>${esc(name)}</div><div class="number">${esc(value)} <span class="number-unit">${esc(unit)}</span></div><div class="uncertainty">${esc(uncertainty)}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(0,Math.min(100,width))}%"></div></div><div class="score-detail">${esc(detail)}</div></section>`;}
+function effect(number,text,note,positive){return `<div class="effect"><div class="effect-number ${positive?'':'negative'}">${esc(number)}</div><div class="effect-label">${esc(text)}<p class="subtle">${esc(note)}</p></div></div>`;}
+function bindSelect(id,key){$(id).addEventListener('change',e=>{state[key]=e.target.value;render();});}
+const money = value => new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',notation:'compact',maximumFractionDigits:1}).format(value);
+// One slider drives everything: model size N, Chinchilla tokens D=20N, compute 6ND.
+const OURS=['SoftMuon','LionMuon','SoftSignum','DyKAF','FRUGAL ρ=0','FRUGAL ρ=0,25'];
+const COLORS={AdamW:'adam',SoftMuon:'c1',LionMuon:'c2',SoftSignum:'c3',DyKAF:'c4','FRUGAL ρ=0':'c5','FRUGAL ρ=0,25':'c5 soft'};
+// Lab methods: speed-up over the parent method under the paper's own protocol, times the parent's factor in the common benchmark.
+const LAB={
+ SoftMuon:{parent:'Muon',ratio:1.025,ref:.22},
+ LionMuon:{parent:'Muon',ratio:1.162,ref:.355,preliminary:true},
+ DyKAF:{parent:'SOAP',ratio:1.21,ref:.124},
+ SoftSignum:{parent:'AdamW',ratio:1.081,ref:.13}};
+const STEP={AdamW:'поэл.',NAdamW:'поэл.',Cautious:'поэл.',Mars:'поэл.','Adam-Mini':'поэл.',Lion:'поэл.',SoftSignum:'поэл.',Muon:'NS',SoftMuon:'NS',Scion:'NS',LionMuon:'NS ½',SOAP:'Крон.',DyKAF:'Крон.',Kron:'Крон.'};
+const MEMORY={AdamW:'adam',NAdamW:'adam',Cautious:'adam',Mars:'mars','Adam-Mini':'momentum',Lion:'momentum',Scion:'momentum',SoftSignum:'momentum',Muon:'muon',SoftMuon:'muon',LionMuon:'muon',SOAP:'soap',DyKAF:'soap',Kron:'kron'};
+const LANDMARKS=[[1.3e8,'130M · бенчмарк'],[1e9,'1B'],[8e9,'8B'],[7e10,'70B'],[4.05e11,'405B']];
+const LIKE=[[1.3e8,'как модели из бенчмарка'],[1e9,'как Llama 3.2 1B'],[8e9,'как Llama 3 8B'],[7e10,'как Llama 3 70B'],[4.05e11,'как Llama 3.1 405B']];
+const VOCAB=32000,GPU_BYTES=80e9,PEAK_FLOPS=989e12,HOURS_MONTH=730;
+// FRUGAL, arXiv 2411.07837 Table 2: LLaMA on C4, validation perplexity and optimizer-state memory (GB).
+const FRUGAL={sizes:[6e7,1.3e8,3.5e8,1e9],rows:{AdamW:{ppl:[22.73,18.13,14.43,12.02],mem:[.43,1,2.74,9.98]},'FRUGAL ρ=0':{ppl:[24.06,18.9,15.03,12.63],mem:[.24,.37,.49,.98]},'FRUGAL ρ=0,25':{ppl:[23.59,18.6,14.79,12.32],mem:[.29,.52,1.05,3.23]},'BAdam ρ=0,25':{ppl:[24.86,20.34,16.41,13.75],mem:[.29,.52,1.05,3.23]},'GaLore ρ=0,25':{ppl:[25.68,21.11,16.88,13.69],mem:[.3,.54,1.1,3.41]}}};
+const MEM_NAMES=['AdamW','FRUGAL ρ=0','FRUGAL ρ=0,25','SoftSignum','SoftMuon','LionMuon','GaLore ρ=0,25'];
+const costState={position:Math.log10(8e9),rate:250,mfu:40,maxDays:182.5,raced:false};
+// Cluster size: the smallest power of two, at least one 8×H100 node, that finishes AdamW training within maxDays.
+const clusterFor=hours=>Math.max(8,2**Math.ceil(Math.log2(hours/(costState.maxDays*24))));
+const sizeAt=position=>10**position;
+function shape(N){
+ // LLaMA-like: 12·L·d² in blocks, L=d/128, tied-free embedding and head of VOCAB×d.
+ let lo=64,hi=65536;for(let i=0;i<60;i++){const d=(lo+hi)/2;(12*d**3/128+2*VOCAB*d>N)?hi=d:lo=d;}
+ const d=lo,L=Math.max(2,d/128);return {d,L,f:8*d/3};
+}
+// fp32 state floats per parameter. SOAP/DyKAF on blocked weights (b×b blocks): m, v plus L, R, Q_L, Q_R = 6.
+// Kron: momentum plus two blocked triangular factors = 3. Muon-type methods train embeddings and head with AdamW.
+const STATE_FLOATS={adam:2,mars:3,momentum:1,muon:1,soap:6,kron:3};
+const stateFloats=(kind,m,n,embedding)=>(kind==='muon'&&embedding?2:STATE_FLOATS[kind])*m*n;
+function memory(name,N){
+ // bf16 weights and grads + fp32 master copy (8 bytes) + fp32 optimizer state.
+ const base=N*8;let state;
+ if(FRUGAL.rows[name]&&name!=='AdamW')state=8*N*FRUGAL.rows[name].mem[3]/FRUGAL.rows.AdamW.mem[3];
+ else{const {d,L,f}=shape(N),kind=MEMORY[name];
+  const floats=L*(4*stateFloats(kind,d,d,false)+3*stateFloats(kind,d,f,false))+2*stateFloats(kind,VOCAB,d,true);
+  state=floats/(L*(4*d*d+3*d*f)+2*VOCAB*d)*N*4;}
+ return {base,state,total:base+state,gpus:Math.ceil((base+state)/GPU_BYTES)};
+}
+// Speed-up over AdamW versus model size N (billions). Medians per scale: 130M/300M/520M from Fantastic Appendix B.4 (data.js),
+// 1.2B from Fantastic Tables 160–175 (best loss at 1–8× Chinchilla). Excess speed-up k−1 decays as N^−GAMMA,
+// GAMMA fitted jointly on Muon, SOAP and NAdamW, the methods measured up to 1.2B.
+const GAMMA=.456;
+const BIG={AdamW:[2.904,2.836,2.787,2.752],NAdamW:[2.902,2.833,2.785,2.749],SOAP:[2.94,2.829,2.783,2.749],Muon:[2.886,2.827,2.78,2.748]};
+const median=a=>{a=[...a].sort((x,y)=>x-y);const n=a.length;return n%2?a[(n-1)/2]:(a[n/2-1]+a[n/2])/2;};
+function tokensAt(budgets,losses,target){for(let i=1;i<budgets.length;i++)if(losses[i]<=target&&target<=losses[i-1])return Math.exp(Math.log(budgets[i-1])+(target-losses[i-1])/(losses[i]-losses[i-1])*Math.log(budgets[i]/budgets[i-1]));return null;}
+const SCALING=Object.fromEntries(D.economy.methods.filter(m=>!LAB[m.name]).map(m=>{
+ const byScale={};for(const s of m.scenarios){const scale=Number(s.id.split('-').slice(-2)[0])/1000;(byScale[scale]=byScale[scale]||[]).push(s.factor);}
+ const points=Object.entries(byScale).map(([n,f])=>[Number(n),median(f)]).sort((a,b)=>a[0]-b[0]);
+ if(BIG[m.name]){const f=BIG.AdamW.map((t,i)=>{const n=tokensAt([1,2,4,8],BIG[m.name],t);return n&&2**i/n;}).filter(Boolean);points.push([1.2,median(f)]);}
+ const decays=points.every(p=>p[1]>1);
+ return [m.name,{points,decays,amp:decays?Math.exp(points.reduce((a,[n,k])=>a+Math.log(k-1)+GAMMA*Math.log(n),0)/points.length):0,flat:median(points.map(p=>p[1]))}];
+}));
+function baseFactor(name,N){if(name==='AdamW')return 1;const s=SCALING[name];return s.decays?1+s.amp*N**-GAMMA:s.flat;}
+function factorAt(name,N){
+ const lab=LAB[name];if(!lab)return baseFactor(name,N);
+ const ratio=N<=lab.ref?lab.ratio:1+(lab.ratio-1)*(N/lab.ref)**-GAMMA;
+ return baseFactor(lab.parent,N)*ratio;
+}
+// Optimizer-step time relative to AdamW's update. Element-wise updates are memory-bound: AdamW moves ~28 bytes per
+// parameter (fp32 master, m, v, bf16 grad and copy), sign-type methods with one momentum ~20 bytes. Measured on 1×H200,
+// LLaMA-124M, 131 072 tokens/step, the whole step grows by Muon +11,1%, SOAP +25,2%, DyKAF +30,1% over AdamW; divided by
+// AdamW's update share of that step this gives the optimizer-step ratios below. Newton–Schulz scales with width d,
+// blocked Kronecker does not. LionMuon runs Newton–Schulz every second step.
+const HBM_BW=3.35e12,ELEM=20/28;
+const updateShare=N=>28*PEAK_FLOPS*costState.mfu/100/(6*batchTokens(N)*HBM_BW);
+const batchTokens=N=>Math.max(131072,.292*(120*N*N)**.3271);
+const NS_124M=1+.111/updateShare(0)-ELEM;
+const OPT_RATIO={AdamW:()=>1,SoftSignum:()=>ELEM,Muon:N=>ELEM+NS_124M*shape(N).d/768,SoftMuon:N=>ELEM+NS_124M*shape(N).d/768,LionMuon:N=>ELEM+NS_124M*shape(N).d/768/2,SOAP:()=>1+.252/updateShare(0),DyKAF:()=>1+.301/updateShare(0)};
+const optRatio=(name,N)=>OPT_RATIO[name](N);
+// Extra wall-clock per training step over AdamW.
+const stepOverhead=(name,N)=>(optRatio(name,N)-1)*updateShare(N);
+const MONEY_NAMES=['AdamW','LionMuon','DyKAF','SoftMuon','SoftSignum','Muon','SOAP'];
+function project(settings){
+ const N=sizeAt(settings.position),tokens=20*N,flops=6*N*tokens;
+ const hours=flops/(PEAK_FLOPS*settings.mfu/100*3600),gpus=clusterFor(hours);
+ const lanes=MONEY_NAMES.map(name=>{const tokenFactor=factorAt(name,N/1e9),overhead=stepOverhead(name,N),factor=tokenFactor/(1+overhead),h=hours/factor;
+  return {name,ours:OURS.includes(name),tokenFactor,overhead,factor,hours:h,saved:(hours-h)*settings.rate,days:h/gpus/24};});
+ const mem=MEM_NAMES.map(name=>({name,ours:OURS.includes(name),memory:memory(name,N)}));
+ for(const m of mem){m.freed=mem[0].memory.gpus-m.memory.gpus;m.monthly=m.freed*settings.rate*HOURS_MONTH;}
+ return {N,tokens,flops,hours,gpus,cost:hours*settings.rate,lanes,mem};
+}
+function duration(days){
+ if(days<1/24)return fmt(days*1440,0)+' мин';if(days<2)return fmt(days*24,days*24<10?1:0)+' ч';
+ if(days<60)return fmt(days,days<10?1:0)+' сут';if(days<730)return fmt(days/30.4,1)+' мес';return fmt(days/365,1)+' лет';
+}
+const paramsText=N=>N>=1e9?fmt(N/1e9,N<1e10?1:0)+'B':fmt(N/1e6,0)+'M';
+const tokensText=T=>T>=1e12?fmt(T/1e12,1)+'T':fmt(T/1e9,T<1e10?1:0)+'B';
+const view={};let frame=0;
+function ease(key,target,rate=.16){const v=view[key];view[key]=v===undefined||!isFinite(v)?target:v+(target-v)*rate;if(Math.abs(view[key]-target)<=Math.abs(target)*1e-4)view[key]=target;return view[key];}
+// AdamW stays on the first row as the reference; the rest are ranked, lab methods and others mixed.
+const ranked=(rows,key)=>[rows[0],...rows.slice(1).sort((a,b)=>key(a)-key(b))];
+const race={start:0,duration:3600,running:false};
+function startRace(){race.start=performance.now();race.running=true;costState.raced=true;document.querySelectorAll('#money .lane').forEach(l=>l.classList.remove('finished','pop'));tick();}
+function tick(){cancelAnimationFrame(frame);frame=requestAnimationFrame(drawEconomy);}
+const place=(id,order)=>order.forEach((r,i)=>{$(id+'-'+r.name).style.transform=`translateY(${i*100}%)`;});
+function setWinner(id,row,value,note){const el=$('win-'+id);el.querySelector('.tag').textContent=row.name+(LAB[row.name]&&LAB[row.name].preliminary?'*':'');el.querySelector('.tag').className='tag '+COLORS[row.name];el.querySelector('strong').textContent=value;el.querySelector('small').textContent=note;}
+function drawEconomy(){
+ if(!$('scale'))return;
+ const p=project(costState);
+ let moving=false;const track=(key,target)=>{const v=ease(key,target);if(v!==target)moving=true;return v;};
+ $('scale-params').textContent=paramsText(p.N);$('scale-tokens').textContent=tokensText(p.tokens);
+ $('scale-hours').textContent=fmt(p.hours,0)+' GPU·ч';$('scale-money').textContent=money(p.cost);
+ $('scale-days').textContent=duration(p.hours/p.gpus/24)+' на '+fmt(p.gpus,0)+' H100';
+ const like=LIKE.find(([n])=>Math.abs(Math.log(n/p.N))<.12);
+ $('scale-hint').innerHTML=`<b>${paramsText(p.N)}</b>${like?' — '+like[1]:''}. 20 токенов на параметр, аренда H100 ${fmt(costState.rate,0)} ₽/ч, загрузка GPU ${fmt(costState.mfu,0)}%.`;
+ // 1. Money: race to AdamW quality in wall-clock time.
+ const scale=p.hours*1.08,progress=race.running?Math.min(1,(performance.now()-race.start)/race.duration):1;
+ if(race.running&&progress>=1)race.running=false;
+ const slowest=Math.max(...p.lanes.map(l=>l.hours)),clock=race.running?slowest*easeRace(progress):Infinity;
+ const lanes=ranked(p.lanes,l=>l.hours);place('money',lanes);
+ for(const l of lanes){
+  const row=$('money-'+l.name),finished=clock>=l.hours-1e-9,finishAt=l.hours/scale*100,adamAt=100/1.08;
+  row.querySelector('.fill').style.width=track('w'+l.name,Math.min(clock,l.hours)/scale*100)+'%';
+  row.querySelector('.gap').style.cssText=`left:${Math.min(finishAt,adamAt)}%;width:${finished?Math.abs(adamAt-finishAt):0}%`;
+  if(finished&&!row.classList.contains('finished')&&race.running)row.classList.add('pop');
+  row.classList.toggle('finished',finished);
+  row.querySelector('.k').textContent=fmt(l.factor)+'×';
+  row.querySelector('.value').textContent=l.name==='AdamW'?money(track('c'+l.name,p.cost)):finished?'−'+money(track('s'+l.name,l.saved)):'…';
+ }
+ const fastest=p.lanes.filter(l=>l.ours).reduce((a,b)=>a.saved>b.saved?a:b),published=p.lanes.filter(l=>l.ours&&!LAB[l.name].preliminary).reduce((a,b)=>a.saved>b.saved?a:b);
+ setWinner('money',fastest,'−'+money(track('wm',fastest.saved)),`${fmt((1-1/fastest.factor)*100,1)}% бюджета`);
+ setWinner('published',published,'−'+money(track('wp',published.saved)),'среди опубликованных');
+ // 2. Memory: GPUs needed to hold weights, gradients and optimizer state.
+ const mems=ranked(p.mem,m=>m.memory.total),adam=p.mem[0],unit=adam.memory.gpus>40?8:1;place('mem',mems);
+ for(const m of mems){
+  const row=$('mem-'+m.name);
+  row.querySelector('.base').style.width=track('mb'+m.name,m.memory.base/adam.memory.total*66)+'%';
+  row.querySelector('.state').style.width=track('ms'+m.name,m.memory.state/adam.memory.total*66)+'%';
+  const box=row.querySelector('.chips'),chips=Math.ceil(m.memory.gpus/unit);
+  while(box.children.length<chips)box.appendChild(document.createElement('i'));
+  while(box.children.length>chips)box.lastChild.remove();
+  row.querySelector('.k').textContent=fmt(m.memory.gpus,0)+' GPU';
+  row.querySelector('.value').textContent=m.name==='AdamW'?money(m.memory.gpus*costState.rate*HOURS_MONTH)+'/мес':m.freed?'−'+money(track('mm'+m.name,m.monthly))+'/мес':'как AdamW';
+ }
+ $('chip-unit').textContent=unit===8?'квадрат = 8 H100':'квадрат = 1 H100';
+ const lightest=p.mem.filter(m=>m.ours).reduce((a,b)=>a.memory.total<b.memory.total?a:b);
+ setWinner('mem',lightest,'−'+fmt(track('wg',(adam.memory.total-lightest.memory.total)/1e9),0)+' ГБ',`${fmt(lightest.memory.gpus,0)} H100 вместо ${fmt(adam.memory.gpus,0)}${lightest.freed?' · −'+money(lightest.monthly)+' в месяц':''}`);
+ // 3. Step cost: optimizer overhead per step.
+ const opt=l=>optRatio(l.name,p.N),steps=ranked(p.lanes,opt);place('step',steps);
+ for(const l of steps){
+  const row=$('step-'+l.name),r=opt(l);
+  row.querySelector('.fill').style.width=track('st'+l.name,Math.log(r/.5)/Math.log(1000/.5)*100)+'%';
+  row.querySelector('.value').textContent=r<1?'на '+fmt((1-r)*100,0)+'% быстрее':r<1.005?'эталон':'в '+times(track('so'+l.name,r))+' дольше';
+  row.title=`Шаг оптимизатора ×${fmt(r,2)} от AdamW, ко всему шагу обучения ${l.overhead<0?'−':'+'}${fmt(Math.abs(l.overhead)*100,2)}%`;
+ }
+ // Among matrix methods, where the step itself is the cost: Newton–Schulz grows with width, blocked Kronecker does not.
+ const muon=optRatio('Muon',p.N),cheapest=p.lanes.filter(l=>l.ours&&l.name!=='SoftSignum').reduce((a,b)=>opt(a)<opt(b)?a:b);
+ setWinner('step',cheapest,'на '+fmt(track('ws',(1-opt(cheapest)/muon)*100),0)+'% быстрее',`шаг оптимизатора Muon · SoftSignum на ${fmt((1-optRatio('SoftSignum',p.N))*100,0)}% быстрее AdamW`);
+ // 4. Speed-up versus model size.
+ for(const l of p.lanes){const pt=$('sc-pt-'+l.name);if(pt){pt.setAttribute('cx',scX(p.N/1e9));pt.setAttribute('cy',SPEED_CHART.y(l.tokenFactor));}}
+ moveCursor('sc',p.N);
+ $('race-clock').textContent=race.running?duration(clock/p.gpus/24):'';
+ if(moving||race.running)tick();
+}
+// Russian count form for a multiplier: «в 2,5 раза», «в 3 раза», «в 61 раз».
+const times=x=>{const n=Math.round(x),whole=x>=10||Math.abs(x-n)<.05,v=whole?n:x,last=n%10,teen=n%100>10&&n%100<15;return fmt(v,whole?0:1)+(whole&&(teen||last<2||last>4)?' раз':' раза');};
+const easeRace=t=>t<.5?2*t*t:1-(-2*t+2)**2/2;
+const mark=name=>`<i class="mark ${COLORS[name]||'other'}"></i><b>${esc(name)}</b>${LAB[name]&&LAB[name].preliminary?'<sup title="Предварительный результат">*</sup>':''}`;
+const lane=(id,name,body,extra='')=>`<div class="lane ${id==='mem'?'mem-lane':''} ${OURS.includes(name)?'ours':''} ${name==='AdamW'?'base':''}" id="${id}-${esc(name)}"><div class="lane-name">${mark(name)}${extra}<span class="k"></span></div>${body}<div class="lane-money"><span class="value"></span></div></div>`;
+const bar=name=>`<div class="lane-track"><div class="fill ${COLORS[name]||'other'}"></div><div class="gap"></div></div>`;
+const panel=(id,title,legend,rows,note,extra='')=>`<section class="board quad"><div class="board-head"><h3>${title}</h3>${extra}</div><div class="lane-legend quad-legend">${legend}</div><div class="lanes" id="${id}" style="height:calc(${rows} * var(--row))">${note}</div></section>`;
+// Shared line chart over model size (log x) with a cursor that follows the slider.
+const CH={w:640,h:236,l:44,r:92,t:12,b:30,x0:8,x1:11.7};
+const scX=N=>CH.l+(Math.log10(N*1e9)-CH.x0)/(CH.x1-CH.x0)*(CH.w-CH.l-CH.r);
+const chartY=(y0,y1)=>v=>CH.t+(y1-Math.min(y1,Math.max(y0,v)))/(y1-y0)*(CH.h-CH.t-CH.b);
+const SPEED_CHART={id:'sc',names:['SOAP','Muon','SoftSignum','SoftMuon','DyKAF','LionMuon'],value:factorAt,y:chartY(.95,1.6),ticks:[1,1.1,1.2,1.3,1.4,1.5],tick:v=>fmt(v,1)+'×',base:1,
+ dots:()=>['Muon','SOAP'].flatMap(n=>SCALING[n].points.map(([N,k])=>[n,N,k,'sc-dot'])).concat(Object.entries(LAB).map(([n,l])=>[n,l.ref,factorAt(n,l.ref),'sc-ring']))};
+function lineChart(c){
+ const grid=Array.from({length:61},(_,i)=>10**(CH.x0+i/60*(CH.x1-CH.x0)-9)),mine=n=>OURS.includes(n);
+ const path=n=>grid.map((N,i)=>`${i?'L':'M'}${scX(N).toFixed(1)},${c.y(c.value(n,N)).toFixed(1)}`).join('');
+ const end=10**(CH.x1-9);const labels=c.names.map(n=>({n,y:c.y(c.value(n,end))})).sort((a,b)=>a.y-b.y);
+ for(let i=1;i<labels.length;i++)labels[i].y=Math.max(labels[i].y,labels[i-1].y+12);
+ const over=labels.length?labels[labels.length-1].y-(CH.h-CH.b):0;if(over>0)labels.forEach(l=>l.y-=over);
+ const ticksX=[[1e8,'100M'],[1e9,'1B'],[1e10,'10B'],[1e11,'100B']].map(([N,t])=>`<text x="${scX(N/1e9)}" y="${CH.h-10}" text-anchor="middle">${t}</text>`).join('');
+ const ticksY=c.ticks.map(v=>`<line x1="${CH.l}" x2="${CH.w-CH.r}" y1="${c.y(v)}" y2="${c.y(v)}" class="${v===c.base?'sc-base':'sc-grid'}"/><text x="${CH.l-8}" y="${c.y(v)+4}" text-anchor="end">${c.tick(v)}</text>`).join('');
+ return `<svg class="sc-chart" viewBox="0 0 ${CH.w} ${CH.h}" role="img" aria-label="Ускорение над AdamW в зависимости от размера модели">${ticksY}${ticksX}${c.names.map(n=>`<path class="sc-line ${COLORS[n]||'other'}" d="${path(n)}" stroke-width="${mine(n)?2.5:1.3}"/>`).join('')}${c.dots().map(([n,N,v,cls])=>`<circle class="${cls} ${COLORS[n]||'other'}" cx="${scX(N)}" cy="${c.y(v)}" r="${cls==='sc-ring'?5:3.5}"><title>${n}, ${paramsText(N*1e9)}: ${fmt(v)}×</title></circle>`).join('')}${labels.map(l=>`<text x="${CH.w-CH.r+8}" y="${l.y+4}" class="sc-label">${l.n}</text>`).join('')}<line id="${c.id}-cursor" y1="${CH.t}" y2="${CH.h-CH.b}" class="sc-cursor"/>${c.names.map(n=>`<circle id="${c.id}-pt-${n}" r="${mine(n)?5:3.5}" class="sc-pt ${COLORS[n]||'other'}"/>`).join('')}</svg>`;
+}
+function moveCursor(id,N){const x=scX(N/1e9),line=$(id+'-cursor');if(line){line.setAttribute('x1',x);line.setAttribute('x2',x);}}
+function renderEconomy(){
+ const ticks=LANDMARKS.map(([N,t])=>`<button class="landmark" data-size="${Math.log10(N)}" style="left:${(Math.log10(N)-8)/(11.7-8)*100}%">${t}</button>`).join('');
+ const win=(id,title)=>`<div class="win" id="win-${id}"><span class="eyebrow">${title}</span><div><span class="tag"></span><strong></strong></div><small></small></div>`;
+ const memBody=name=>`<div class="mem-body"><div class="stack"><span class="base"></span><span class="state ${COLORS[name]||'other'}"></span></div><div class="chips ${COLORS[name]||'other'}"></div></div>`;
+ $('controls').innerHTML='';
+ $('result').innerHTML=`<div class="scale-dock"><div class="scale-read"><div><span class="eyebrow">Размер модели</span><strong id="scale-params"></strong></div><div><span class="eyebrow">Токенов</span><strong id="scale-tokens"></strong></div><div><span class="eyebrow">Вычислений с AdamW</span><strong id="scale-hours"></strong></div><div><span class="eyebrow">Стоимость с AdamW</span><strong id="scale-money"></strong></div><div><span class="eyebrow">Срок с AdamW</span><strong id="scale-days"></strong></div></div><input type="range" id="scale" min="8" max="11.7" step="any" value="${costState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div><p class="scale-hint" id="scale-hint"></p></div>
+ <div class="wins">${win('money','Дешевле всего обучить')}${win('published','Лучший опубликованный')}${win('mem','Меньше всего памяти')}${win('step','Самый лёгкий матричный шаг')}</div>
+ <div class="quads">
+ ${panel('money','Гонка до качества AdamW','<span>метод · ускорение</span><span>время обучения</span><span>экономия</span>',MONEY_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:${100/1.08}%"></div></div>`+MONEY_NAMES.map(n=>lane('money',n,bar(n))).join(''),'<span class="meta" id="race-clock"></span><button class="play" id="play">▶ Заново</button>')}
+ ${panel('mem','Память GPU под обучение','<span>метод · GPU</span><span><i class="key base"></i>веса и градиенты <i class="key st"></i>состояние</span><span>аренда минимума</span>',MEM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:66%"></div></div>`+MEM_NAMES.map(n=>lane('mem',n,memBody(n))).join(''),'<span class="meta" id="chip-unit"></span>')}
+ ${panel('step','Цена одного шага','<span>метод · тип шага</span><span>время шага оптимизатора, лог. шкала</span><span>к AdamW</span>',MONEY_NAMES.length,MONEY_NAMES.map(n=>lane('step',n,`<div class="lane-track"><div class="fill ${COLORS[n]||'other'}"></div></div>`,`<span class="steptag">${STEP[n]}</span>`)).join(''))}
+ <section class="board quad"><div class="board-head"><h3>Ускорение по данным и размер модели</h3></div>${lineChart(SPEED_CHART)}</section>
+ </div>`;
+ for(const b of document.querySelectorAll('.landmark'))b.addEventListener('click',()=>{costState.position=Number(b.dataset.size);$('scale').value=costState.position;tick();});
+ $('scale').addEventListener('input',e=>{costState.position=Number(e.target.value);tick();});
+ $('play').addEventListener('click',startRace);
+ if(!costState.raced)startRace();else tick();
+}
+function llmValues(row){return state.model==='nano'?[row.adamw1,row['muon'+state.batch]]:[row.hybrid_adamw1,row.hybrid_muon2];}
+function renderLLM(){
+ const hybrid=state.model==='hybrid';const batch=hybrid?'2':state.batch;
+ $('controls').innerHTML=`<div class="step">01 / ВЫБЕРИТЕ УСЛОВИЯ</div>`+
+ field('Модель','model',[['nano','Nemotron Nano-V3'],['hybrid','8B Hybrid MTP']],state.model)+
+ field('Задача / метрика','metric',D.llm.map(r=>[r.name,r.name]),state.metric)+
+ field('Batch Muon относительно AdamW','batch',[['1','1× · одинаковый batch'],['2','2× · увеличенный batch'],['3','3× · увеличенный batch']],batch,hybrid)+
+ `<div class="protocol-badge">${batch==='1'?'Архитектура и batch фиксированы':'Размер batch различается'}</div><p class="control-description">${hybrid?'72B параметров, 8B активных. Горизонт обучения — 1T токенов.':'30B параметров, 3B активных. Горизонт обучения — 3T токенов.'} Числа взяты из Table 5.</p><div class="stats-foot"><div><strong>15</strong><span>метрик качества</span></div><div><strong>2</strong><span>архитектуры</span></div></div>`;
+ bindSelect('model','model');bindSelect('metric','metric');bindSelect('batch','batch');
+ const row=D.llm.find(r=>r.name===state.metric);const [a,b]=llmValues(row);const delta=b-a;
+ const cards=card('AdamW · 1× batch',fmt(a),'баллов','Опубликованная оценка','Шкала метрики: 0–100',a,false)+card('Muon · '+batch+'× batch',fmt(b),'баллов','Опубликованная оценка','Та же задача и архитектура',b,true);
+ $('result').innerHTML=header(row.name,(hybrid?'8B Hybrid MTP · 1T токенов':'Nemotron Nano-V3 · 3T токенов')+' · выше — лучше',D.sources[0].url)+`<div class="comparison">${cards}</div>`+
+ effect(signed(delta)+' п.п.',delta>=0?'Оценка модели с Muon выше, чем с AdamW.':'На этой задаче оценка модели с AdamW выше.',batch==='1'?'Одинаковый размер batch у обоих оптимизаторов.':'Здесь меняются и оптимизатор, и batch. Это сравнение двух режимов обучения.',delta>=0)+
+ `<section class="evidence"><div class="evidence-head"><h3>Что происходит на других задачах</h3><span class="meta">Δ к AdamW, п.п.</span></div><div class="metric-grid">${D.llm.map(r=>{const [x,y]=llmValues(r);return `<button class="metric-button ${r.name===state.metric?'active':''}" data-metric="${esc(r.name)}" aria-pressed="${r.name===state.metric}"><span>${esc(r.name)}</span><b class="${y<x?'negative':''}">${signed(y-x)}</b></button>`;}).join('')}</div><p class="note">Таблица авторов не содержит разброса по повторам: различия здесь описательные, без утверждения о статистической значимости. Эти оценки не заменяют примеры ответов модели.</p></section>`;
+ document.querySelectorAll('[data-metric]').forEach(b=>b.addEventListener('click',()=>{state.metric=b.dataset.metric;render();}));
+}
+function seedPlot(row){
+ const values=[...row.methods.adamw.values,...row.methods.muon.values];const low=Math.min(...values),high=Math.max(...values);const pad=(high-low)*.15||.001;const lo=low-pad,hi=high+pad;const x=v=>110+650*(v-lo)/(hi-lo);
+ return `<svg class="seed-plot" viewBox="0 0 800 135" role="img" aria-label="Результаты десяти независимых обучений для каждого оптимизатора"><line x1="110" y1="103" x2="760" y2="103" stroke="var(--line)"/>${[0,.25,.5,.75,1].map(t=>`<text x="${110+650*t}" y="128" text-anchor="middle">${fmt(lo+(hi-lo)*t,row.lower?3:4)}</text>`).join('')}${['adamw','muon'].map((method,j)=>`<text x="5" y="${38+j*45}">${method==='adamw'?'AdamW':'Muon'}</text>${row.methods[method].values.map((v,i)=>`<circle cx="${x(v)}" cy="${34+j*45+((i%3)-1)*7}" r="4" fill="var(--${j?'new':'adam'})" opacity=".8"><title>Seed ${i}: ${v}</title></circle>`).join('')}<line x1="${x(row.methods[method].mean)}" x2="${x(row.methods[method].mean)}" y1="${18+j*45}" y2="${50+j*45}" stroke="var(--text)" stroke-width="2"/>`).join('')}</svg>`;
+}
+function renderTabular(){
+ const row=D.tabular.find(r=>r.id===state.dataset);const a=row.methods.adamw,b=row.methods.muon;const multiplier=row.lower?1:100;const digits=row.lower?(a.mean>100?0:4):2;const delta=row.lower?(a.mean-b.mean)/a.mean*100:(b.mean-a.mean)*100;const unit=row.lower?'RMSE':row.metric==='roc-auc'?'AUC × 100':'accuracy, %';const max=row.lower?Math.max(a.mean,b.mean)*1.15:1;
+ $('controls').innerHTML=`<div class="step">02 / ВЫБЕРИТЕ ЗАДАЧУ</div>`+field('Прикладная задача','dataset',D.tabular.map(r=>[r.id,r.dataset+' · '+r.name]),state.dataset)+`<div class="protocol-badge">Лучшие настроенные MLP</div><p class="control-description">Подбор оптимизатора и параметров модели проводился совместно. Архитектуры AdamW и Muon могут различаться. Финальное качество измерено на тестовой выборке.</p><div class="stats-foot"><div><strong>17</strong><span>датасетов</span></div><div><strong>10</strong><span>seeds на метод</span></div></div>`;
+ bindSelect('dataset','dataset');
+ $('result').innerHTML=header(row.name,row.dataset+' · '+unit+' · '+(row.lower?'ниже':'выше')+' — лучше',D.sources[1].url)+`<div class="comparison">`+
+ card('AdamW',fmt(a.mean*multiplier,digits),row.lower?'':'/ 100','± '+fmt(a.sd*multiplier,digits)+' SD · 10 seeds','Обучение: '+fmt(a.seconds,1)+' с',a.mean/max*100,false)+
+ card('Muon',fmt(b.mean*multiplier,digits),row.lower?'':'/ 100','± '+fmt(b.sd*multiplier,digits)+' SD · 10 seeds','Обучение: '+fmt(b.seconds,1)+' с',b.mean/max*100,true)+`</div>`+
+ effect((row.lower?(delta>=0?'−':'+')+fmt(Math.abs(delta))+'%':signed(delta)+' п.п.'),row.lower?(delta>=0?'Ниже средняя ошибка прогноза у конфигурации с Muon.':'Выше средняя ошибка прогноза у конфигурации с Muon.'):(delta>=0?'Выше средняя тестовая оценка у конфигурации с Muon.':'Ниже средняя тестовая оценка у конфигурации с Muon.'),'Время обучения Muon / AdamW: '+fmt(b.seconds/a.seconds)+'×. Время поиска гиперпараметров не включено.',delta>=0)+
+ `<section class="evidence"><div class="evidence-head"><h3>Каждая точка — одно обучение</h3><span class="meta">Черта — среднее</span></div>${seedPlot(row)}<details class="note"><summary>Условия и выбранные архитектуры</summary><p>AdamW: ${esc(JSON.stringify(a.architecture.backbone))}<br>Muon: ${esc(JSON.stringify(b.architecture.backbone))}</p><p>${link(a.source)} AdamW &nbsp; ${link(b.source)} Muon</p><p>Среднее ± выборочное стандартное отклонение по 10 seeds. Различие средних само по себе не означает статистическую значимость. Единицы RMSE — в шкале датасета после его обработки, без пересчёта в деньги или минуты.</p></details></section>`;
+}
+function diffusionPlot(){
+ const W=800,H=210,left=58,right=778,top=12,bottom=180;const min=.005,max=2;const xx=e=>left+(right-left)*(e-1)/1023;const yy=v=>bottom-(Math.log10(v)-Math.log10(min))/(Math.log10(max)-Math.log10(min))*(bottom-top);
+ return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Кривые validation loss трёх оптимизаторов. Логарифмическая шкала по вертикали.">${[.01,.03,.1,.3,1].map(v=>`<line x1="${left}" x2="${right}" y1="${yy(v)}" y2="${yy(v)}" stroke="var(--line)" stroke-dasharray="3 5"/><text x="${left-10}" y="${yy(v)+4}" text-anchor="end">${v}</text>`).join('')}${[1,256,512,768,1024].map(e=>`<text x="${xx(e)}" y="203" text-anchor="middle">${e}</text>`).join('')}${['adamw','muon','soap'].map((method,j)=>{const series=D.diffusion[method].series;const points=series.filter((_,i)=>i%4===0||i===1023).map(p=>`${xx(p.epoch)},${yy(p.ema)}`).join(' ');const p=series[state.epoch-1];return `<polyline points="${points}" fill="none" stroke="var(--${['adam','new','soap'][j]})" stroke-width="${method===state.method?2.6:1.6}" opacity="${method===state.method||method==='adamw'?1:.6}"/><circle cx="${xx(p.epoch)}" cy="${yy(p.ema)}" r="4" fill="var(--${['adam','new','soap'][j]})"/>`;}).join('')}<line x1="${xx(state.epoch)}" x2="${xx(state.epoch)}" y1="${top}" y2="${bottom}" stroke="var(--muted)" stroke-dasharray="4 4"/></svg>`;
+}
+function diffusionSummary(){
+ const a=D.diffusion.adamw.series[state.epoch-1],b=D.diffusion[state.method].series[state.epoch-1];const delta=(a.display_loss-b.display_loss)/a.display_loss*100;const max=Math.max(a.display_loss,b.display_loss)*1.15;const method=state.method==='muon'?'Muon':'SOAP';
+ return header('Восстановление физических траекторий','Validation denoising loss · ниже — лучше',D.sources[2].url)+`<div class="comparison">`+
+ card('AdamW',fmt(a.display_loss,5),'','± '+fmt(a.sd,5)+' SD · 3 seeds','Чистое время обучения: '+fmt(a.train_minutes,1)+' мин',a.display_loss/max*100,false)+
+ card(method,fmt(b.display_loss,5),'','± '+fmt(b.sd,5)+' SD · 3 seeds','Чистое время обучения: '+fmt(b.train_minutes,1)+' мин',b.display_loss/max*100,true)+`</div>`+
+ effect((delta>=0?'−':'+')+fmt(Math.abs(delta),1)+'%',(delta>=0?'Меньше':'Больше')+' ошибка восстановления у '+method+' на эпохе '+state.epoch+'.',state.epoch===1024?'Финальные модели после полного обучения.':'Точка одной траектории обучения, а не отдельный запуск с коротким бюджетом.',delta>=0);
+}
+function renderDiffusion(){
+ $('controls').innerHTML=`<div class="step">03 / ВЫБЕРИТЕ ОПТИМИЗАТОР</div>`+field('Сравнить с AdamW','method',[['muon','Muon'],['soap','SOAP']],state.method)+`<div class="protocol-badge">Одинаковые модель и эпохи</div><p class="control-description">U-Net с 22,9M параметров восстанавливает зашумлённые траектории течения жидкости. Для каждого оптимизатора в статье настроены learning rate и weight decay.</p><div class="stats-foot"><div><strong>1 024</strong><span>эпохи обучения</span></div><div><strong>3</strong><span>seeds на метод</span></div></div>`;bindSelect('method','method');
+ $('result').innerHTML=`<div id="diffusion-summary">${diffusionSummary()}</div>`+
+ `<section class="evidence"><div class="evidence-head"><h3>Как формируется результат</h3><div class="legend"><span><i style="background:var(--adam)"></i>AdamW</span><span><i style="background:var(--new)"></i>Muon</span><span><i style="background:var(--soap)"></i>SOAP</span></div></div><div id="curve">${diffusionPlot()}</div><div class="slider-row"><label for="epoch" class="meta">ЭПОХА</label><input id="epoch" type="range" min="32" max="1024" step="32" value="${state.epoch}" aria-label="Эпоха обучения"><output class="slider-value" for="epoch">${state.epoch} / 1024</output></div><div class="slider-labels"><span>Начало обучения</span><span>Финальная модель</span></div><p class="note">Кривые: EMA 0,95, логарифмическая шкала. Числа: среднее по последним пяти эпохам, затем по трём seeds; ± SD между seeds. Измеряется ошибка восстановления, не FID или качество фотографий. Время исключает оценку и прочие накладные расходы.</p></section>`;
+ $('epoch').addEventListener('input',e=>{state.epoch=Number(e.target.value);$('diffusion-summary').innerHTML=diffusionSummary();$('curve').innerHTML=diffusionPlot();document.querySelector('output[for="epoch"]').textContent=state.epoch+' / 1024';});
+}
+function render(){
+ const economy=state.domain==='economy';$('workspace').classList.toggle('economy',economy);document.body.classList.toggle('economy-view',economy);
+ $('page-title').innerHTML=economy?'То же качество. <br>Меньше затрат на обучение.':'Как оптимизатор<br>меняет качество модели';
+ $('intro-note').textContent=economy?'Двигайте размер модели. Все оптимизаторы обучаются одновременно до качества AdamW: видно, кто финиширует раньше, сколько это стоит и сколько GPU нужно под память.':'Выберите задачу. Сравните итог обучения с AdamW и современными оптимизаторами на опубликованных результатах.';
+ document.querySelectorAll('[data-domain]').forEach(b=>{b.classList.toggle('active',b.dataset.domain===state.domain);b.setAttribute('aria-pressed',String(b.dataset.domain===state.domain));});
+ if(economy)renderEconomy();else if(state.domain==='llm')renderLLM();else if(state.domain==='tabular')renderTabular();else renderDiffusion();
+}
+document.querySelectorAll('[data-domain]').forEach(b=>b.addEventListener('click',()=>{state.domain=b.dataset.domain;$('workspace').hidden=false;$('sources-panel').hidden=true;$('sources-button').setAttribute('aria-expanded','false');render();}));
+$('theme').addEventListener('click',()=>{const light=document.body.classList.toggle('light');$('theme').textContent=light?'Тёмная тема':'Светлая тема';$('theme').setAttribute('aria-label',light?'Переключить тёмную тему':'Переключить светлую тему');});
+$('sources-button').addEventListener('click',()=>{const open=$('sources-panel').hidden;$('sources-panel').hidden=!open;$('workspace').hidden=open;$('sources-button').setAttribute('aria-expanded',String(open));if(open)$('source-list').innerHTML=D.sources.map(s=>`<article class="source-item"><div class="eyebrow">${esc(s.domain)}</div><span class="source-state">${esc(s.status)}</span><h3><a target="_blank" rel="noopener noreferrer" href="${esc(s.url)}">${esc(s.name)} ↗</a></h3><p>${esc(s.detail)}</p></article>`).join('');});
+render();
+</script>
+</body>
+</html>
