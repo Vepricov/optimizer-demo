@@ -408,16 +408,18 @@ function skillChart(card,i,rank){
  if(!svg.dataset.ready){svg.innerHTML=`<line x1="0" x2="${W}" y1="${py(0)}" y2="${py(0)}" class="sk-axis"/>`+series.map(x=>`<path class="sk-line ${FT_METHODS[x.m].color} ${x.imp?'imp':''}" d="${x.ys.map((v,k)=>(k?'L':'M')+px(FT_GRID[k]).toFixed(1)+','+py(v).toFixed(1)).join('')}"/>`).join('')+`<line class="sk-cursor" y1="0" y2="${H-10}"/>`+[1,8,128].map(r=>`<text x="${px(r)}" y="${H-1}" text-anchor="${r===1?'start':r===128?'end':'middle'}">r=${r}</text>`).join('');svg.dataset.ready=1;}
  svg.querySelector('.sk-cursor').setAttribute('x1',px(rank));svg.querySelector('.sk-cursor').setAttribute('x2',px(rank));
 }
-// Zero-order fine-tuning over model size. Memory: MeZO Table 22 (OPT-1.3B…66B, MultiRC, 400 tokens) fitted linearly for MeZO and
+// Zero-order fine-tuning over model size. Memory: MeZO Table 22 (OPT-1.3B…66B, MultiRC, 400 tokens) interpolated in log-log for MeZO and
 // full fine-tuning with Adam; every other method is MeZO × its memory ratio to MeZO/ZO-SGD in its own paper (ZO-Bench Table 4,
 // HiZOO Table 10, SubZero Tables 10–12, LOZO Table 1, AdaMeZO Table 4, DiZO Table 5, JAGUAR Tables 5–6).
 // Quality: gain over MeZO/ZO-SGD in the same table, in percentage points, fitted as a + b·log10 N over the sizes where the method
-// was measured (slope capped at ±2 pp per decade, values kept within the measured range ±0.5 pp).
+// was measured, each size weighted once by its mean (slope capped at ±2 pp per decade, values kept within the measured
+// range ±0.5 pp).
 const ZO_MEZO={N:[1.3,2.7,6.7,13,30,66],gb:[4,7,14,26,58,128]},ZO_FT={N:[1.3,2.7,6.7,13,30],gb:[27,55,156,316,633]};
-const linFit=({N,gb})=>{const n=N.length,mx=N.reduce((a,b)=>a+b)/n,my=gb.reduce((a,b)=>a+b)/n,b=N.reduce((a,x,i)=>a+(x-mx)*(gb[i]-my),0)/N.reduce((a,x)=>a+(x-mx)**2,0);return x=>Math.max(.5,my+b*(x-mx));};
-const mezoGB=linFit(ZO_MEZO),adamGB=linFit(ZO_FT);
+// Log-log interpolation through the table points (exact at every measured size), power law from the edge segments outside.
+const logInterp=({N,gb})=>x=>{const lx=Math.log(x),ln=N.map(Math.log),lg=gb.map(Math.log);let i=ln.findIndex(v=>v>lx);if(i<1)i=i<0?ln.length-1:1;const t=(lx-ln[i-1])/(ln[i]-ln[i-1]);return Math.exp(lg[i-1]+t*(lg[i]-lg[i-1]));};
+const mezoGB=logInterp(ZO_MEZO),adamGB=logInterp(ZO_FT);
 const ZO_METHODS=[
- {name:'Adam, обычное',fo:true,gb:adamGB,pts:[[.35,.6],[1.3,6.9],[1.3,4.8],[2.7,8],[6.7,12.5],[8,2],[13,3.1],[13,7.6],[13,4.4]],info:'обратный проход и состояния Adam'},
+ {name:'Adam, обычное',fo:true,gb:adamGB,pts:[[.35,.6],[1.3,6.9],[1.3,4.8],[2.7,8],[6.7,12.5],[8,2],[13,3.1],[13,7.6],[13,4.4],[13,3.9]],info:'обратный проход и состояния Adam'},
  {name:'SGD, обычное',fo:true,ratio:2.31,pts:[[1.3,.3],[1.3,3.5],[1.3,.9],[6.7,-1],[6.7,2.6],[13,1],[13,4.3],[13,2.8]],info:'обратный проход без состояний'},
  {name:'MeZO (ZO-SGD)',base:true,ratio:1,pts:[[1,0]],info:'две прямые прогонки со случайным направлением'},
  {name:'ZO-Adam',ratio:2.47,pts:[[1.3,-6.4],[1.3,2.2],[6.7,-3],[6.7,.1],[13,2],[13,1.4]],info:'Adam на оценках градиента'},
@@ -436,9 +438,11 @@ const ZO_METHODS=[
  {name:'JAGUAR Muon',ours:true,ratio:1.1,pts:[[.35,-4.4],[.35,1.4],[1.3,-6.8],[1.3,3.9],[6.7,2],[6.7,-1.5],[13,0],[13,-.3]],info:'момент по координатам и ортогонализация'},
  {name:'ZO-LDSD',ours:true,preliminary:true,ratio:1,pts:[[1.3,.7],[1.3,6.2],[6.7,4],[6.7,1.8]],info:'обучаемое распределение направлений'}];
 for(const m of ZO_METHODS){
- const x=m.pts.map(p=>Math.log10(p[0])),y=m.pts.map(p=>p[1]),n=x.length,mx=x.reduce((a,b)=>a+b)/n,my=y.reduce((a,b)=>a+b)/n,sxx=x.reduce((a,v)=>a+(v-mx)**2,0);
+ const bySize={};for(const [N,v] of m.pts)(bySize[N]=bySize[N]||[]).push(v);const sizes0=Object.keys(bySize).map(Number),x=sizes0.map(Math.log10),y=sizes0.map(N=>bySize[N].reduce((a,b)=>a+b)/bySize[N].length),n=x.length,mx=x.reduce((a,b)=>a+b)/n,my=y.reduce((a,b)=>a+b)/n,sxx=x.reduce((a,v)=>a+(v-mx)**2,0);
  const b=sxx>1e-9?Math.max(-2,Math.min(2,x.reduce((a,v,i)=>a+(v-mx)*(y[i]-my),0)/sxx)):0,lo=Math.min(...y)-.5,hi=Math.max(...y)+.5,sizes=m.pts.map(p=>p[0]);
- m.gain=N=>m.base?0:Math.max(lo,Math.min(hi,my+b*(Math.log10(N)-mx)));
+ // First-order baselines come from many papers and tasks with no size trend in the data: use the median of all points.
+ const flat=median(m.pts.map(p=>p[1]));
+ m.gain=N=>m.base?0:m.fo?flat:Math.max(lo,Math.min(hi,my+b*(Math.log10(N)-mx)));
  m.mem=N=>m.gb?m.gb(N):mezoGB(N)*m.ratio;m.range=[Math.min(...sizes),Math.max(...sizes)];
 }
 const ZO_SIZES=[[.35,'350M'],[1.3,'1.3B'],[7,'7B'],[13,'13B'],[30,'30B'],[66,'66B']];
@@ -448,11 +452,11 @@ const gpuCount=gb=>Math.max(1,Math.ceil(gb/80));
 const gpuText=gb=>{const n=gpuCount(gb);return n===1?'1 H100':n+'×H100';};
 const ZO_COLORS={'JAGUAR SignSGD':'c1','JAGUAR Muon':'c2','ZO-Muon':'c3','ZO-LDSD':'c5'};
 // Zero-order table: quality gain over MeZO on the left, how many times less memory than ordinary fine-tuning (Adam) on the right.
-// Rows: Adam as reference, MeZO, our methods and the five strongest other methods at the current size, sorted by quality.
+// Rows: Adam as reference, MeZO, our methods and the five strongest other methods at the current size, sorted by memory saved.
 function zoRows(N){const rows=ZO_METHODS.map((m,i)=>({m,i,gain:m.gain(N),gb:m.mem(N)})),adam=rows.find(r=>r.m.fo&&r.m.gb);
  for(const r of rows)r.save=adam.gb/r.gb;
  const others=rows.filter(r=>!r.m.fo&&!r.m.ours&&!r.m.base).sort((a,b)=>b.gain-a.gain).slice(0,5);
- return {adam,all:rows,rows:[adam,...rows.filter(r=>r.m.base||r.m.ours),...others].sort((a,b)=>b.gain-a.gain)};}
+ return {adam,all:rows,rows:[adam,...rows.filter(r=>r.m.base||r.m.ours),...others].sort((a,b)=>b.save-a.save||b.gain-a.gain)};}
 function drawZO(){
  if(!$('zo-size'))return;
  const N=zoSize(),{adam,all,rows}=zoRows(N),mezo=all.find(r=>r.m.base);
