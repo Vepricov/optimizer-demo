@@ -57,9 +57,11 @@
 .sk-chart{width:100%;height:84px;display:block;margin:0 0 8px}.sk-chart text{fill:var(--muted);font-size:9px}.sk-axis{stroke:var(--muted);opacity:.4}.sk-line{fill:none;stroke:var(--hue);stroke-width:2;vector-effect:non-scaling-stroke}.sk-cursor{stroke:var(--text);stroke-dasharray:3 3;opacity:.5;vector-effect:non-scaling-stroke}.sk-pt{fill:var(--hue);stroke:var(--panel);stroke-width:1.5}
 .hm-table td.imp .hm-fill{background:transparent;box-shadow:inset 0 0 0 1.5px var(--hue)}.hm-table td.imp b{font-style:italic;opacity:.75}.sk-fill.imp{background:transparent;box-shadow:inset 0 0 0 1.5px var(--hue)}
 .sk-row{height:22px;font-size:12px}.sk-row.other span{color:var(--muted)}.sk-fill.other{background:var(--other)}.sk-line.imp{stroke-dasharray:4 3;opacity:.6}.sk-chart{height:60px}
-.zo2{padding:14px 18px;margin-bottom:12px}.zo-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 8px}.zo-tab{border:1px solid var(--line);background:none;border-radius:8px;padding:6px 12px;font-size:13px;color:var(--muted)}.zo-tab[aria-pressed=true]{color:var(--text);border-color:var(--c1);background:color-mix(in srgb,var(--c1) 14%,transparent)}.zo-headline{font-size:20px;margin:4px 0 10px}.zo-headline strong{color:var(--c1);font-weight:600}
-.zo-legend,.zo-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 60px 90px;gap:12px;align-items:center}.zo-legend{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.zo-legend span:nth-child(n+3){text-align:right}.zo-list{position:relative}.zo-row{position:absolute;left:0;right:0;top:0;height:23px;font-size:13px;transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .4s}.zo-row.gone{opacity:0;pointer-events:none}.zo-row span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zo-row span small{color:var(--muted);margin-left:8px;font-size:11px}.zo-row.ours span{font-weight:650}.zo-track{height:12px;background:color-mix(in srgb,var(--muted) 14%,transparent);border-radius:3px;overflow:hidden}.zo-fill{height:100%;background:var(--other);transition:width .5s}.zo-row.ours .zo-fill{background:var(--c1)}.zo-row.fo .zo-fill{background:var(--lane-adam)}.zo-v,.zo-m{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}.zo-m{color:var(--muted)}.zo-row.ours .zo-m{color:var(--text)}
+.zo2{padding:14px 18px;margin-bottom:12px}.zo-headline{font-size:20px;margin:4px 0 10px}.zo-headline strong{color:var(--c1);font-weight:600}
+.zo-legend{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.zo-list{position:relative}.zo-row span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zo-row span small{color:var(--muted);margin-left:8px;font-size:11px}.zo-row.ours span{font-weight:650}.zo-track{height:12px;background:color-mix(in srgb,var(--muted) 14%,transparent);border-radius:3px;overflow:hidden}.zo-row.ours .zo-row.fo .zo-row.ours 
 .below-fold{margin-top:12px}
+.zo-dock{display:flex;align-items:center;gap:26px;margin:8px 0 0}.zo-big-n{font-size:36px;font-weight:500;color:var(--c1);letter-spacing:-.03em}.zo-headline{font-size:16px;margin:0;line-height:1.4}.zo-headline b{font-weight:600}.zo2 input[type=range]{display:block;width:100%;height:30px;margin:6px 0 0;accent-color:var(--c1)}.zo2 .landmarks{height:22px;margin-bottom:6px}
+.zo-legend,.zo-row{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1.3fr) 130px minmax(0,1fr) 44px;gap:12px;align-items:center}.zo-legend{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.zo-row{position:absolute;left:0;right:0;top:0;height:21px;font-size:12px;transition:transform .6s cubic-bezier(.2,.8,.2,1)}.zo-mfill{height:100%;background:var(--other);border-radius:3px;transition:width .15s}.zo-row.ours .zo-mfill{background:var(--c1)}.zo-row.fo .zo-mfill{background:var(--lane-adam)}.zo-mv,.zo-gv{font-style:normal;font-variant-numeric:tabular-nums;white-space:nowrap}.zo-mv{color:var(--muted);font-size:11px}.zo-gv{text-align:right}.zo-gtrack{position:relative;height:10px}.zo-gzero{position:absolute;left:50%;top:-4px;bottom:-4px;border-left:1px solid var(--muted);opacity:.5}.zo-gfill{position:absolute;top:0;bottom:0;background:var(--other);border-radius:3px;transition:left .15s,width .15s}.zo-row.ours .zo-gfill{background:var(--c1)}.zo-row.fo .zo-gfill{background:var(--lane-adam)}.zo-gfill.neg{opacity:.7}.zo-gfill.est{background-image:repeating-linear-gradient(135deg,transparent 0 4px,color-mix(in srgb,var(--panel) 60%,transparent) 4px 8px)}.zo-track{height:10px}
 </style>
 </head>
 <body>
@@ -356,7 +358,7 @@ function ftTable(rank){
  return {tasks,skills};
 }
 const pct=v=>(v>=0?'+':'−')+fmt(Math.abs(v),1)+'%';
-const ftState={position:3,zo:0};
+const ftState={position:3};
 const ftRank=()=>2**ftState.position;
 function drawFinetune(){
  if(!$('ft-rank'))return;
@@ -392,45 +394,78 @@ function skillChart(card,i,rank){
  if(!svg.dataset.ready){svg.innerHTML=`<line x1="0" x2="${W}" y1="${py(0)}" y2="${py(0)}" class="sk-axis"/>`+series.map(x=>`<path class="sk-line ${FT_METHODS[x.m].color} ${x.imp?'imp':''}" d="${x.ys.map((v,k)=>(k?'L':'M')+px(FT_GRID[k]).toFixed(1)+','+py(v).toFixed(1)).join('')}"/>`).join('')+`<line class="sk-cursor" y1="0" y2="${H-10}"/>`+[1,8,128].map(r=>`<text x="${px(r)}" y="${H-1}" text-anchor="${r===1?'start':r===128?'end':'middle'}">r=${r}</text>`).join('');svg.dataset.ready=1;}
  svg.querySelector('.sk-cursor').setAttribute('x1',px(rank));svg.querySelector('.sk-cursor').setAttribute('x2',px(rank));
 }
-// Zero-order fine-tuning, JAGUAR arXiv 2506.04430 v4: SST-2 (Table 2), COPA / WinoGrande (Table 3), memory (Tables 5–6).
-// First-order memory for OPT-13B and LLaMA2-7B is from the JOTA submission (unpublished, marked *).
-const ZO_OURS=['JAGUAR SignSGD','JAGUAR Muon','ZO-Muon'];
-const ZO_INFO={'FO-SGD':'обычный градиент через обратный проход','Forward-Grad':'производная по направлению в прямом режиме','ZO-SGD':'оценка градиента по двум прямым проходам, 2d памяти','ZO-SGD-Cons':'ZO-SGD с осторожным шагом, 2d','ZO-SignSGD':'знак оценки градиента, 2d','ZO-AdaMM':'Adam на оценках градиента, 4d','Acc-ZOM':'ускоренный ZO с моментом, 5d','LeZO':'обновляет часть слоёв за шаг, 2d','ZO-Muon':'ортогонализация оценки, как в Muon','JAGUAR SignSGD':'момент по координатам и знак, память как у ZO-SGD','JAGUAR Muon':'момент по координатам и ортогонализация'};
-const ZO_SETUPS=[
- {label:'OPT-1.3B · SST-2 · полное',metric:'SST-2',acc:{'FO-SGD':91.1,'Forward-Grad':90.3,'ZO-SGD':90.8,'Acc-ZOM':85.2,'ZO-SGD-Cons':88.3,'ZO-SignSGD':87.2,'ZO-AdaMM':84.4,LeZO:85.1,'JAGUAR SignSGD':94.0,'JAGUAR Muon':84.0,'ZO-Muon':86.5},mem:{'FO-SGD':12.246,'ZO-SGD':4.171,'ZO-AdaMM':13.046,'JAGUAR SignSGD':4.172,'JAGUAR Muon':4.179,'ZO-Muon':4.177}},
- {label:'OPT-1.3B · SST-2 · LoRA',metric:'SST-2',acc:{'FO-SGD':93.6,'Forward-Grad':90.3,'ZO-SGD':90.1,'Acc-ZOM':91.3,'ZO-SGD-Cons':90.5,'ZO-SignSGD':91.5,'ZO-AdaMM':92.3,LeZO:92.3,'JAGUAR SignSGD':92.5,'JAGUAR Muon':94.0,'ZO-Muon':93.5},mem:{'FO-SGD':5.855,'ZO-SGD':4.125,'ZO-AdaMM':6.132,'JAGUAR SignSGD':4.128,'JAGUAR Muon':4.132,'ZO-Muon':4.13}},
- {label:'RoBERTa-L · SST-2 · полное',metric:'SST-2',acc:{'FO-SGD':91.4,'Forward-Grad':90.1,'ZO-SGD':89.4,'Acc-ZOM':89.6,'ZO-SGD-Cons':89.6,'ZO-SignSGD':52.5,'ZO-AdaMM':89.8,LeZO:90.4,'JAGUAR SignSGD':92.2,'JAGUAR Muon':85.0,'ZO-Muon':72.0},mem:{}},
- {label:'RoBERTa-L · SST-2 · LoRA',metric:'SST-2',acc:{'FO-SGD':91.2,'Forward-Grad':89.7,'ZO-SGD':90.8,'Acc-ZOM':90.9,'ZO-SGD-Cons':91.6,'ZO-SignSGD':90.2,'ZO-AdaMM':89.5,LeZO:91.8,'JAGUAR SignSGD':92.2,'JAGUAR Muon':92.2,'ZO-Muon':86.0},mem:{}},
- {label:'LLaMA2-7B · COPA · LoRA',metric:'COPA',acc:{'FO-SGD':85,'Forward-Grad':82,'ZO-SGD':86,'ZO-SGD-Cons':85,'JAGUAR SignSGD':88,'JAGUAR Muon':88,'ZO-Muon':85},mem:{'FO-SGD*':48.572,'ZO-SGD':13.219,'ZO-AdaMM':27.971,'JAGUAR SignSGD':13.219,'JAGUAR Muon':16.032,'ZO-Muon':15.021}},
- {label:'LLaMA2-7B · WinoGrande · LoRA',metric:'WinoGrande',acc:{'FO-SGD':66.9,'Forward-Grad':64.3,'ZO-SGD':64.3,'ZO-SGD-Cons':64.6,'JAGUAR SignSGD':64.9,'JAGUAR Muon':62.8,'ZO-Muon':61.6},mem:{'FO-SGD*':49.114,'ZO-SGD':14.67,'ZO-AdaMM':29.44,'JAGUAR SignSGD':14.672,'JAGUAR Muon':17.992,'ZO-Muon':16.992}},
- {label:'OPT-13B · COPA · LoRA',metric:'COPA',acc:{'FO-SGD':88,'Forward-Grad':89,'ZO-SGD':87,'ZO-SGD-Cons':88,'JAGUAR SignSGD':89,'JAGUAR Muon':87,'ZO-Muon':87},mem:{'FO-SGD*':96.247,'ZO-SGD':24.71,'ZO-AdaMM':38.612,'JAGUAR SignSGD':24.712,'JAGUAR Muon':25.88,'ZO-Muon':25.74}},
- {label:'OPT-13B · WinoGrande · LoRA',metric:'WinoGrande',acc:{'FO-SGD':66.9,'Forward-Grad':62.9,'ZO-SGD':62.6,'ZO-SGD-Cons':63.3,'JAGUAR SignSGD':63.7,'JAGUAR Muon':62.3,'ZO-Muon':61.9},mem:{'FO-SGD*':97.355,'ZO-SGD':26.407,'ZO-AdaMM':39.872,'JAGUAR SignSGD':26.408,'JAGUAR Muon':27.44,'ZO-Muon':27.416}}];
-const ZO_NAMES=Object.keys(ZO_INFO);
+// Zero-order fine-tuning over model size. Memory: MeZO Table 22 (OPT-1.3B…66B, MultiRC, 400 tokens) fitted linearly for MeZO and
+// full fine-tuning with Adam; every other method is MeZO × its memory ratio to MeZO/ZO-SGD in its own paper (ZO-Bench Table 4,
+// HiZOO Table 10, SubZero Tables 10–12, LOZO Table 1, AdaMeZO Table 4, DiZO Table 5, JAGUAR Tables 5–6).
+// Quality: gain over MeZO/ZO-SGD in the same table, in percentage points, fitted as a + b·log10 N over the sizes where the method
+// was measured (slope capped at ±2 pp per decade, values kept within the measured range ±0.5 pp).
+const ZO_MEZO={N:[1.3,2.7,6.7,13,30,66],gb:[4,7,14,26,58,128]},ZO_FT={N:[1.3,2.7,6.7,13,30],gb:[27,55,156,316,633]};
+const linFit=({N,gb})=>{const n=N.length,mx=N.reduce((a,b)=>a+b)/n,my=gb.reduce((a,b)=>a+b)/n,b=N.reduce((a,x,i)=>a+(x-mx)*(gb[i]-my),0)/N.reduce((a,x)=>a+(x-mx)**2,0);return x=>Math.max(.5,my+b*(x-mx));};
+const mezoGB=linFit(ZO_MEZO),adamGB=linFit(ZO_FT);
+const ZO_METHODS=[
+ {name:'Adam, обычное',fo:true,gb:adamGB,pts:[[.35,.6],[1.3,6.9],[1.3,4.8],[2.7,8],[6.7,12.5],[8,2],[13,3.1],[13,7.6],[13,4.4]],info:'обратный проход и состояния Adam'},
+ {name:'SGD, обычное',fo:true,ratio:2.31,pts:[[1.3,.3],[1.3,3.5],[1.3,.9],[6.7,-1],[6.7,2.6],[13,1],[13,4.3],[13,2.8]],info:'обратный проход без состояний'},
+ {name:'MeZO (ZO-SGD)',base:true,ratio:1,pts:[[1,0]],info:'две прямые прогонки со случайным направлением'},
+ {name:'ZO-Adam',ratio:2.47,pts:[[1.3,-6.4],[1.3,2.2],[6.7,-3],[6.7,.1],[13,2],[13,1.4]],info:'Adam на оценках градиента'},
+ {name:'ZO-SGD-Cons',ratio:1,pts:[[1.3,-2.5],[1.3,.4],[6.7,-1],[6.7,.3],[13,1],[13,.7]],info:'осторожный шаг'},
+ {name:'Forward-Grad',ratio:2.09,pts:[[1.3,-.5],[1.3,.2],[6.7,-4],[6.7,0],[13,2],[13,.3]],info:'производная по направлению в прямом режиме'},
+ {name:'HiZOO',ratio:2.04,pts:[[2.7,1.9],[13,1.9],[30,1.1],[66,2.7]],info:'диагональ гессиана по прямым проходам'},
+ {name:'SubZero+',ratio:1.01,pts:[[1.3,1.7],[8,1],[13,3.1],[32,3.8]],info:'случайные низкоранговые подпространства'},
+ {name:'LOZO',ratio:.94,pts:[[13,.7],[30,2.1],[66,.5]],info:'низкоранговая оценка градиента'},
+ {name:'FZOO',ratio:1,pts:[[13,1.9],[30,1.9],[66,1.7]],info:'пакет направлений, шаг как у Adam'},
+ {name:'LeZO',ratio:1,pts:[[1.3,2.2],[13,1.6],[30,2.2]],info:'обновляет часть слоёв за шаг'},
+ {name:'AdaMeZO',ratio:1.08,pts:[[1.3,1.7],[6.7,4.2],[13,1.3]],info:'адаптивный шаг без хранения моментов'},
+ {name:'ZO-Act',ratio:1,pts:[[8,7.25],[13,5.25]],info:'подпространство по активациям'},
+ {name:'ZO-AdaMU',ratio:1.91,pts:[[13,3.75]],info:'возмущения по моменту и неопределённости'},
+ {name:'DiZO',ratio:1.22,pts:[[2.7,3.6],[6.7,.9]],info:'послойная адаптация шага'},
+ {name:'JAGUAR SignSGD',ours:true,ratio:1,pts:[[.35,2.8],[.35,1.4],[1.3,3.2],[1.3,2.4],[6.7,2],[6.7,.6],[13,2],[13,1.1]],info:'момент по координатам и знак'},
+ {name:'JAGUAR Muon',ours:true,ratio:1.1,pts:[[.35,-4.4],[.35,1.4],[1.3,-6.8],[1.3,3.9],[6.7,2],[6.7,-1.5],[13,0],[13,-.3]],info:'момент по координатам и ортогонализация'},
+ {name:'ZO-Muon',ours:true,ratio:1.09,pts:[[.35,-17.4],[.35,-4.8],[1.3,-4.3],[1.3,3.4],[6.7,-1],[6.7,-2.7],[13,0],[13,-.7]],info:'ортогонализация оценки градиента'},
+ {name:'ZO-LDSD',ours:true,preliminary:true,ratio:1,pts:[[1.3,.7],[1.3,6.2],[6.7,4],[6.7,1.8]],info:'обучаемое распределение направлений'}];
+for(const m of ZO_METHODS){
+ const x=m.pts.map(p=>Math.log10(p[0])),y=m.pts.map(p=>p[1]),n=x.length,mx=x.reduce((a,b)=>a+b)/n,my=y.reduce((a,b)=>a+b)/n,sxx=x.reduce((a,v)=>a+(v-mx)**2,0);
+ const b=sxx>1e-9?Math.max(-2,Math.min(2,x.reduce((a,v,i)=>a+(v-mx)*(y[i]-my),0)/sxx)):0,lo=Math.min(...y)-.5,hi=Math.max(...y)+.5,sizes=m.pts.map(p=>p[0]);
+ m.gain=N=>m.base?0:Math.max(lo,Math.min(hi,my+b*(Math.log10(N)-mx)));
+ m.mem=N=>m.gb?m.gb(N):mezoGB(N)*m.ratio;m.range=[Math.min(...sizes),Math.max(...sizes)];
+}
+const ZO_SIZES=[[.35,'350M'],[1.3,'1.3B'],[7,'7B'],[13,'13B'],[30,'30B'],[66,'66B']];
+const zoState={position:Math.log10(13)};
+const zoSize=()=>10**zoState.position;
+const gpuText=gb=>{const n=Math.ceil(gb/80);return n<=1?'1 H100':n+'×H100';};
 function drawZO(){
- const z=ZO_SETUPS[ftState.zo],ranked=Object.entries(z.acc).sort((a,b)=>b[1]-a[1]),lo=Math.min(...Object.values(z.acc))-2,hi=Math.max(...Object.values(z.acc))+1;
- document.querySelectorAll('.zo-tab').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===ftState.zo)));
- ZO_NAMES.forEach(n=>{const row=$('zo-'+n.replace(/\W/g,'')),v=z.acc[n];row.classList.toggle('gone',v===undefined);
-  const i=ranked.findIndex(([m])=>m===n);if(i>=0)row.style.transform=`translateY(${i*100}%)`;
-  if(v!==undefined){row.querySelector('.zo-fill').style.width=((v-lo)/(hi-lo)*100)+'%';row.querySelector('.zo-v').textContent=fmt(v,1);}
-  const memKey=Object.keys(z.mem).find(k=>k.replace('*','')===n),gb=memKey?z.mem[memKey]:null;row.querySelector('.zo-m').textContent=gb?fmt(gb,1)+(memKey.endsWith('*')?'*':'')+' ГБ':'—';});
- document.querySelector('.zo-list').style.height=`calc(${ranked.length} * 23px)`;
- const fo=z.acc['FO-SGD'],best=ZO_OURS.map(n=>[n,z.acc[n]]).sort((a,b)=>b[1]-a[1])[0],foMem=Object.entries(z.mem).find(([k])=>k.startsWith('FO'));
- $('zo-head').innerHTML=`<strong>${best[0]}</strong> ${best[1]>=fo?'лучше':'почти как'} обычного дообучения: ${fmt(best[1],1)} против ${fmt(fo,1)}`+(foMem&&z.mem[best[0]]?` · памяти в <strong>${fmt(foMem[1]/z.mem[best[0]],1)} раза</strong> меньше`:'');
- const setup=$('zo-setup');setup.textContent=z.metric+', точность, %';
+ if(!$('zo-size'))return;
+ const N=zoSize(),rows=ZO_METHODS.map(m=>({m,gain:m.gain(N),gb:m.mem(N),est:N<m.range[0]/1.15||N>m.range[1]*1.15}));
+ const order=[...rows.filter(r=>r.m.fo),...rows.filter(r=>!r.m.fo).sort((a,b)=>b.gain-a.gain)],maxGB=Math.max(...rows.map(r=>r.gb)),maxGain=Math.max(4,...rows.map(r=>Math.abs(r.gain)));
+ $('zo-n').textContent=N>=1?fmt(N,N<10?1:0)+'B':fmt(N*1000,0)+'M';
+ const mezo=rows.find(r=>r.m.base),adam=rows.find(r=>r.m.fo),best=rows.filter(r=>r.m.ours&&!r.m.preliminary).sort((a,b)=>b.gain-a.gain)[0];
+ $('zo-head').innerHTML=`Обычное дообучение: <b>${fmt(adam.gb,0)} ГБ</b> (${gpuText(adam.gb)}). Нулевой порядок: <b>${fmt(mezo.gb,0)} ГБ</b> (${gpuText(mezo.gb)}) — в <strong>${fmt(adam.gb/mezo.gb,0)} раз</strong> меньше. Лучший наш — <strong>${best.m.name}</strong>: ${pct(best.gain).replace('%','')} п.п. к MeZO при той же памяти.`;
+ order.forEach((r,i)=>{const row=$('zo-r-'+ZO_METHODS.indexOf(r.m));row.style.transform=`translateY(${i*100}%)`;
+  row.querySelector('.zo-mfill').style.width=Math.max(.5,r.gb/maxGB*100)+'%';row.querySelector('.zo-mv').textContent=fmt(r.gb,r.gb<10?1:0)+' ГБ · '+gpuText(r.gb);
+  const w=r.gain/maxGain*50,f=row.querySelector('.zo-gfill');f.style.left=(w>=0?50:50+w)+'%';f.style.width=Math.abs(w)+'%';f.classList.toggle('neg',r.gain<0);f.classList.toggle('est',r.est);
+  row.querySelector('.zo-gv').textContent=r.m.base?'база':(r.gain>=0?'+':'−')+fmt(Math.abs(r.gain),1);});
+}
+function zoSection(){
+ const ticks=ZO_SIZES.map(([n,t])=>`<button class="landmark" data-zo="${Math.log10(n)}" style="left:${(Math.log10(n)-Math.log10(.35))/(Math.log10(70)-Math.log10(.35))*100}%">${t}</button>`).join('');
+ return `<section class="board zo2"><div class="board-head"><h3>Нулевой порядок: дообучение без обратного прохода</h3><span class="meta">наши: JAGUAR SignSGD, JAGUAR Muon, ZO-Muon, ZO-LDSD*</span></div>
+ <div class="zo-dock"><div><span class="eyebrow" style="display:block;margin:0">Размер модели</span><strong id="zo-n" class="zo-big-n"></strong></div><p class="zo-headline" id="zo-head"></p></div>
+ <input type="range" id="zo-size" min="${Math.log10(.35)}" max="${Math.log10(70)}" step="any" value="${zoState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div>
+ <div class="zo-legend"><span>метод</span><span>память под дообучение</span><span></span><span>качество к MeZO, п.п.</span><span></span></div><div class="zo-list" style="height:calc(${ZO_METHODS.length} * 21px)">${ZO_METHODS.map((m,i)=>`<div class="zo-row ${m.ours?'ours':''} ${m.fo?'fo':''}" id="zo-r-${i}"><span title="${m.info}">${m.name}${m.preliminary?'*':''}<small>${m.info}</small></span><div class="zo-track"><div class="zo-mfill"></div></div><em class="zo-mv"></em><div class="zo-gtrack"><div class="zo-gzero"></div><div class="zo-gfill"></div></div><em class="zo-gv"></em></div>`).join('')}</div>
+ <p class="step-note">Память: MeZO Table 22 (OPT 1,3–66B), остальные методы — через их отношение к MeZO в собственных статьях. Качество: прирост к MeZO/ZO-SGD в той же таблице, подогнан по log N; штриховка — размер вне замеров метода. * — не опубликовано.</p></section>`;
 }
 function renderFinetune(){
  const {skills}=ftTable(ftRank());
  const bar=(m,other)=>`<div class="sk-row ${other?'other':''}" data-m="${m}"><span>${m}${FT_METHODS[m]&&FT_METHODS[m].preliminary?'*':''}</span><div class="sk-track"><div class="sk-fill ${other?'other':FT_METHODS[m].color}"></div></div><em class="sk-v"></em></div>`;
  const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs">чем <span class="sk-base"></span></span></div><svg class="sk-chart" viewBox="0 0 400 70" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${FT_NAMES.length+Object.keys(s.others).length} * 22px)"><div class="sk-zero"></div>${FT_NAMES.map(m=>bar(m,false)).join('')}${Object.keys(s.others).map(m=>bar(m,true)).join('')}</div></section>`;
  const heat=`<section class="board hm below-fold"><div class="board-head"><h3>По задачам</h3><span class="meta">насколько лучше базового метода из той же статьи</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th><i class="mark ${FT_METHODS[m].color}"></i>${m}${FT_METHODS[m].preliminary?'*':''}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${t.name}<small>${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?t.rows.filter(r=>r.m===m).map(r=>r.model).join(', '):'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table><p class="step-note">Контур — клетки без замера, оценка «сила метода × отзывчивость задачи». Модель рангов: у каждого метода свой наклон прироста по рангу, подогнанный по его замерам (WLoRA+ почти ровный, SimplexLoRA сильнее на малых рангах); после r=32 все выигрыши затухают ∝ r<sup>−0,3</sup>. Штриховка — ранг вне замеров. * — не опубликовано.</p></section>`;
- const zo=`<section class="board zo2"><div class="board-head"><h3>Нулевой порядок: дообучение без обратного прохода</h3><span class="meta">JAGUAR SignSGD, JAGUAR Muon, ZO-Muon — наши</span></div><div class="zo-tabs">${ZO_SETUPS.map((z,i)=>`<button class="zo-tab" data-zo="${i}">${z.label}</button>`).join('')}</div><p class="zo-headline" id="zo-head"></p><div class="zo-cols"><div class="zo-legend"><span>метод</span><span id="zo-setup"></span><span>память</span></div><div class="zo-list" style="height:calc(${ZO_NAMES.length} * 23px)">${ZO_NAMES.map(n=>`<div class="zo-row ${ZO_OURS.includes(n)?'ours':''} ${n==='FO-SGD'?'fo':''}" id="zo-${n.replace(/\W/g,'')}"><span title="${ZO_INFO[n]}">${n}<small>${ZO_INFO[n]}</small></span><div class="zo-track"><div class="zo-fill"></div></div><em class="zo-v"></em><em class="zo-m"></em></div>`).join('')}</div></div><p class="step-note">Память: 2d — два вектора размера модели, как у инференса с копией весов; 4d–5d — методы с состояниями Adam или ускорением. * — память обычного дообучения из версии статьи на рецензии.</p></section>`;
+ const zo=zoSection();
  const stops=[1,4,16,64,128].map(r=>`<button class="ft-stop" data-pos="${Math.log2(r)}">r=${r}<small>${fmt(ftShare(r),2)}%</small></button>`).join('');
  $('controls').innerHTML='';
  $('result').innerHTML=`<div class="scale-dock ft-dock"><div class="ft-dock-row"><div><span class="eyebrow" style="display:block;margin:0">Ранг адаптера LoRA</span><strong id="ft-r" class="ft-big"></strong></div><div class="ft-ring-wrap"><div class="ft-ring" id="ft-ring"><div><strong id="ft-share"></strong><small>весов 8B</small></div></div><dl><dt>Обучаемых параметров</dt><dd id="ft-count"></dd><dt>Размер адаптера</dt><dd id="ft-size"></dd><dt>WLoRA оставляет</dt><dd id="ft-wlora"></dd></dl></div><div class="ft-stops">${stops}</div></div><input type="range" id="ft-rank" min="0" max="7" step="any" value="${ftState.position}" aria-label="Ранг адаптера"></div>
  <div class="sk-grid">${skills.map(skill).join('')}</div>${zo}${heat}`;
  $('ft-rank').addEventListener('input',e=>{ftState.position=Number(e.target.value);drawFinetune();});
  document.querySelectorAll('.ft-stop').forEach(b=>b.addEventListener('click',()=>{ftState.position=Number(b.dataset.pos);$('ft-rank').value=ftState.position;drawFinetune();}));
- document.querySelectorAll('.zo-tab').forEach(b=>b.addEventListener('click',()=>{ftState.zo=Number(b.dataset.zo);drawZO();}));
+ $('zo-size').addEventListener('input',e=>{zoState.position=Number(e.target.value);drawZO();});
+ document.querySelectorAll('[data-zo]').forEach(b=>b.addEventListener('click',()=>{zoState.position=Number(b.dataset.zo);$('zo-size').value=zoState.position;drawZO();}));
  drawFinetune();drawZO();
 }
 function llmValues(row){return state.model==='nano'?[row.adamw1,row['muon'+state.batch]]:[row.hybrid_adamw1,row.hybrid_muon2];}
