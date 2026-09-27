@@ -42,21 +42,24 @@
 .quads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.quad{padding:12px 16px 14px}.quad .board-head h3{font-size:15px}.quad .board-head{align-items:center}.quad-legend{display:grid;grid-template-columns:170px minmax(0,1fr) 120px;gap:12px;margin:8px 0 4px}.quad-legend span:last-child{text-align:right}.quad .lane{grid-template-columns:170px minmax(0,1fr) 120px;gap:12px}.quad .lane-name .k{white-space:nowrap}.quad .lane-grid{left:182px;right:132px}.quad .lanes{margin-bottom:0}.quad .lane-money .value{font-size:14px;color:var(--c1);font-variant-numeric:tabular-nums}.quad .base .lane-money .value{color:var(--text)}.quad .lane:not(.finished) .value{color:var(--muted)}#mem .lane .value,#step .lane .value{color:var(--text)}#money .lane.finished .value{color:var(--c1)}#money .lane.base .value{color:var(--text)}.quad .quad .board-head .meta{margin-left:auto;margin-right:10px}.quad .sc-chart{margin-top:4px}
 @media(max-width:1100px){body:not(.fit) .quads{grid-template-columns:1fr}body:not(.fit) .wins{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.quad-legend,.quad .lane{grid-template-columns:100px minmax(0,1fr) 84px;gap:8px}.quad .lane-grid{left:108px;right:92px}.win strong{font-size:20px}}
-.fit .shell{width:1600px;max-width:none;padding:18px 36px 16px}.fit{overflow:hidden}
+.fit .shell{width:1600px;max-width:none;padding:18px 36px 16px}.fit{overflow-x:hidden}
 .economy-view .domain-nav{margin:0 0 10px;border-bottom:0;gap:4px}.economy-view .domain{border:1px solid var(--line);border-radius:8px;padding:7px 16px;font-size:14px;margin:0}.economy-view .domain.active{border-color:var(--c1);color:var(--text);background:color-mix(in srgb,var(--c1) 12%,transparent)}
 .ft-dock{padding:10px 24px 6px}.ft-dock-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}.ft-big{font-size:40px;font-weight:500;letter-spacing:-.03em;color:var(--c2)}.ft-stops{display:flex;gap:6px}.ft-stop{border:1px solid var(--line);background:none;border-radius:8px;padding:6px 14px;font-size:15px;color:var(--muted);text-align:center;line-height:1.2}.ft-stop small{display:block;font-size:11px}.ft-stop.on{color:var(--text);border-color:var(--c2);background:color-mix(in srgb,var(--c2) 14%,transparent)}.ft-dock input{display:block;width:100%;height:34px;margin:6px 0 0;accent-color:var(--c2)}
 
 .ft-ring-wrap{display:flex;align-items:center;gap:14px;margin:0 auto 0 30px}.ft-ring{--p:50;width:92px;height:92px;border-radius:50%;background:conic-gradient(var(--c2) calc(var(--p)*1%),color-mix(in srgb,var(--muted) 18%,transparent) 0);display:grid;place-items:center;flex:none}.ft-ring>div{width:70px;height:70px;border-radius:50%;background:var(--panel);display:grid;place-content:center;text-align:center;line-height:1.1}.ft-ring strong{font-size:17px;font-weight:500}.ft-ring small{font-size:10px;color:var(--muted)}.ft-ring-wrap dl{margin:0;font-size:12px;display:grid;grid-template-columns:auto auto;gap:4px 10px}.ft-ring-wrap dt{color:var(--muted)}.ft-ring-wrap dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}.step-note{font-size:11px;color:var(--muted);margin:8px 0 0;line-height:1.4}
 :root{--c6:#c9503f;--c7:#7f9a2e}.light{--c6:#b03f2f;--c7:#5f7a12}.c6{--hue:var(--c6)}.c7{--hue:var(--c7)}.ft-tile 
-.zo{padding:14px 18px}.zo-lead{font-size:12px;color:var(--muted);margin:2px 0 6px}.zo-grid{display:grid;grid-template-columns:1fr;gap:10px}.zo-model{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:color-mix(in srgb,var(--c1) 4%,transparent)}.zo-head b{font-size:16px}.zo-head small{color:var(--muted);margin-left:8px;font-size:12px}.zo-big{display:flex;align-items:baseline;gap:10px;margin:0 0 2px}.zo-big strong{font-size:28px;font-weight:500;letter-spacing:-.03em;color:var(--c1)}.zo-big span{font-size:12px;color:var(--muted)}
-.zo-axis{position:relative;height:84px;border-bottom:1px solid var(--line)}.zo-gpu{position:absolute;top:0;bottom:0;border-right:1px dashed color-mix(in srgb,var(--muted) 45%,transparent)}.zo-gpu span{position:absolute;right:4px;bottom:-17px;font-size:9px;color:var(--muted);white-space:nowrap}.zo-mark{position:absolute;left:0;height:20px;width:var(--x);animation:zo-slide 1.2s cubic-bezier(.2,.8,.2,1) var(--d) both}.zo-mark i{position:absolute;left:0;right:0;top:7px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--muted) 55%,transparent)}.zo-mark.ours i{background:var(--c1);height:8px;top:6px}.zo-mark span{position:absolute;left:calc(100% + 6px);top:1px;font-size:11px;white-space:nowrap}.zo-mark span.inside{left:auto;right:0;top:-14px}.zo-mark.ours span{font-weight:650}@keyframes zo-slide{from{width:0}}.zo-quality{font-size:12px;margin-top:18px;color:var(--muted)}.zo-quality b{color:var(--text)}
+
+
 .fit .shell{container-type:inline-size}
 .sk-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:10px 0 12px}.sk-card{padding:14px 18px 16px}.sk-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.sk-head .eyebrow{font-size:12px;margin:0;color:var(--text);letter-spacing:.14em}.sk-head small{font-size:11px;color:var(--muted);text-align:right}.sk-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:10px 0 12px}.sk-top .tag{font-size:17px}.sk-value{font-size:34px;font-weight:500;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.sk-vs{font-size:14px;color:var(--muted)}
 .sk-rows{position:relative}.sk-zero{position:absolute;top:-4px;bottom:-4px;left:calc(110px + (100% - 110px - 64px) * .18);border-left:1px solid var(--muted);opacity:.5}.sk-row{position:absolute;left:0;right:0;top:0;height:26px;display:grid;grid-template-columns:104px minmax(0,1fr) 58px;gap:6px;align-items:center;font-size:13px;transition:transform .6s cubic-bezier(.2,.8,.2,1)}.sk-row span{white-space:nowrap}.sk-track{position:relative;height:14px}.sk-fill{position:absolute;top:0;bottom:0;background:var(--hue);border-radius:3px;transition:left .15s,width .15s}.sk-fill.neg{background:var(--lane-adam)}.sk-fill.est,.hm-fill.est{background:repeating-linear-gradient(135deg,var(--hue) 0 4px,color-mix(in srgb,var(--hue) 35%,transparent) 4px 8px)}.sk-v{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}
-.ft-bottom{display:grid;grid-template-columns:minmax(0,1fr) 620px;gap:12px}.hm{padding:12px 16px}.hm-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:12px;table-layout:fixed}.hm-table thead th{font-weight:500;text-align:left;color:var(--muted);font-size:11px;padding:0 6px 6px;white-space:nowrap;overflow:hidden}.hm-table thead th:first-child{width:130px}.hm-table thead .mark{display:inline-block;width:8px;height:8px;margin-right:5px}.hm-table tbody th{text-align:left;font-weight:500;padding:3px 6px;white-space:nowrap}.hm-table tbody th small{display:block;font-size:9px;color:var(--muted);font-weight:400;letter-spacing:.06em;text-transform:uppercase}.hm-table td{padding:3px 6px;border-top:1px solid color-mix(in srgb,var(--line) 60%,transparent)}.hm-table td b{font-weight:400;font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted)}.hm-table td.top b{color:var(--text);font-weight:650}.hm-bar{height:7px;border-radius:3px;background:color-mix(in srgb,var(--muted) 14%,transparent);overflow:hidden}.hm-fill{height:100%;background:var(--hue);border-radius:3px;transition:width .15s}.hm-fill.neg{background:var(--lane-adam)}.hm-empty{color:var(--muted);text-align:center}
-.zo-grid{display:grid;grid-template-columns:1fr;gap:8px}.zo-model{padding:8px 14px;display:grid;grid-template-columns:170px minmax(0,1fr);gap:14px;align-items:center}.zo-left .zo-big{display:block;margin:0}.zo-left .zo-big strong{display:block;font-size:34px;line-height:1.1}.zo-left .zo-big span{font-size:11px}.zo-left .zo-quality{margin-top:4px;font-size:11px}.zo-model .zo-axis{height:68px;margin-bottom:14px}
-.sk-kappa{font-size:12px;color:var(--muted);margin:-8px 0 6px;min-height:16px}.sk-chart{width:100%;height:84px;display:block;margin:0 0 8px}.sk-chart text{fill:var(--muted);font-size:9px}.sk-axis{stroke:var(--muted);opacity:.4}.sk-line{fill:none;stroke:var(--hue);stroke-width:2;vector-effect:non-scaling-stroke}.sk-cursor{stroke:var(--text);stroke-dasharray:3 3;opacity:.5;vector-effect:non-scaling-stroke}.sk-pt{fill:var(--hue);stroke:var(--panel);stroke-width:1.5}
+.hm{padding:12px 16px}.hm-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:12px;table-layout:fixed}.hm-table thead th{font-weight:500;text-align:left;color:var(--muted);font-size:11px;padding:0 6px 6px;white-space:nowrap;overflow:hidden}.hm-table thead th:first-child{width:130px}.hm-table thead .mark{display:inline-block;width:8px;height:8px;margin-right:5px}.hm-table tbody th{text-align:left;font-weight:500;padding:3px 6px;white-space:nowrap}.hm-table tbody th small{display:block;font-size:9px;color:var(--muted);font-weight:400;letter-spacing:.06em;text-transform:uppercase}.hm-table td{padding:3px 6px;border-top:1px solid color-mix(in srgb,var(--line) 60%,transparent)}.hm-table td b{font-weight:400;font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted)}.hm-table td.top b{color:var(--text);font-weight:650}.hm-bar{height:7px;border-radius:3px;background:color-mix(in srgb,var(--muted) 14%,transparent);overflow:hidden}.hm-fill{height:100%;background:var(--hue);border-radius:3px;transition:width .15s}.hm-fill.neg{background:var(--lane-adam)}.hm-empty{color:var(--muted);text-align:center}
+.sk-chart{width:100%;height:84px;display:block;margin:0 0 8px}.sk-chart text{fill:var(--muted);font-size:9px}.sk-axis{stroke:var(--muted);opacity:.4}.sk-line{fill:none;stroke:var(--hue);stroke-width:2;vector-effect:non-scaling-stroke}.sk-cursor{stroke:var(--text);stroke-dasharray:3 3;opacity:.5;vector-effect:non-scaling-stroke}.sk-pt{fill:var(--hue);stroke:var(--panel);stroke-width:1.5}
 .hm-table td.imp .hm-fill{background:transparent;box-shadow:inset 0 0 0 1.5px var(--hue)}.hm-table td.imp b{font-style:italic;opacity:.75}.sk-fill.imp{background:transparent;box-shadow:inset 0 0 0 1.5px var(--hue)}
+.sk-row{height:22px;font-size:12px}.sk-row.other span{color:var(--muted)}.sk-fill.other{background:var(--other)}.sk-line.imp{stroke-dasharray:4 3;opacity:.6}.sk-chart{height:60px}
+.zo2{padding:14px 18px;margin-bottom:12px}.zo-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 8px}.zo-tab{border:1px solid var(--line);background:none;border-radius:8px;padding:6px 12px;font-size:13px;color:var(--muted)}.zo-tab[aria-pressed=true]{color:var(--text);border-color:var(--c1);background:color-mix(in srgb,var(--c1) 14%,transparent)}.zo-headline{font-size:20px;margin:4px 0 10px}.zo-headline strong{color:var(--c1);font-weight:600}
+.zo-legend,.zo-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 60px 90px;gap:12px;align-items:center}.zo-legend{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.zo-legend span:nth-child(n+3){text-align:right}.zo-list{position:relative}.zo-row{position:absolute;left:0;right:0;top:0;height:23px;font-size:13px;transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .4s}.zo-row.gone{opacity:0;pointer-events:none}.zo-row span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zo-row span small{color:var(--muted);margin-left:8px;font-size:11px}.zo-row.ours span{font-weight:650}.zo-track{height:12px;background:color-mix(in srgb,var(--muted) 14%,transparent);border-radius:3px;overflow:hidden}.zo-fill{height:100%;background:var(--other);transition:width .5s}.zo-row.ours .zo-fill{background:var(--c1)}.zo-row.fo .zo-fill{background:var(--lane-adam)}.zo-v,.zo-m{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}.zo-m{color:var(--muted)}.zo-row.ours .zo-m{color:var(--text)}
+.below-fold{margin-top:12px}
 </style>
 </head>
 <body>
@@ -282,97 +285,79 @@ function renderEconomy(){
  $('scale').addEventListener('input',e=>{costState.position=Number(e.target.value);tick();});
  if(!costState.raced)startRace();else tick();
 }
-// Fine-tuning tab. Each row is one of our methods on one model: {rank: [ours, baseline]} from the same paper and setup.
+// Fine-tuning tab. Each row is one method on one model: {rank: [method, baseline]} from the same paper and setup.
 // Sources: WeightLoRA (ACL 2026; Qwen3-8B table camera-ready only), SimplexLoRA (EMNLP submission), DyKAF arXiv 2511.06477
 // Tables 1–2, FRUGAL arXiv 2411.07837 Tables 6–7, PSI-LoRA arXiv 2602.16456 v1, LoRA-TSD (AAAI 2027 draft, r=16 vs AdamW LoRA).
-// Gain is relative: (ours − baseline) / baseline. Between measured ranks it is interpolated linearly in log2 r; outside them
-// it stays at the nearest measurement and is drawn hatched.
 const FT_METHODS={'WLoRA+':{color:'c2',base:'LoRA'},SimplexLoRA:{color:'c3',base:'LoRA',preliminary:true},DyKAF:{color:'c4',base:'AdamW'},FRUGAL:{color:'c5',base:'LoRA'},'LoRA-TSD':{color:'c6',base:'AdamW-LoRA',preliminary:true},'PSI-LoRA':{color:'c7',base:'LoRA'}};
 const FT_NAMES=Object.keys(FT_METHODS);
-const qwen=(m,pts)=>({m,model:'Qwen3-8B',pts});
+const qwen=(m,pts)=>({m,model:'Qwen3-8B',pts}),llama=(m,pts)=>({m,model:'LLaMA 3.1-8B',pts});
 const FT_TASKS=[
  {skill:'Математика',name:'MathQA',rows:[qwen('WLoRA+',{2:[60.1,57.3],4:[60.5,58.1],8:[61.6,59.9],16:[63.5,60.7]}),qwen('DyKAF',{8:[47,43]})]},
  {skill:'Математика',name:'GSM8K',rows:[qwen('WLoRA+',{2:[31.7,31.1],4:[32,31.4],8:[32.4,31.6],16:[32.5,31.8]}),qwen('SimplexLoRA',{1:[27.3,26.4],2:[27.3,26.5],4:[28.1,27.5],8:[28.7,27.9]}),qwen('DyKAF',{8:[39,40]})]},
- {skill:'Здравый смысл',name:'ARC',rows:[qwen('WLoRA+',{2:[87.4,86.9],4:[88.2,87.6],8:[88.7,88.1],16:[89.7,89.3]}),qwen('DyKAF',{8:[86,85]}),{m:'FRUGAL',model:'LLaMA 3.1-8B',pts:{32:[79.86,79.52]}}]},
- {skill:'Здравый смысл',name:'HellaSwag',rows:[qwen('WLoRA+',{2:[79.5,78.7],4:[79.8,78.8],8:[80.1,79.5],16:[81.9,80]}),qwen('SimplexLoRA',{1:[77.5,77.2],2:[79.1,77.6],4:[78,77.7],8:[79,78.2]}),qwen('DyKAF',{8:[70,69]}),{m:'FRUGAL',model:'LLaMA 3.1-8B',pts:{32:[95.15,95.13]}}]},
- {skill:'Здравый смысл',name:'WinoGrande',rows:[{m:'FRUGAL',model:'LLaMA 3.1-8B',pts:{32:[86.11,83.5]}}]},
- {skill:'Здравый смысл',name:'OpenBookQA',rows:[{m:'LoRA-TSD',model:'Llama-3.1-8B',pts:{16:[88.6,86.8]}},{m:'LoRA-TSD',model:'Llama-3.2-1B',pts:{16:[74,72.2]}},{m:'FRUGAL',model:'LLaMA 3.1-8B',pts:{32:[84.8,84]}}]},
- {skill:'Здравый смысл',name:'PIQA',rows:[{m:'LoRA-TSD',model:'Llama-3.1-8B',pts:{16:[90.1,89.2]}},{m:'LoRA-TSD',model:'Llama-3.2-1B',pts:{16:[80.53,75.77]}},{m:'FRUGAL',model:'LLaMA 3.1-8B',pts:{32:[88.47,88.19]}}]},
- {skill:'Понимание текста',name:'BoolQ',rows:[qwen('WLoRA+',{2:[69.1,68.9],4:[70.4,69.7],8:[72.4,70.8],16:[74.7,74.4]}),qwen('SimplexLoRA',{1:[68,65.5],2:[68.2,66.2],4:[70,69.1],8:[69.9,69.1]}),qwen('DyKAF',{8:[67,63]}),{m:'FRUGAL',model:'LLaMA 3.1-8B',pts:{32:[74.25,73.39]}},{m:'LoRA-TSD',model:'Llama-3.1-8B',pts:{16:[90,89.6]}}]},
- {skill:'Понимание текста',name:'MNLI',rows:[{m:'LoRA-TSD',model:'Llama-3.1-8B',pts:{16:[90.9,89.5]}},{m:'PSI-LoRA',model:'RoBERTa-base',pts:{8:[86.57,86.39]}},{m:'DyKAF',model:'RoBERTa-large',pts:{8:[90.01,90.13]}}]},
- {skill:'Понимание текста',name:'GLUE',rows:[{m:'WLoRA+',model:'Llama 3.1-8B',pts:{1:[89.23,89.03],2:[90.46,89.22],4:[91.68,90.24],8:[92.58,90.8]}},{m:'SimplexLoRA',model:'DeBERTaV3',pts:{1:[86.9,85.62],2:[87.17,86.29],4:[87.56,87],8:[88.26,88.04]}},{m:'WLoRA+',model:'DeBERTaV3',pts:{1:[86.12,85.62],2:[86.67,86.41],4:[87.43,87],8:[88.44,88.04]}},{m:'SimplexLoRA',model:'Llama 3.1-8B',pts:{1:[88.98,88.86],2:[89.33,89],4:[89.41,88.99],8:[89.52,88.92]}},{m:'FRUGAL',model:'RoBERTa-base',pts:{8:[86.7,86.1]}},{m:'DyKAF',model:'RoBERTa-large',pts:{8:[88,87.7]}}]},
+ {skill:'Здравый смысл',name:'ARC',rows:[qwen('WLoRA+',{2:[87.4,86.9],4:[88.2,87.6],8:[88.7,88.1],16:[89.7,89.3]}),qwen('DyKAF',{8:[86,85]}),llama('FRUGAL',{32:[79.86,79.52]})]},
+ {skill:'Здравый смысл',name:'HellaSwag',rows:[qwen('WLoRA+',{2:[79.5,78.7],4:[79.8,78.8],8:[80.1,79.5],16:[81.9,80]}),qwen('SimplexLoRA',{1:[77.5,77.2],2:[79.1,77.6],4:[78,77.7],8:[79,78.2]}),qwen('DyKAF',{8:[70,69]}),llama('FRUGAL',{32:[95.15,95.13]})]},
+ {skill:'Здравый смысл',name:'WinoGrande',rows:[llama('FRUGAL',{32:[86.11,83.5]})]},
+ {skill:'Здравый смысл',name:'OpenBookQA',rows:[llama('LoRA-TSD',{16:[88.6,86.8]}),{m:'LoRA-TSD',model:'Llama-3.2-1B',pts:{16:[74,72.2]}},llama('FRUGAL',{32:[84.8,84]})]},
+ {skill:'Здравый смысл',name:'PIQA',rows:[llama('LoRA-TSD',{16:[90.1,89.2]}),{m:'LoRA-TSD',model:'Llama-3.2-1B',pts:{16:[80.53,75.77]}},llama('FRUGAL',{32:[88.47,88.19]})]},
+ {skill:'Понимание текста',name:'BoolQ',rows:[qwen('WLoRA+',{2:[69.1,68.9],4:[70.4,69.7],8:[72.4,70.8],16:[74.7,74.4]}),qwen('SimplexLoRA',{1:[68,65.5],2:[68.2,66.2],4:[70,69.1],8:[69.9,69.1]}),qwen('DyKAF',{8:[67,63]}),llama('FRUGAL',{32:[74.25,73.39]}),llama('LoRA-TSD',{16:[90,89.6]})]},
+ {skill:'Понимание текста',name:'MNLI',rows:[llama('LoRA-TSD',{16:[90.9,89.5]}),{m:'PSI-LoRA',model:'RoBERTa-base',pts:{8:[86.57,86.39]}},{m:'DyKAF',model:'RoBERTa-large',pts:{8:[90.01,90.13]}}]},
+ {skill:'Понимание текста',name:'GLUE',rows:[llama('WLoRA+',{1:[89.23,89.03],2:[90.46,89.22],4:[91.68,90.24],8:[92.58,90.8]}),{m:'SimplexLoRA',model:'DeBERTaV3',pts:{1:[86.9,85.62],2:[87.17,86.29],4:[87.56,87],8:[88.26,88.04]}},{m:'WLoRA+',model:'DeBERTaV3',pts:{1:[86.12,85.62],2:[86.67,86.41],4:[87.43,87],8:[88.44,88.04]}},llama('SimplexLoRA',{1:[88.98,88.86],2:[89.33,89],4:[89.41,88.99],8:[89.52,88.92]}),{m:'FRUGAL',model:'RoBERTa-base',pts:{8:[86.7,86.1]}},{m:'DyKAF',model:'RoBERTa-large',pts:{8:[88,87.7]}}]},
  {skill:'Понимание текста',name:'SQuAD 2.0',rows:[{m:'PSI-LoRA',model:'T5-base',pts:{8:[62.41,57.56]}},{m:'WLoRA+',model:'DeBERTaV3',pts:{1:[80.65,80.19],2:[83.13,82.98],4:[84.86,84.4],8:[85.49,85.19]}}]},
  {skill:'Генерация',name:'XSum',rows:[{m:'WLoRA+',model:'BART-large',pts:{1:[35.82,35.23],2:[36.37,35.59],4:[36.45,35.96],8:[36.74,36.07]}},{m:'SimplexLoRA',model:'BART-large',pts:{1:[37.3,37.2],2:[37.6,37.4],4:[37.8,37.5],8:[37.9,38]}}]}];
+// Other groups' methods from the same tables, against the same baselines (measured cells only).
+const FT_OTHERS={
+ Muon:[['MathQA',qwen('Muon',{8:[43,43]})],['GSM8K',qwen('Muon',{8:[42,40]})],['HellaSwag',qwen('Muon',{8:[69,69]})],['BoolQ',qwen('Muon',{8:[64,63]})],['ARC',qwen('Muon',{8:[85,85]})],['GLUE',{m:'Muon',model:'RoBERTa-large',pts:{8:[87.07,87.7]}}],['PIQA',llama('Muon',{16:[87.9,89.2]})],['OpenBookQA',llama('Muon',{16:[86,86.8]})],['MNLI',llama('Muon',{16:[89.7,89.5]})]],
+ SOAP:[['MathQA',qwen('SOAP',{8:[41,43]})],['GSM8K',qwen('SOAP',{8:[42,40]})],['HellaSwag',qwen('SOAP',{8:[68,69]})],['BoolQ',qwen('SOAP',{8:[63,63]})],['ARC',qwen('SOAP',{8:[89,85]})],['GLUE',{m:'SOAP',model:'RoBERTa-large',pts:{8:[86.79,87.7]}}]],
+ GaLore:[['BoolQ',llama('GaLore',{32:[74.13,73.39]})],['PIQA',llama('GaLore',{32:[88.36,88.19]})],['HellaSwag',llama('GaLore',{32:[94.88,95.13]})],['WinoGrande',llama('GaLore',{32:[83.82,83.5]})],['ARC',llama('GaLore',{32:[80.2,79.52]})],['OpenBookQA',llama('GaLore',{32:[85.8,84]})],['GLUE',{m:'GaLore',model:'RoBERTa-base',pts:{8:[85.8,86.1]}}]],
+ DoRA:[['GLUE',{m:'DoRA',model:'DeBERTaV3',pts:{8:[86.11,86.96]}}]],
+ 'LoRA-Pro':[['BoolQ',llama('LoRA-Pro',{16:[88.3,89.6]})],['PIQA',llama('LoRA-Pro',{16:[86.3,89.2]})],['OpenBookQA',llama('LoRA-Pro',{16:[86.8,86.8]})],['MNLI',llama('LoRA-Pro',{16:[88.2,89.5]})]],
+ 'LoRA-Rite':[['BoolQ',llama('LoRA-Rite',{16:[88.9,89.6]})],['PIQA',llama('LoRA-Rite',{16:[88.4,89.2]})],['OpenBookQA',llama('LoRA-Rite',{16:[85.6,86.8]})],['MNLI',llama('LoRA-Rite',{16:[90.3,89.5]})]]};
 const FT_SKILLS=[...new Set(FT_TASKS.map(t=>t.skill))];
-// Trainable share of Qwen3-8B weights with LoRA on q/k/v/o: 0.57% at r=8 (WeightLoRA table), linear in r.
 const ftShare=r=>.57*r/8;
-// Zero-order fine-tuning, JAGUAR arXiv 2506.04430 v4 (memory in GB, quality). First-order LoRA memory for 7B/13B comes from the
-// JOTA submission and is marked as unpublished.
-const ZO=[
- {model:'OPT-1.3B',mode:'полное',task:'SST-2',rows:[['Обычное дообучение',12.246,91.1],['ZO-AdaMM',13.046,84.4],['JAGUAR',4.172,94.0]]},
- {model:'LLaMA2-7B',mode:'LoRA',task:'COPA',rows:[['Обычное дообучение*',48.572,85],['ZO-Adam',27.971,null],['JAGUAR',13.219,88]]},
- {model:'OPT-13B',mode:'LoRA',task:'COPA',rows:[['Обычное дообучение*',96.247,88],['ZO-Adam',38.612,null],['JAGUAR',24.712,89]]}];
-const GPUS=[[24,'RTX 4090 · 24 ГБ'],[48,'48 ГБ'],[80,'H100 · 80 ГБ']];
-const ftState={position:3};
-const ftRank=()=>2**ftState.position;
-// Rank model. LoRA quality saturates with rank: Q(r) = Qinf − D·r^−β, β = 0.3 (fit on the LoRA rank sweeps of WeightLoRA and
-// SimplexLoRA; plain log-linear fits the 1–16 range about as well, saturation reflects LoRA approaching full fine-tuning).
-// Our method behaves like LoRA with a κ times larger rank: Q_ours(r) = Q(κ·r); κ is fitted to the row's measured points.
-// Rows measured at a single rank borrow the median headroom D/Qinf of the swept curves.
-const FT_BETA=.3;
-function ftCurve(pts){
- const ranks=Object.keys(pts).map(Number),x=ranks.map(r=>r**-FT_BETA),q=ranks.map(r=>pts[r][1]);
- if(ranks.length<2)return null;
- const n=x.length,mx=x.reduce((a,b)=>a+b)/n,mq=q.reduce((a,b)=>a+b)/n,sxx=x.reduce((a,v)=>a+(v-mx)**2,0),sxq=x.reduce((a,v,i)=>a+(v-mx)*(q[i]-mq),0);
- const D=-sxq/sxx,Qinf=mq+D*mx;return D>0?{Qinf,D}:null;
+// Rank model. Each method has its own trend of gain versus rank, fitted on all of its rows measured at several ranks: the
+// median relative change of the gain per doubling of r (WLoRA+ ≈ flat, SimplexLoRA falls with r). Methods measured at one rank
+// get the pooled median trend. A row is g(r) = G·2^{q·(log2 r − c)}, G fitted by least squares to the row's points, c = mean
+// measured log2 r. Past r = 32 every curve also saturates as (r/32)^−0.3: LoRA approaches full fine-tuning.
+const FT_SAT=32,FT_BETA=.3;
+const gainAt=(row,r)=>(row.pts[r][0]-row.pts[r][1])/row.pts[r][1]*100;
+function rowSlope(row){const rs=Object.keys(row.pts).map(Number);if(rs.length<3)return null;const xs=rs.map(Math.log2),ys=rs.map(r=>gainAt(row,r)),mx=xs.reduce((a,b)=>a+b)/xs.length,my=ys.reduce((a,b)=>a+b)/ys.length;if(Math.abs(my)<.3)return null;return xs.reduce((a,x,i)=>a+(x-mx)*(ys[i]-my),0)/xs.reduce((a,x)=>a+(x-mx)**2,0)/my;}
+const FT_TREND=(()=>{const per={};for(const t of FT_TASKS)for(const row of t.rows){const s=rowSlope(row);if(s!==null)(per[row.m]=per[row.m]||[]).push(s);}
+ const pooled=median(Object.values(per).flat()),q=s=>Math.log2(1+Math.max(-.5,Math.min(.5,s)));
+ return Object.fromEntries([...FT_NAMES,...Object.keys(FT_OTHERS)].map(m=>[m,q(per[m]?median(per[m]):pooled)]));})();
+const ftSat=r=>r>FT_SAT?(r/FT_SAT)**-FT_BETA:1;
+function ftRowFit(row){
+ if(row.fit_)return row.fit_;
+ const rs=Object.keys(row.pts).map(Number),q=FT_TREND[row.m],c=rs.reduce((a,r)=>a+Math.log2(r),0)/rs.length,w=rs.map(r=>2**(q*(Math.log2(r)-c)));
+ const G=rs.reduce((a,r,i)=>a+gainAt(row,r)*w[i],0)/w.reduce((a,v)=>a+v*v,0);
+ return row.fit_={G,c,q,lo:Math.min(...rs),hi:Math.max(...rs)};
 }
-const FT_HEADROOM=median(FT_TASKS.flatMap(t=>t.rows).map(r=>ftCurve(r.pts)).filter(Boolean).map(c=>c.D/c.Qinf));
-function ftModel(row){
- if(row.model_)return row.model_;
- const ranks=Object.keys(row.pts).map(Number);
- let c=ftCurve(row.pts);
- if(!c){const r0=ranks[0],q0=row.pts[r0][1],Qinf=q0/(1-FT_HEADROOM*r0**-FT_BETA);c={Qinf,D:FT_HEADROOM*Qinf};}
- // κ at each measured rank; its trend in log r is fitted where several ranks exist and held flat beyond them.
- const logs=ranks.map(r=>{const gap=c.Qinf-row.pts[r][0];const eff=gap<=0?4096:(gap/c.D)**(-1/FT_BETA);return Math.log(Math.min(256,Math.max(1/64,eff/r)));});
- const lr=ranks.map(Math.log),ml=lr.reduce((a,b)=>a+b)/lr.length,mk=logs.reduce((a,b)=>a+b)/logs.length,sll=lr.reduce((a,v)=>a+(v-ml)**2,0);
- const slope=sll?Math.max(-.6,Math.min(.6,lr.reduce((a,v,i)=>a+(v-ml)*(logs[i]-mk),0)/sll)):0,lo=Math.min(...ranks),hi=Math.max(...ranks);
- return row.model_={...c,kappaAt:r=>Math.exp(mk+slope*(Math.log(Math.min(hi,Math.max(lo,r)))-ml))};
-}
-const ftQ=(c,r)=>c.Qinf-c.D*r**-FT_BETA;
-// Relative gain of one row at rank r, in percent. At measured ranks it equals the paper; between them it is interpolated in log r;
-// beyond them it follows the model's decay ∝ r^−β from the nearest measurement. est marks ranks outside the measured ones.
-function ftGain(row,rank){
- const ranks=Object.keys(row.pts).map(Number).sort((a,b)=>a-b),g=r=>(row.pts[r][0]-row.pts[r][1])/row.pts[r][1]*100,lo=ranks[0],hi=ranks[ranks.length-1];
- let gain;
- if(rank<=lo)gain=g(lo)*(rank/lo)**-FT_BETA;else if(rank>=hi)gain=g(hi)*(rank/hi)**-FT_BETA;
- else{const i=ranks.findIndex(r=>r>rank),a=ranks[i-1],b=ranks[i],t=Math.log(rank/a)/Math.log(b/a);gain=g(a)+(g(b)-g(a))*t;}
- const c=ftModel(row),target=ftQ(c,rank)*(1+gain/100),gap=c.Qinf-target,kappa=gap>0?(gap/c.D)**(-1/FT_BETA)/rank:Infinity;
- return {gain,kappa:gain>0?kappa:1,est:rank<lo/1.05||rank>hi*1.05};
-}
-// Per task and method: mean over that method's rows (models). Missing task × method cells are filled by a rank-one estimate
-// gain ≈ strength(method) × response(task), both taken at r = 8: strength is the method's median measured gain shrunk toward
-// the overall median with weight n/(n+6); response is the median ratio of a task's gains to the strengths of the methods
-// measured on it, clipped to [0.5, 2.5]. A skill's headline winner must have at least one measured task in that skill. Estimated cells follow the same r^−β decay as the rank model.
-function ftMeasured(task,m,rank){const rows=task.rows.filter(r=>r.m===m).map(r=>ftGain(r,rank));return rows.length?{gain:rows.reduce((s,r)=>s+r.gain,0)/rows.length,kappa:Math.exp(rows.reduce((s,r)=>s+Math.log(r.kappa),0)/rows.length),est:rows.every(r=>r.est)}:null;}
+function ftGain(row,rank){const f=ftRowFit(row);return {gain:f.G*2**(f.q*(Math.log2(rank)-f.c))*ftSat(rank),est:rank<f.lo/1.05||rank>f.hi*1.05};}
+function ftMeasured(rows,rank){const g=rows.map(r=>ftGain(r,rank));return g.length?{gain:g.reduce((a,x)=>a+x.gain,0)/g.length,est:g.every(x=>x.est)}:null;}
+// Missing task × method cells: gain ≈ strength(method) × response(task) at r = 8, strength shrunk toward the overall median with
+// weight n/(n+6), response clipped to [0.5, 2.5]; the cell then follows the method's own rank trend.
 const FT_FILL=(()=>{
- const at8=FT_TASKS.map(t=>Object.fromEntries(FT_NAMES.map(m=>[m,ftMeasured(t,m,8)]).filter(([,c])=>c).map(([m,c])=>[m,c.gain])));
+ const at8=FT_TASKS.map(t=>Object.fromEntries(FT_NAMES.map(m=>[m,ftMeasured(t.rows.filter(r=>r.m===m),8)]).filter(([,c])=>c).map(([m,c])=>[m,c.gain])));
  const all=median(at8.flatMap(o=>Object.values(o)));
  const strength=Object.fromEntries(FT_NAMES.map(m=>{const v=at8.map(o=>o[m]).filter(x=>x!==undefined),n=v.length;return [m,(n*median(v)+6*all)/(n+6)];}));
  const response=at8.map(o=>{const r=Object.entries(o).filter(([m])=>strength[m]>.2).map(([m,g])=>g/strength[m]);return r.length?Math.min(2.5,Math.max(.5,median(r))):1;});
  return {strength,response};
 })();
 function ftCell(task,t,m,rank){
- const c=ftMeasured(task,m,rank);if(c)return c;
- return {gain:FT_FILL.strength[m]*FT_FILL.response[t]*(rank/8)**-FT_BETA,kappa:1,est:true,imputed:true};
+ const c=ftMeasured(task.rows.filter(r=>r.m===m),rank);if(c)return c;
+ return {gain:FT_FILL.strength[m]*FT_FILL.response[t]*2**(FT_TREND[m]*(Math.log2(rank)-3))*ftSat(rank),est:true,imputed:true};
 }
+// Skill score of a method: median over the skill's tasks (robust to a single large result). Other groups' methods: measured only.
 function ftTable(rank){
  const tasks=FT_TASKS.map((task,t)=>({...task,cells:Object.fromEntries(FT_NAMES.map(m=>[m,ftCell(task,t,m,rank)]))}));
- const skills=FT_SKILLS.map(skill=>{const ts=tasks.filter(t=>t.skill===skill),methods={};
-  for(const m of FT_NAMES){const cs=ts.map(t=>t.cells[m]);methods[m]={gain:cs.reduce((s,c)=>s+c.gain,0)/cs.length,kappa:Math.exp(cs.filter(c=>!c.imputed).reduce((s,c)=>s+Math.log(c.kappa),0)/Math.max(1,cs.filter(c=>!c.imputed).length)),est:cs.every(c=>c.est),imputed:cs.every(c=>c.imputed),tasks:cs.length};}
-  return {skill,tasks:ts,methods};});
+ const skills=FT_SKILLS.map(skill=>{const ts=tasks.filter(t=>t.skill===skill),methods={},others={};
+  for(const m of FT_NAMES){const cs=ts.map(t=>t.cells[m]);methods[m]={gain:median(cs.map(c=>c.gain)),est:cs.every(c=>c.est),imputed:cs.every(c=>c.imputed)};}
+  for(const [m,list] of Object.entries(FT_OTHERS)){const rows=list.filter(([name])=>ts.some(t=>t.name===name)).map(([,row])=>ftGain(row,rank).gain);if(rows.length)others[m]={gain:median(rows),other:true};}
+  return {skill,tasks:ts,methods,others};});
  return {tasks,skills};
 }
 const pct=v=>(v>=0?'+':'−')+fmt(Math.abs(v),1)+'%';
+const ftState={position:3,zo:0};
+const ftRank=()=>2**ftState.position;
 function drawFinetune(){
  if(!$('ft-rank'))return;
  const rank=ftRank(),{tasks,skills}=ftTable(rank);let moving=false;
@@ -381,46 +366,72 @@ function drawFinetune(){
  $('ft-count').textContent=fmt(ftShare(rank)/100*8e9/1e6,0)+' млн';$('ft-size').textContent=fmt(ftShare(rank)/100*8e9*2/1e6,0)+' МБ';$('ft-wlora').textContent=fmt(ftShare(rank)/2,2)+'%';
  $('ft-ring').style.setProperty('--p',track('fring',Math.min(100,Math.log2(ftShare(rank)/.05)/Math.log2(9.2/.05)*100)));
  skills.forEach((s,i)=>{
-  const card=$('ft-skill-'+i),order=Object.entries(s.methods).sort((a,b)=>(a[1].imputed-b[1].imputed)||(b[1].gain-a[1].gain)),[top,best]=order[0],scale=Math.max(5,...order.map(([,v])=>Math.max(v.gain,-v.gain*4.4)));
+  const card=$('ft-skill-'+i),all={...s.methods,...s.others};
+  const order=Object.entries(all).sort((a,b)=>(!!a[1].imputed-!!b[1].imputed)||(b[1].gain-a[1].gain)),[top,best]=order.find(([m,v])=>FT_METHODS[m]&&!v.imputed);
+  const scale=Math.max(3,...order.map(([,v])=>Math.max(v.gain,-v.gain*4.4)));
   card.querySelector('.tag').textContent=top+(FT_METHODS[top].preliminary?'*':'');card.querySelector('.tag').className='tag '+FT_METHODS[top].color;
   card.querySelector('.sk-value').textContent=`на ${fmt(Math.abs(track('sk'+i,best.gain)),1)}% ${best.gain>=0?'лучше':'хуже'}`;
   card.querySelector('.sk-base').textContent=FT_METHODS[top].base;
-  card.querySelector('.sk-kappa').textContent=best.kappa>=1.05&&best.kappa<=64?`работает как ${FT_METHODS[top].base} с рангом в ${times(best.kappa)} больше`:'';
-  skillChart(card,s,rank);
   order.forEach(([m,v],j)=>{const row=card.querySelector(`.sk-row[data-m="${m}"]`);row.style.transform=`translateY(${j*100}%)`;
    const w=track('skw'+i+m,v.gain)/scale*80,fill=row.querySelector('.sk-fill');fill.style.left=(w>=0?18:18+w)+'%';fill.style.width=Math.abs(w)+'%';
-   fill.classList.toggle('neg',v.gain<0);fill.classList.toggle('est',v.est);fill.classList.toggle('imp',v.imputed);row.querySelector('.sk-v').textContent=pct(v.gain);});
+   fill.classList.toggle('neg',v.gain<0&&!v.other);fill.classList.toggle('est',!!v.est&&!v.imputed);fill.classList.toggle('imp',!!v.imputed);row.querySelector('.sk-v').textContent=pct(v.gain);});
+  skillChart(card,i,rank);
  });
  tasks.forEach((t,i)=>{const best=Object.entries(t.cells).filter(([,c])=>!c.imputed).sort((a,b)=>b[1].gain-a[1].gain)[0][0];
   for(const [m,c] of Object.entries(t.cells)){const cell=$(`ft-c-${i}-${FT_NAMES.indexOf(m)}`);cell.classList.toggle('top',m===best);
-   const fill=cell.querySelector('.hm-fill');fill.style.width=Math.min(100,Math.abs(track('hm'+i+m,c.gain))/10*100)+'%';fill.classList.toggle('neg',c.gain<0);fill.classList.toggle('est',c.est);cell.querySelector('b').textContent=pct(c.gain);}});
+   const fill=cell.querySelector('.hm-fill');fill.style.width=Math.min(100,Math.abs(c.gain)/10*100)+'%';fill.classList.toggle('neg',c.gain<0);fill.classList.toggle('est',c.est&&!c.imputed);cell.querySelector('b').textContent=pct(c.gain);}});
  if(moving)requestAnimationFrame(drawFinetune);
 }
-// Gain versus rank for every method of a skill, with the slider position marked.
-function skillChart(card,s,rank){
- const svg=card.querySelector('.sk-chart'),W=400,H=110,px=r=>6+Math.log2(r)/7*(W-12);
- const grid=Array.from({length:29},(_,i)=>2**(i/4)),idx=FT_SKILLS.indexOf(s.skill),tables=skillChart.cache||(skillChart.cache=grid.map(r=>ftTable(r))),curve=m=>tables.map(tb=>tb.skills[idx].methods[m].gain);
- const series=Object.keys(s.methods).map(m=>({m,ys:curve(m)})),top=Math.max(2,...series.flatMap(x=>x.ys)),bottom=Math.min(0,...series.flatMap(x=>x.ys)),py=v=>6+(top-v)/(top-bottom)*(H-18);
- if(!svg.dataset.ready){svg.innerHTML=`<line x1="0" x2="${W}" y1="${py(0)}" y2="${py(0)}" class="sk-axis"/>`+series.map(x=>`<path class="sk-line ${FT_METHODS[x.m].color}" d="${x.ys.map((v,i)=>(i?'L':'M')+px(grid[i]).toFixed(1)+','+py(v).toFixed(1)).join('')}"/>`).join('')+`<line class="sk-cursor" y1="0" y2="${H-10}"/>`+series.map(x=>`<circle class="sk-pt ${FT_METHODS[x.m].color}" data-m="${x.m}" r="3.5"/>`).join('')+[1,8,128].map(r=>`<text x="${px(r)}" y="${H-1}" text-anchor="${r===1?'start':r===128?'end':'middle'}">r=${r}</text>`).join('');svg.dataset.ready=1;}
+// Gain versus rank for our methods in one skill, with the slider position marked.
+const FT_GRID=Array.from({length:29},(_,i)=>2**(i/4));
+let FT_TABLES=null;
+function skillChart(card,i,rank){
+ const svg=card.querySelector('.sk-chart'),W=400,H=70,px=r=>6+Math.log2(r)/7*(W-12),tables=FT_TABLES||(FT_TABLES=FT_GRID.map(ftTable));
+ const series=FT_NAMES.map(m=>({m,ys:tables.map(tb=>tb.skills[i].methods[m].gain),imp:tables[0].skills[i].methods[m].imputed}));
+ const top=Math.max(2,...series.flatMap(x=>x.ys)),bottom=Math.min(0,...series.flatMap(x=>x.ys)),py=v=>4+(top-v)/(top-bottom)*(H-16);
+ if(!svg.dataset.ready){svg.innerHTML=`<line x1="0" x2="${W}" y1="${py(0)}" y2="${py(0)}" class="sk-axis"/>`+series.map(x=>`<path class="sk-line ${FT_METHODS[x.m].color} ${x.imp?'imp':''}" d="${x.ys.map((v,k)=>(k?'L':'M')+px(FT_GRID[k]).toFixed(1)+','+py(v).toFixed(1)).join('')}"/>`).join('')+`<line class="sk-cursor" y1="0" y2="${H-10}"/>`+[1,8,128].map(r=>`<text x="${px(r)}" y="${H-1}" text-anchor="${r===1?'start':r===128?'end':'middle'}">r=${r}</text>`).join('');svg.dataset.ready=1;}
  svg.querySelector('.sk-cursor').setAttribute('x1',px(rank));svg.querySelector('.sk-cursor').setAttribute('x2',px(rank));
- for(const x of series){const pt=svg.querySelector(`[data-m="${x.m}"]`);pt.setAttribute('cx',px(rank));pt.setAttribute('cy',py(s.methods[x.m].gain));}
 }
-function zoBlock(){
- const model=z=>{const fo=z.rows[0],jag=z.rows[2];return `<div class="zo-model"><div class="zo-left"><div class="zo-head"><b>${z.model}</b><small>${z.mode}</small></div><div class="zo-big"><strong>в ${fmt(fo[1]/jag[1],1)} раза</strong><span>меньше памяти</span></div><div class="zo-quality">${z.task}: <b>${fmt(jag[2],0)}</b> против ${fmt(fo[2],0)}</div></div><div class="zo-axis">${GPUS.map(([g,t])=>`<div class="zo-gpu" style="width:${g}%"><span>${t}</span></div>`).join('')}${z.rows.map(([n,gb],i)=>`<div class="zo-mark ${n==='JAGUAR'?'ours':''}" style="--x:${gb}%;--d:${i*.25}s;top:${4+i*20}px"><i></i><span class="${gb>70?'inside':''}">${n} · ${fmt(gb,1)} ГБ</span></div>`).join('')}</div></div>`;};
- return `<section class="board zo"><div class="board-head"><h3>Без обратного прохода: дообучение на одной видеокарте</h3><span class="meta">JAGUAR</span></div><p class="zo-lead">Градиент оценивается по двум прямым проходам: ни активаций, ни состояний оптимизатора. Памяти почти как на инференс, качество не хуже.</p><div class="zo-grid">${ZO.map(model).join('')}</div><p class="step-note">Шкала 0–100 ГБ, пунктир — объём видеокарт. * — из версии статьи на рецензии.</p></section>`;
+// Zero-order fine-tuning, JAGUAR arXiv 2506.04430 v4: SST-2 (Table 2), COPA / WinoGrande (Table 3), memory (Tables 5–6).
+// First-order memory for OPT-13B and LLaMA2-7B is from the JOTA submission (unpublished, marked *).
+const ZO_OURS=['JAGUAR SignSGD','JAGUAR Muon','ZO-Muon'];
+const ZO_INFO={'FO-SGD':'обычный градиент через обратный проход','Forward-Grad':'производная по направлению в прямом режиме','ZO-SGD':'оценка градиента по двум прямым проходам, 2d памяти','ZO-SGD-Cons':'ZO-SGD с осторожным шагом, 2d','ZO-SignSGD':'знак оценки градиента, 2d','ZO-AdaMM':'Adam на оценках градиента, 4d','Acc-ZOM':'ускоренный ZO с моментом, 5d','LeZO':'обновляет часть слоёв за шаг, 2d','ZO-Muon':'ортогонализация оценки, как в Muon','JAGUAR SignSGD':'момент по координатам и знак, память как у ZO-SGD','JAGUAR Muon':'момент по координатам и ортогонализация'};
+const ZO_SETUPS=[
+ {label:'OPT-1.3B · SST-2 · полное',metric:'SST-2',acc:{'FO-SGD':91.1,'Forward-Grad':90.3,'ZO-SGD':90.8,'Acc-ZOM':85.2,'ZO-SGD-Cons':88.3,'ZO-SignSGD':87.2,'ZO-AdaMM':84.4,LeZO:85.1,'JAGUAR SignSGD':94.0,'JAGUAR Muon':84.0,'ZO-Muon':86.5},mem:{'FO-SGD':12.246,'ZO-SGD':4.171,'ZO-AdaMM':13.046,'JAGUAR SignSGD':4.172,'JAGUAR Muon':4.179,'ZO-Muon':4.177}},
+ {label:'OPT-1.3B · SST-2 · LoRA',metric:'SST-2',acc:{'FO-SGD':93.6,'Forward-Grad':90.3,'ZO-SGD':90.1,'Acc-ZOM':91.3,'ZO-SGD-Cons':90.5,'ZO-SignSGD':91.5,'ZO-AdaMM':92.3,LeZO:92.3,'JAGUAR SignSGD':92.5,'JAGUAR Muon':94.0,'ZO-Muon':93.5},mem:{'FO-SGD':5.855,'ZO-SGD':4.125,'ZO-AdaMM':6.132,'JAGUAR SignSGD':4.128,'JAGUAR Muon':4.132,'ZO-Muon':4.13}},
+ {label:'RoBERTa-L · SST-2 · полное',metric:'SST-2',acc:{'FO-SGD':91.4,'Forward-Grad':90.1,'ZO-SGD':89.4,'Acc-ZOM':89.6,'ZO-SGD-Cons':89.6,'ZO-SignSGD':52.5,'ZO-AdaMM':89.8,LeZO:90.4,'JAGUAR SignSGD':92.2,'JAGUAR Muon':85.0,'ZO-Muon':72.0},mem:{}},
+ {label:'RoBERTa-L · SST-2 · LoRA',metric:'SST-2',acc:{'FO-SGD':91.2,'Forward-Grad':89.7,'ZO-SGD':90.8,'Acc-ZOM':90.9,'ZO-SGD-Cons':91.6,'ZO-SignSGD':90.2,'ZO-AdaMM':89.5,LeZO:91.8,'JAGUAR SignSGD':92.2,'JAGUAR Muon':92.2,'ZO-Muon':86.0},mem:{}},
+ {label:'LLaMA2-7B · COPA · LoRA',metric:'COPA',acc:{'FO-SGD':85,'Forward-Grad':82,'ZO-SGD':86,'ZO-SGD-Cons':85,'JAGUAR SignSGD':88,'JAGUAR Muon':88,'ZO-Muon':85},mem:{'FO-SGD*':48.572,'ZO-SGD':13.219,'ZO-AdaMM':27.971,'JAGUAR SignSGD':13.219,'JAGUAR Muon':16.032,'ZO-Muon':15.021}},
+ {label:'LLaMA2-7B · WinoGrande · LoRA',metric:'WinoGrande',acc:{'FO-SGD':66.9,'Forward-Grad':64.3,'ZO-SGD':64.3,'ZO-SGD-Cons':64.6,'JAGUAR SignSGD':64.9,'JAGUAR Muon':62.8,'ZO-Muon':61.6},mem:{'FO-SGD*':49.114,'ZO-SGD':14.67,'ZO-AdaMM':29.44,'JAGUAR SignSGD':14.672,'JAGUAR Muon':17.992,'ZO-Muon':16.992}},
+ {label:'OPT-13B · COPA · LoRA',metric:'COPA',acc:{'FO-SGD':88,'Forward-Grad':89,'ZO-SGD':87,'ZO-SGD-Cons':88,'JAGUAR SignSGD':89,'JAGUAR Muon':87,'ZO-Muon':87},mem:{'FO-SGD*':96.247,'ZO-SGD':24.71,'ZO-AdaMM':38.612,'JAGUAR SignSGD':24.712,'JAGUAR Muon':25.88,'ZO-Muon':25.74}},
+ {label:'OPT-13B · WinoGrande · LoRA',metric:'WinoGrande',acc:{'FO-SGD':66.9,'Forward-Grad':62.9,'ZO-SGD':62.6,'ZO-SGD-Cons':63.3,'JAGUAR SignSGD':63.7,'JAGUAR Muon':62.3,'ZO-Muon':61.9},mem:{'FO-SGD*':97.355,'ZO-SGD':26.407,'ZO-AdaMM':39.872,'JAGUAR SignSGD':26.408,'JAGUAR Muon':27.44,'ZO-Muon':27.416}}];
+const ZO_NAMES=Object.keys(ZO_INFO);
+function drawZO(){
+ const z=ZO_SETUPS[ftState.zo],ranked=Object.entries(z.acc).sort((a,b)=>b[1]-a[1]),lo=Math.min(...Object.values(z.acc))-2,hi=Math.max(...Object.values(z.acc))+1;
+ document.querySelectorAll('.zo-tab').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===ftState.zo)));
+ ZO_NAMES.forEach(n=>{const row=$('zo-'+n.replace(/\W/g,'')),v=z.acc[n];row.classList.toggle('gone',v===undefined);
+  const i=ranked.findIndex(([m])=>m===n);if(i>=0)row.style.transform=`translateY(${i*100}%)`;
+  if(v!==undefined){row.querySelector('.zo-fill').style.width=((v-lo)/(hi-lo)*100)+'%';row.querySelector('.zo-v').textContent=fmt(v,1);}
+  const memKey=Object.keys(z.mem).find(k=>k.replace('*','')===n),gb=memKey?z.mem[memKey]:null;row.querySelector('.zo-m').textContent=gb?fmt(gb,1)+(memKey.endsWith('*')?'*':'')+' ГБ':'—';});
+ document.querySelector('.zo-list').style.height=`calc(${ranked.length} * 23px)`;
+ const fo=z.acc['FO-SGD'],best=ZO_OURS.map(n=>[n,z.acc[n]]).sort((a,b)=>b[1]-a[1])[0],foMem=Object.entries(z.mem).find(([k])=>k.startsWith('FO'));
+ $('zo-head').innerHTML=`<strong>${best[0]}</strong> ${best[1]>=fo?'лучше':'почти как'} обычного дообучения: ${fmt(best[1],1)} против ${fmt(fo,1)}`+(foMem&&z.mem[best[0]]?` · памяти в <strong>${fmt(foMem[1]/z.mem[best[0]],1)} раза</strong> меньше`:'');
+ const setup=$('zo-setup');setup.textContent=z.metric+', точность, %';
 }
 function renderFinetune(){
  const {skills}=ftTable(ftRank());
- const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs">чем <span class="sk-base"></span></span></div><div class="sk-kappa"></div><svg class="sk-chart" viewBox="0 0 400 110" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${Object.keys(s.methods).length} * 26px)"><div class="sk-zero"></div>${Object.keys(s.methods).map(m=>`<div class="sk-row" data-m="${m}"><span>${m}${FT_METHODS[m].preliminary?'*':''}</span><div class="sk-track"><div class="sk-fill ${FT_METHODS[m].color}"></div></div><em class="sk-v"></em></div>`).join('')}</div></section>`;
- const heat=`<section class="board hm"><div class="board-head"><h3>По задачам</h3><span class="meta">насколько лучше базового метода из той же статьи</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th><i class="mark ${FT_METHODS[m].color}"></i>${m}${FT_METHODS[m].preliminary?'*':''}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${t.name}<small>${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?'':'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table><p class="step-note">Контурные полоски — клетки без замера, оценка «сила метода × отзывчивость задачи». На рангах из статей — их числа, между ними — интерполяция, за их пределами — затухание ∝ r<sup>−0,3</sup>: качество LoRA насыщается с рангом, и выигрыш сжимается. Штриховка — ранг вне замеров. * — не опубликовано.</p></section>`;
+ const bar=(m,other)=>`<div class="sk-row ${other?'other':''}" data-m="${m}"><span>${m}${FT_METHODS[m]&&FT_METHODS[m].preliminary?'*':''}</span><div class="sk-track"><div class="sk-fill ${other?'other':FT_METHODS[m].color}"></div></div><em class="sk-v"></em></div>`;
+ const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs">чем <span class="sk-base"></span></span></div><svg class="sk-chart" viewBox="0 0 400 70" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${FT_NAMES.length+Object.keys(s.others).length} * 22px)"><div class="sk-zero"></div>${FT_NAMES.map(m=>bar(m,false)).join('')}${Object.keys(s.others).map(m=>bar(m,true)).join('')}</div></section>`;
+ const heat=`<section class="board hm below-fold"><div class="board-head"><h3>По задачам</h3><span class="meta">насколько лучше базового метода из той же статьи</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th><i class="mark ${FT_METHODS[m].color}"></i>${m}${FT_METHODS[m].preliminary?'*':''}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${t.name}<small>${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?t.rows.filter(r=>r.m===m).map(r=>r.model).join(', '):'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table><p class="step-note">Контур — клетки без замера, оценка «сила метода × отзывчивость задачи». Модель рангов: у каждого метода свой наклон прироста по рангу, подогнанный по его замерам (WLoRA+ почти ровный, SimplexLoRA сильнее на малых рангах); после r=32 все выигрыши затухают ∝ r<sup>−0,3</sup>. Штриховка — ранг вне замеров. * — не опубликовано.</p></section>`;
+ const zo=`<section class="board zo2"><div class="board-head"><h3>Нулевой порядок: дообучение без обратного прохода</h3><span class="meta">JAGUAR SignSGD, JAGUAR Muon, ZO-Muon — наши</span></div><div class="zo-tabs">${ZO_SETUPS.map((z,i)=>`<button class="zo-tab" data-zo="${i}">${z.label}</button>`).join('')}</div><p class="zo-headline" id="zo-head"></p><div class="zo-cols"><div class="zo-legend"><span>метод</span><span id="zo-setup"></span><span>память</span></div><div class="zo-list" style="height:calc(${ZO_NAMES.length} * 23px)">${ZO_NAMES.map(n=>`<div class="zo-row ${ZO_OURS.includes(n)?'ours':''} ${n==='FO-SGD'?'fo':''}" id="zo-${n.replace(/\W/g,'')}"><span title="${ZO_INFO[n]}">${n}<small>${ZO_INFO[n]}</small></span><div class="zo-track"><div class="zo-fill"></div></div><em class="zo-v"></em><em class="zo-m"></em></div>`).join('')}</div></div><p class="step-note">Память: 2d — два вектора размера модели, как у инференса с копией весов; 4d–5d — методы с состояниями Adam или ускорением. * — память обычного дообучения из версии статьи на рецензии.</p></section>`;
  const stops=[1,4,16,64,128].map(r=>`<button class="ft-stop" data-pos="${Math.log2(r)}">r=${r}<small>${fmt(ftShare(r),2)}%</small></button>`).join('');
  $('controls').innerHTML='';
  $('result').innerHTML=`<div class="scale-dock ft-dock"><div class="ft-dock-row"><div><span class="eyebrow" style="display:block;margin:0">Ранг адаптера LoRA</span><strong id="ft-r" class="ft-big"></strong></div><div class="ft-ring-wrap"><div class="ft-ring" id="ft-ring"><div><strong id="ft-share"></strong><small>весов 8B</small></div></div><dl><dt>Обучаемых параметров</dt><dd id="ft-count"></dd><dt>Размер адаптера</dt><dd id="ft-size"></dd><dt>WLoRA оставляет</dt><dd id="ft-wlora"></dd></dl></div><div class="ft-stops">${stops}</div></div><input type="range" id="ft-rank" min="0" max="7" step="any" value="${ftState.position}" aria-label="Ранг адаптера"></div>
- <div class="sk-grid">${skills.map(skill).join('')}</div>
- <div class="ft-bottom">${heat}${zoBlock()}</div>`;
+ <div class="sk-grid">${skills.map(skill).join('')}</div>${zo}${heat}`;
  $('ft-rank').addEventListener('input',e=>{ftState.position=Number(e.target.value);drawFinetune();});
  document.querySelectorAll('.ft-stop').forEach(b=>b.addEventListener('click',()=>{ftState.position=Number(b.dataset.pos);$('ft-rank').value=ftState.position;drawFinetune();}));
- drawFinetune();
+ document.querySelectorAll('.zo-tab').forEach(b=>b.addEventListener('click',()=>{ftState.zo=Number(b.dataset.zo);drawZO();}));
+ drawFinetune();drawZO();
 }
 function llmValues(row){return state.model==='nano'?[row.adamw1,row['muon'+state.batch]]:[row.hybrid_adamw1,row.hybrid_muon2];}
 function renderLLM(){
@@ -486,7 +497,8 @@ function fitToScreen(){
  if(!desktop)return;
  // Try a few canvas widths and keep the one that fills the window best: wide windows get a wider, lower layout.
  const shell=document.querySelector('.shell');let best={zoom:0,width:1600};
- for(const width of [1600,1800,2000,2200]){shell.style.width=width+'px';const zoom=Math.min(innerWidth/width,innerHeight/shell.scrollHeight);if(zoom>best.zoom+.01)best={zoom,width};}
+ const visible=()=>{const cut=shell.querySelector('.below-fold');return cut?cut.offsetTop-shell.offsetTop:shell.scrollHeight;};
+ for(const width of [1600,1800,2000,2200]){shell.style.width=width+'px';const zoom=Math.min(innerWidth/width,innerHeight/visible());if(zoom>best.zoom+.01)best={zoom,width};}
  shell.style.width=best.width+'px';root.style.zoom=best.zoom;
 }
 addEventListener('resize',fitToScreen);
