@@ -37,19 +37,23 @@
 .lane-name .steptag{font:10px monospace;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 4px;white-space:nowrap}.lane-name sup{color:var(--c2)}.scale-hint{font-size:13px;color:var(--muted);margin:6px 0 0}.scale-hint b{color:var(--text);font-weight:500}
 @media(max-width:700px){.lane{grid-template-columns:110px minmax(0,1fr) 84px}.lane-grid{left:118px;right:92px}.lane-name .steptag{display:none}}
 .sc-chart{width:100%;height:auto;display:block;margin-top:6px}.sc-chart text{fill:var(--muted);font:11px "Helvetica Neue",sans-serif}.sc-chart .sc-label{fill:var(--text);font-size:12px}.sc-line{fill:none;stroke:var(--hue)}.sc-line.other{opacity:.55}.sc-dot{fill:var(--hue)}.sc-dot.other{opacity:.6}.sc-ring{fill:var(--panel);stroke:var(--hue);stroke-width:2}.sc-pt{fill:var(--hue);stroke:var(--panel);stroke-width:2;}.sc-cursor{stroke:var(--text);stroke-dasharray:3 4;opacity:.6}.sc-grid{stroke:var(--line);stroke-dasharray:2 5}.sc-base{stroke:var(--lane-adam);stroke-width:1.5}
-:root{--c5:#8a5cf0}.light{--c5:#6d45d6}.c5{--hue:var(--c5)}.soft .fill,.state.soft,.chips.soft i,.mark.soft,.sc-line.soft{opacity:.55}.mem-lane .stack{height:11px}.mem-lane .chips{height:8px;margin-top:3px}.mem-lane .chips i{width:8px;height:8px;border-radius:2px}.mem-lane .mem-body{gap:0}.lane-money .saved.muted{color:var(--muted)}.domain-nav{display:none}
+:root{--c5:#8a5cf0}.light{--c5:#6d45d6}.c5{--hue:var(--c5)}.soft .fill,.state.soft,.chips.soft i,.mark.soft,.sc-line.soft{opacity:.55}.mem-lane .stack{height:11px}.mem-lane .chips{height:8px;margin-top:3px}.mem-lane .chips i{width:8px;height:8px;border-radius:2px}.mem-lane .mem-body{gap:0}.lane-money .saved.muted{color:var(--muted)}
 .wins{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:10px 0}.win{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:8px 14px}.win .eyebrow{display:block;margin:0 0 4px;font-size:10px}.win>div{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.win .tag{font-size:15px;transition:background .4s,border-color .4s}.win strong{font-size:26px;font-weight:500;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.win small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .quads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.quad{padding:12px 16px 14px}.quad .board-head h3{font-size:15px}.quad .board-head{align-items:center}.quad-legend{display:grid;grid-template-columns:170px minmax(0,1fr) 120px;gap:12px;margin:8px 0 4px}.quad-legend span:last-child{text-align:right}.quad .lane{grid-template-columns:170px minmax(0,1fr) 120px;gap:12px}.quad .lane-name .k{white-space:nowrap}.quad .lane-grid{left:182px;right:132px}.quad .lanes{margin-bottom:0}.quad .lane-money .value{font-size:14px;color:var(--c1);font-variant-numeric:tabular-nums}.quad .base .lane-money .value{color:var(--text)}.quad .lane:not(.finished) .value{color:var(--muted)}#mem .lane .value,#step .lane .value{color:var(--text)}#money .lane.finished .value{color:var(--c1)}#money .lane.base .value{color:var(--text)}.quad .quad .board-head .meta{margin-left:auto;margin-right:10px}.quad .sc-chart{margin-top:4px}
 @media(max-width:1100px){body:not(.fit) .quads{grid-template-columns:1fr}body:not(.fit) .wins{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.quad-legend,.quad .lane{grid-template-columns:100px minmax(0,1fr) 84px;gap:8px}.quad .lane-grid{left:108px;right:92px}.win strong{font-size:20px}}
 .fit .shell{width:1600px;max-width:none;padding:18px 36px 16px}.fit{overflow:hidden}
+.economy-view .domain-nav{margin:0 0 10px;border-bottom:0;gap:4px}.economy-view .domain{border:1px solid var(--line);border-radius:8px;padding:7px 16px;font-size:14px;margin:0}.economy-view .domain.active{border-color:var(--c1);color:var(--text);background:color-mix(in srgb,var(--c1) 12%,transparent)}
+.ft-dock{padding:12px 24px 8px}.ft-dock-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}.ft-big{font-size:40px;font-weight:500;letter-spacing:-.03em;color:var(--c2)}.ft-stops{display:flex;gap:6px}.ft-stop{border:1px solid var(--line);background:none;border-radius:8px;padding:6px 14px;font-size:15px;color:var(--muted);text-align:center;line-height:1.2}.ft-stop small{display:block;font-size:11px}.ft-stop.on{color:var(--text);border-color:var(--c2);background:color-mix(in srgb,var(--c2) 14%,transparent)}.ft-dock input{display:block;width:100%;height:34px;margin:6px 0 0;accent-color:var(--c2)}
+.ft-layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:12px}.ft-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.ft-tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:11px 13px 12px;min-width:0;display:flex;flex-direction:column}.ft-head{display:flex;flex-direction:column;line-height:1.2}.ft-head .eyebrow{font-size:9px;margin:0 0 3px}.ft-head b{font-size:15px;font-weight:600}.ft-head small{font-size:11px;color:var(--muted)}.ft-top{display:flex;align-items:center;gap:8px;margin:8px 0 2px;flex-wrap:wrap}.ft-best{font-size:30px;font-weight:500;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.ft-top .tag{font-size:12px;padding:2px 8px}.ft-vs{font-size:11px;color:var(--muted);margin:0 0 8px;min-height:28px}.ft-rows{position:relative;margin-top:auto}.ft-row{position:absolute;left:0;right:0;top:0;height:24px;display:grid;grid-template-columns:78px minmax(0,1fr) 62px;gap:6px;align-items:center;font-size:11px;transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .3s}.ft-row span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ft-row.faded{opacity:.45}.ft-track{height:8px;background:color-mix(in srgb,var(--muted) 18%,transparent);border-radius:4px;overflow:hidden}.ft-fill{height:100%;background:var(--hue);border-radius:4px;transition:width .3s}.ft-fill.neg{background:repeating-linear-gradient(135deg,var(--lane-adam) 0 3px,transparent 3px 6px)}.ft-val,.ft-mrow em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ft-side{display:flex;flex-direction:column;gap:10px}.ft-side .board{padding:12px 16px}.ft-ring-wrap{display:flex;align-items:center;gap:18px;margin:10px 0 4px}.ft-ring{--p:50;width:128px;height:128px;border-radius:50%;background:conic-gradient(var(--c2) calc(var(--p)*1%),color-mix(in srgb,var(--muted) 18%,transparent) 0);display:grid;place-items:center;flex:none}.ft-ring>div{width:96px;height:96px;border-radius:50%;background:var(--panel);display:grid;place-content:center;text-align:center;line-height:1.1}.ft-ring strong{font-size:22px;font-weight:500}.ft-ring small{font-size:10px;color:var(--muted)}.ft-ring-wrap dl{margin:0;font-size:12px;display:grid;grid-template-columns:auto auto;gap:4px 10px}.ft-ring-wrap dt{color:var(--muted)}.ft-ring-wrap dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}.ft-mem{margin-top:10px}.ft-mem small{font-size:11px;color:var(--muted)}.ft-mrow{display:grid;grid-template-columns:118px minmax(0,1fr) 62px;gap:8px;align-items:center;font-size:12px;height:22px}.ft-mrow.ours span{font-weight:650}.step-note{font-size:11px;color:var(--muted);margin:8px 0 0;line-height:1.4}
 </style>
 </head>
 <body>
 <div class="shell">
  <header class="topbar"><div class="wordmark">OPTIMIZER <span>/</span> ATLAS</div><div class="top-actions"><span class="meta"><i class="dot"></i>ОТКРЫТЫЕ ИССЛЕДОВАНИЯ</span><button class="quiet" id="theme" aria-label="Переключить светлую тему">Светлая тема</button><button class="quiet" id="sources-button" aria-expanded="false">Источники ↗</button></div></header>
  <section class="intro"><div><div class="eyebrow">Интерактивный обзор исследований</div><h1 id="page-title">То же качество.<br>Меньше затрат на обучение.</h1></div><p class="intro-note" id="intro-note">Двигайте размер модели. Все оптимизаторы обучаются одновременно до качества AdamW: видно, кто финиширует раньше, сколько это стоит и сколько GPU нужно под память.</p></section>
- <nav class="domain-nav" aria-label="Область применения"><button class="domain active" data-domain="economy" aria-pressed="true"><small>00</small>Экономия на pretraining</button><button class="domain" data-domain="llm" aria-pressed="false"><small>01</small>Качество LLM</button><button class="domain" data-domain="tabular" aria-pressed="false"><small>02</small>Табличные задачи</button><button class="domain" data-domain="diffusion" aria-pressed="false"><small>03</small>Научная диффузия</button></nav>
+ <nav class="domain-nav" aria-label="Раздел"><button class="domain active" data-domain="economy" aria-pressed="true">Предобучение</button><button class="domain" data-domain="finetune" aria-pressed="false">Дообучение</button></nav>
  <main>
   <section class="workspace" id="workspace"><aside class="controls" id="controls" aria-label="Параметры сравнения"></aside><div id="result"></div></section>
   <section id="sources-panel" hidden aria-label="Источники данных"><div class="result-head"><div><h2>Каждое число можно проверить</h2><p>Таблицы и кривые авторов. В калькуляторе коэффициенты получены интерполяцией, денежные затраты рассчитаны по введённым условиям.</p></div></div><div class="source-list" id="source-list"></div></section>
@@ -268,6 +272,78 @@ function renderEconomy(){
  $('scale').addEventListener('input',e=>{costState.position=Number(e.target.value);tick();});
  if(!costState.raced)startRace();else tick();
 }
+// Fine-tuning tab. Every pair is [our method, baseline from the same paper and setup], by adapter rank r.
+// Qwen3-8B: WeightLoRA ACL 2026 camera-ready (WLoRA+ vs LoRA), DyKAF arXiv 2511.06477 Table 2 (LoRA r=8, vs AdamW),
+// SimplexLoRA EMNLP submission (vs LoRA, ×100). DeBERTaV3/Llama GLUE, SQuAD, XSum: WeightLoRA and SimplexLoRA rank sweeps.
+// Commonsense: FRUGAL arXiv 2411.07837 Table 7 (LLaMA 3.1-8B, r=32, vs LoRA). GLUE RoBERTa: FRUGAL Table 6, DyKAF Table 1.
+const FT_METHODS={'WLoRA+':{color:'c2',paper:'WeightLoRA, ACL 2026',base:'LoRA'},SimplexLoRA:{color:'c3',paper:'SimplexLoRA, на рецензии',base:'LoRA',preliminary:true},DyKAF:{color:'c4',paper:'DyKAF, arXiv 2511.06477',base:'AdamW'},FRUGAL:{color:'c5',paper:'FRUGAL, ICML 2025',base:'LoRA'}};
+const FT_TASKS=[
+ {skill:'Математика',name:'MathQA',model:'Qwen3-8B',data:{'WLoRA+':{2:[60.1,57.3],4:[60.5,58.1],8:[61.6,59.9],16:[63.5,60.7]},DyKAF:{8:[47,43]}}},
+ {skill:'Математика',name:'GSM8K',model:'Qwen3-8B',data:{'WLoRA+':{2:[31.7,31.1],4:[32,31.4],8:[32.4,31.6],16:[32.5,31.8]},SimplexLoRA:{1:[27.3,26.4],2:[27.3,26.5],4:[28.1,27.5],8:[28.7,27.9]},DyKAF:{8:[39,40]}}},
+ {skill:'Рассуждение',name:'ARC',model:'Qwen3-8B',data:{'WLoRA+':{2:[87.4,86.9],4:[88.2,87.6],8:[88.7,88.1],16:[89.7,89.3]},DyKAF:{8:[86,85]}}},
+ {skill:'Рассуждение',name:'HellaSwag',model:'Qwen3-8B',data:{'WLoRA+':{2:[79.5,78.7],4:[79.8,78.8],8:[80.1,79.5],16:[81.9,80]},SimplexLoRA:{1:[77.5,77.2],2:[79.1,77.6],4:[78,77.7],8:[79,78.2]},DyKAF:{8:[70,69]}}},
+ {skill:'Рассуждение',name:'Здравый смысл, 8 задач',model:'LLaMA 3.1-8B',data:{FRUGAL:{32:[84.89,84.18]}}},
+ {skill:'Понимание текста',name:'BoolQ',model:'Qwen3-8B',data:{'WLoRA+':{2:[69.1,68.9],4:[70.4,69.7],8:[72.4,70.8],16:[74.7,74.4]},SimplexLoRA:{1:[68,65.5],2:[68.2,66.2],4:[70,69.1],8:[69.9,69.1]},DyKAF:{8:[67,63]}}},
+ {skill:'Понимание текста',name:'GLUE',model:'DeBERTaV3 · RoBERTa',data:{'WLoRA+':{1:[86.12,85.62],2:[86.67,86.41],4:[87.43,87],8:[88.44,88.04]},SimplexLoRA:{1:[86.9,85.62],2:[87.17,86.29],4:[87.56,87],8:[88.26,88.04]},FRUGAL:{8:[86.7,86.1]},DyKAF:{8:[88,87.7]}}},
+ {skill:'Понимание текста',name:'GLUE',model:'Llama 3.1-8B',data:{'WLoRA+':{1:[89.23,89.03],2:[90.46,89.22],4:[91.68,90.24],8:[92.58,90.8]},SimplexLoRA:{1:[88.98,88.86],2:[89.33,89],4:[89.41,88.99],8:[89.52,88.92]}}},
+ {skill:'Понимание текста',name:'SQuAD 2.0',model:'DeBERTaV3',data:{'WLoRA+':{1:[80.65,80.19],2:[83.13,82.98],4:[84.86,84.4],8:[85.49,85.19]}}},
+ {skill:'Генерация',name:'XSum',model:'BART-large',data:{'WLoRA+':{1:[35.82,35.23],2:[36.37,35.59],4:[36.45,35.96],8:[36.74,36.07]},SimplexLoRA:{1:[37.3,37.2],2:[37.6,37.4],4:[37.8,37.5],8:[37.9,38]}}}];
+// Share of trainable parameters for Qwen3-8B with LoRA on q/k/v/o (WeightLoRA table); WLoRA keeps about half the adapters.
+const FT_PARAMS={1:.07,2:.14,4:.28,8:.57,16:1.14};
+// Zero-order fine-tuning memory, GB, JAGUAR arXiv 2506.04430 v4: OPT-1.3B full FT on SST-2 and OPT-13B LoRA on COPA.
+const FT_MEMORY=[{setup:'OPT-1.3B, полное дообучение',rows:[['Обычный градиент',12.246],['ZO-AdaMM',13.046],['JAGUAR',4.172]]},{setup:'OPT-13B, LoRA',rows:[['ZO-Adam',38.612],['ZO-SGD',24.71],['JAGUAR',24.712]]}];
+const ftState={position:3,raced:false};
+function ftPoint(method,task,rank){
+ const d=task.data[method];if(!d)return null;
+ const ranks=Object.keys(d).map(Number),at=ranks.reduce((a,b)=>Math.abs(Math.log2(b/rank))<Math.abs(Math.log2(a/rank))?b:a);
+ const [ours,base]=d[at];return {method,at,exact:at===rank,ours,base,delta:ours-base};
+}
+function drawFinetune(){
+ if(!$('ft-rank'))return;
+ const rank=2**Math.round(ftState.position);let moving=false;
+ const track=(key,target)=>{const v=ease(key,target);if(v!==target)moving=true;return v;};
+ $('ft-r').textContent='r = '+rank;$('ft-share').textContent=fmt(FT_PARAMS[rank],2)+'%';
+ $('ft-count').textContent=fmt(FT_PARAMS[rank]/100*8e9/1e6,0)+' млн';$('ft-size').textContent=fmt(FT_PARAMS[rank]/100*8e9*2/1e6,0)+' МБ';
+ document.querySelectorAll('.ft-stop').forEach(b=>b.classList.toggle('on',Number(b.dataset.rank)===rank));
+ const bySkill={};
+ FT_TASKS.forEach((task,t)=>{
+  const pts=Object.keys(FT_METHODS).map(m=>ftPoint(m,task,rank)).filter(Boolean).sort((a,b)=>(b.exact-a.exact)||(b.delta-a.delta));
+  const tile=$('ft-task-'+t),best=pts[0];
+  tile.querySelector('.ft-best').textContent=(best.delta>=0?'+':'−')+fmt(Math.abs(track('fb'+t,best.delta)),1);
+  tile.querySelector('.ft-who').textContent=best.method+(FT_METHODS[best.method].preliminary?'*':'');tile.querySelector('.ft-who').className='ft-who tag '+FT_METHODS[best.method].color;
+  tile.querySelector('.ft-vs').textContent=`${fmt(best.ours,1)} против ${fmt(best.base,1)} у ${FT_METHODS[best.method].base}`+(best.exact?'':` · измерено при r=${best.at}`);
+  pts.forEach((p,i)=>{const row=tile.querySelector(`[data-m="${p.method}"]`);row.style.transform=`translateY(${i*100}%)`;row.classList.toggle('faded',!p.exact);
+   row.querySelector('.ft-fill').style.width=Math.max(2,track('fw'+t+p.method,Math.abs(p.delta))/4*100)+'%';row.querySelector('.ft-fill').classList.toggle('neg',p.delta<0);
+   row.querySelector('.ft-val').textContent=(p.delta>=0?'+':'−')+fmt(Math.abs(p.delta),1)+(p.exact?'':' · r='+p.at);});
+  (bySkill[task.skill]=bySkill[task.skill]||[]).push(...pts.filter(p=>p.exact).map(p=>({...p,task})));
+ });
+ Object.entries(bySkill).forEach(([skill,pts],i)=>{
+  const el=$('ft-win-'+i);if(!pts.length){el.querySelector('.tag').textContent='—';return;}
+  const score={};pts.forEach(p=>{score[p.method]=(score[p.method]||0)+p.delta/pts.filter(q=>q.task===p.task).length;});
+  const top=Object.entries(score).sort((a,b)=>b[1]-a[1])[0],gains=pts.filter(p=>p.method===top[0]);
+  el.querySelector('.tag').textContent=top[0]+(FT_METHODS[top[0]].preliminary?'*':'');el.querySelector('.tag').className='tag '+FT_METHODS[top[0]].color;
+  el.querySelector('strong').textContent='+'+fmt(track('fwin'+i,gains.reduce((a,p)=>a+p.delta,0)/gains.length),1)+' п.п.';
+  el.querySelector('small').textContent=`в среднем по ${gains.map(p=>p.task.name).join(', ')}`;
+ });
+ const wl=FT_PARAMS[rank]/2;$('ft-wlora').textContent=fmt(wl,2)+'%';
+ $('ft-ring').style.setProperty('--p',Math.min(100,track('fring',FT_PARAMS[rank]/1.14*100)));
+ if(moving)requestAnimationFrame(drawFinetune);
+}
+function renderFinetune(){
+ const skills=[...new Set(FT_TASKS.map(t=>t.skill))];
+ const tile=(task,t)=>`<section class="ft-tile" id="ft-task-${t}"><div class="ft-head"><span class="eyebrow">${task.skill}</span><b>${esc(task.name)}</b><small>${esc(task.model)}</small></div><div class="ft-top"><strong class="ft-best"></strong><span class="ft-who tag"></span></div><p class="ft-vs"></p><div class="ft-rows" style="height:calc(${Object.keys(task.data).length} * 24px)">${Object.keys(task.data).map(m=>`<div class="ft-row" data-m="${m}"><span>${m}</span><div class="ft-track"><div class="ft-fill ${FT_METHODS[m].color}"></div></div><em class="ft-val"></em></div>`).join('')}</div></section>`;
+ const memory=FT_MEMORY.map(g=>{const max=Math.max(...g.rows.map(r=>r[1]));return `<div class="ft-mem"><small>${g.setup}</small>${g.rows.map(([n,v])=>`<div class="ft-mrow ${n==='JAGUAR'?'ours':''}"><span>${n}</span><div class="ft-track"><div class="ft-fill ${n==='JAGUAR'?'c1':'other'}" style="width:${v/max*100}%"></div></div><em>${fmt(v,1)} ГБ</em></div>`).join('')}</div>`;}).join('');
+ $('controls').innerHTML='';
+ $('result').innerHTML=`<div class="scale-dock ft-dock"><div class="ft-dock-row"><div><span class="eyebrow" style="display:block;margin:0">Ранг адаптера LoRA</span><strong id="ft-r" class="ft-big"></strong></div><div class="ft-stops">${[1,2,4,8,16].map((r,i)=>`<button class="ft-stop" data-rank="${r}" data-pos="${i}">r=${r}<small>${fmt(FT_PARAMS[r],2)}%</small></button>`).join('')}</div></div><input type="range" id="ft-rank" min="0" max="4" step="any" value="${ftState.position}" aria-label="Ранг адаптера"><p class="scale-hint">Двигайте ранг: чем он больше, тем больше параметров дообучается. Для каждой задачи — прирост нашего метода к базовому методу из той же статьи, в процентных пунктах.</p></div>
+ <div class="wins">${skills.map((s,i)=>`<div class="win" id="ft-win-${i}"><span class="eyebrow">${s}</span><div><span class="tag"></span><strong></strong></div><small></small></div>`).join('')}</div>
+ <div class="ft-layout"><div class="ft-grid">${FT_TASKS.map(tile).join('')}</div>
+ <aside class="ft-side"><section class="board"><div class="board-head"><h3>Сколько весов обучаем</h3></div><div class="ft-ring-wrap"><div class="ft-ring" id="ft-ring"><div><strong id="ft-share"></strong><small>весов Qwen3-8B</small></div></div><dl><dt>Обучаемых параметров</dt><dd id="ft-count"></dd><dt>Размер адаптера</dt><dd id="ft-size"></dd><dt>WLoRA оставляет</dt><dd id="ft-wlora"></dd></dl></div><p class="step-note">WLoRA отключает ненужные адаптеры: около половины параметров LoRA при том же качестве.</p></section>
+ <section class="board"><div class="board-head"><h3>Дообучение без обратного прохода</h3></div>${memory}<p class="step-note">JAGUAR обучает по нулевому порядку: память почти как у инференса.</p></section></aside></div>`;
+ $('ft-rank').addEventListener('input',e=>{ftState.position=Number(e.target.value);drawFinetune();});
+ $('ft-rank').addEventListener('change',e=>{ftState.position=Math.round(Number(e.target.value));e.target.value=ftState.position;drawFinetune();});
+ document.querySelectorAll('.ft-stop').forEach(b=>b.addEventListener('click',()=>{ftState.position=Number(b.dataset.pos);$('ft-rank').value=ftState.position;drawFinetune();}));
+ drawFinetune();
+}
 function llmValues(row){return state.model==='nano'?[row.adamw1,row['muon'+state.batch]]:[row.hybrid_adamw1,row.hybrid_muon2];}
 function renderLLM(){
  const hybrid=state.model==='hybrid';const batch=hybrid?'2':state.batch;
@@ -316,11 +392,11 @@ function renderDiffusion(){
  $('epoch').addEventListener('input',e=>{state.epoch=Number(e.target.value);$('diffusion-summary').innerHTML=diffusionSummary();$('curve').innerHTML=diffusionPlot();document.querySelector('output[for="epoch"]').textContent=state.epoch+' / 1024';});
 }
 function render(){
- const economy=state.domain==='economy';$('workspace').classList.toggle('economy',economy);document.body.classList.toggle('economy-view',economy);
+ const economy=state.domain==='economy'||state.domain==='finetune';$('workspace').classList.toggle('economy',economy);document.body.classList.toggle('economy-view',economy);
  $('page-title').innerHTML=economy?'То же качество. <br>Меньше затрат на обучение.':'Как оптимизатор<br>меняет качество модели';
  $('intro-note').textContent=economy?'Двигайте размер модели. Все оптимизаторы обучаются одновременно до качества AdamW: видно, кто финиширует раньше, сколько это стоит и сколько GPU нужно под память.':'Выберите задачу. Сравните итог обучения с AdamW и современными оптимизаторами на опубликованных результатах.';
  document.querySelectorAll('[data-domain]').forEach(b=>{b.classList.toggle('active',b.dataset.domain===state.domain);b.setAttribute('aria-pressed',String(b.dataset.domain===state.domain));});
- if(economy)renderEconomy();else if(state.domain==='llm')renderLLM();else if(state.domain==='tabular')renderTabular();else renderDiffusion();
+ if(state.domain==='finetune')renderFinetune();else if(economy)renderEconomy();else if(state.domain==='llm')renderLLM();else if(state.domain==='tabular')renderTabular();else renderDiffusion();
 }
 document.querySelectorAll('[data-domain]').forEach(b=>b.addEventListener('click',()=>{state.domain=b.dataset.domain;$('workspace').hidden=false;$('sources-panel').hidden=true;$('sources-button').setAttribute('aria-expanded','false');render();}));
 $('theme').addEventListener('click',()=>{const light=document.body.classList.toggle('light');$('theme').textContent=light?'Тёмная тема':'Светлая тема';$('theme').setAttribute('aria-label',light?'Переключить тёмную тему':'Переключить светлую тему');});
