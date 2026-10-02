@@ -86,8 +86,10 @@
 .sk-row{height:19px}.sk-chart{height:50px}.sk-top{margin:6px 0 8px}.sk-value{font-size:30px}
 .ft-dock{padding:8px 22px}.ft-dock-row{align-items:center}.ft-dock-row input{flex:1;margin:0!important}.ft-ring-wrap{margin:0 10px 0 16px}.ft-ring{width:70px;height:70px}.ft-ring>div{width:54px;height:54px}.ft-ring strong{font-size:14px}.ft-big{font-size:36px}
 .zo-row{height:25px}.zo-wins{gap:8px;margin-top:16px}.zo-wins .win{padding:8px 12px}.zo-wins .win strong{font-size:21px}.zo-wins .win .tag{font-size:13px}.sk-chart{height:42px}
-.comm-body{display:flex;flex-direction:column;gap:5px}.bits{display:flex;gap:3px}.bits i{width:14px;height:10px;border-radius:2px;border:1px solid color-mix(in srgb,var(--hue) 55%,transparent)}.bits i.on{background:var(--hue);border-color:var(--hue)}#comm{--row:54px}#comm .lane-track{height:14px}#comm .lane-money .value{font-size:15px}
-.comm-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px;border-top:1px solid var(--line);padding-top:14px}.comm-stats span{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}.comm-stats strong{font-size:22px;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--muted)}.comm-stats strong i{font-style:normal;margin:0 4px}.comm-stats strong b{font-weight:600;color:var(--c3)}
+.win{height:auto}.win-list{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:5px}.win-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;height:28px;white-space:nowrap}.win .win-list .tag{font-size:14px;padding:2px 10px}.win .win-list strong{font-size:20px;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+#comm .lane-track{display:flex;align-items:center}.ctime{position:relative;margin-left:8px;font-size:12px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}#comm .fill{position:relative;flex:none;height:100%}
+.wins .win{padding:7px 12px 8px}.win-list{gap:2px;margin-top:2px}.win-list li{height:24px}.win .win-list .tag{font-size:12.5px;padding:1px 9px}.win .win-list strong{font-size:17px}
+.quad .sc-chart{height:calc(7 * var(--row) + 26px)}
 </style>
 </head>
 <body>
@@ -191,13 +193,20 @@ const optRatio=(name,N)=>OPT_RATIO[name](N);
 const stepOverhead=(name,N)=>(optRatio(name,N)-1)*updateShare(N);
 const MONEY_NAMES=['AdamW','LionMuon','DyKAF','SoftMuon','SoftSignum','Muon','SOAP'];
 // Distributed training: gradients are synchronised every step with a ring all-reduce between nodes of 8 GPUs over a
-// 100 Gbit/s network (12,5 GB/s per node); each node sends and receives 2(n−1)/n of the gradient. AdamW, Muon, SOAP and
+// 400 Gbit/s network (50 GB/s per node); each node sends and receives 2(n−1)/n of the gradient. AdamW, Muon, SOAP and
 // DyKAF exchange bf16 gradients (16 bits per parameter); SoftSignum exchanges signs with one scale per block (1 bit).
-const NET_BW=12.5e9,COMM_BITS={AdamW:16,SoftSignum:1},COMM_NAMES=Object.keys(COMM_BITS);
+// FRUGAL sends signs for the state-free part of linear layers and bf16 for its state-full subspace (share ρ) and for the
+// embedding and head, which it trains with Adam, so its average bits per parameter depend on the model's shape.
+// Communication is priced as the whole cluster waiting for it.
+const NET_BW=50e9,COMM_NAMES=['AdamW','SoftSignum','FRUGAL ρ=0','FRUGAL ρ=0,25'];
+function commBits(name,N){
+ if(name==='AdamW')return 16;if(name==='SoftSignum')return 1;
+ const {d}=shape(N),emb=Math.min(1,2*VOCAB*d/N),rho=name==='FRUGAL ρ=0'?0:.25;return 16*emb+(16*rho+(1-rho))*(1-emb);
+}
 function comm(name,N,gpus){
- const nodes=Math.max(2,gpus/8),bytes=2*(nodes-1)/nodes*N*COMM_BITS[name]/8,steps=20*N/batchTokens(N);
+ const bits=commBits(name,N),nodes=Math.max(2,gpus/8),bytes=2*(nodes-1)/nodes*N*bits/8,steps=20*N/batchTokens(N);
  const compute=6*N*batchTokens(N)/(gpus*PEAK_FLOPS*costState.mfu/100),seconds=bytes/NET_BW;
- return {name,bits:COMM_BITS[name],bytes,seconds,share:seconds/compute,total:bytes*steps,hours:seconds*steps/3600};
+ const hours=seconds*steps/3600;return {name,ours:OURS.includes(name),bits,bytes,seconds,share:seconds/compute,total:bytes*steps,hours,cost:hours*gpus*costState.rate};
 }
 function project(settings){
  const N=sizeAt(settings.position),tokens=20*N,flops=6*N*tokens;
@@ -206,7 +215,8 @@ function project(settings){
   return {name,ours:OURS.includes(name),tokenFactor,overhead,factor,hours:h,saved:(hours-h)*settings.rate,days:h/gpus/24};});
  const mem=MEM_NAMES.map(name=>({name,ours:OURS.includes(name),memory:memory(name,N)}));
  for(const m of mem){m.freed=mem[0].memory.gpus-m.memory.gpus;m.monthly=m.freed*settings.rate*HOURS_MONTH;}
- return {N,tokens,flops,hours,gpus,cost:hours*settings.rate,lanes,mem,comm:COMM_NAMES.map(n=>comm(n,N,gpus))};
+ const cm=COMM_NAMES.map(n=>comm(n,N,gpus));for(const c of cm)c.saved=cm[0].cost-c.cost;
+ return {N,tokens,flops,hours,gpus,cost:hours*settings.rate,lanes,mem,comm:cm};
 }
 function duration(days){
  if(days<1/24)return fmt(days*1440,0)+' мин';if(days<2)return fmt(days*24,days*24<10?1:0)+' ч';
@@ -222,6 +232,8 @@ const race={start:0,duration:3600,running:false};
 function startRace(){race.start=performance.now();race.running=true;costState.raced=true;document.querySelectorAll('#money .lane').forEach(l=>l.classList.remove('finished','pop'));tick();}
 function tick(){cancelAnimationFrame(frame);frame=requestAnimationFrame(drawEconomy);}
 const place=(id,order)=>order.forEach((r,i)=>{$(id+'-'+r.name).style.transform=`translateY(${i*100}%)`;});
+// Winner tiles list our top three methods for the criterion, with approximate values.
+function setWins(id,rows){const el=$('win-'+id);rows.forEach((r,i)=>{const li=el.querySelectorAll('li')[i],tag=li.querySelector('.tag');tag.textContent=r.name;tag.className='tag '+COLORS[r.name];li.querySelector('strong').textContent='≈ '+r.value;});}
 function setWinner(id,row,value,note){const el=$('win-'+id);el.querySelector('.tag').textContent=row.name;el.querySelector('.tag').className='tag '+COLORS[row.name];el.querySelector('strong').textContent=value;el.querySelector('small').textContent=note;}
 function drawEconomy(){
  if(!$('scale'))return;
@@ -246,9 +258,9 @@ function drawEconomy(){
   row.querySelector('.k').textContent=fmt(l.factor)+'×';
   row.querySelector('.value').textContent=l.name==='AdamW'?money(track('c'+l.name,p.cost)):finished?'−'+money(track('s'+l.name,l.saved)):'…';
  }
- const fastest=p.lanes.filter(l=>l.ours).reduce((a,b)=>a.saved>b.saved?a:b),published=p.lanes.filter(l=>l.ours&&!LAB[l.name].preliminary).reduce((a,b)=>a.saved>b.saved?a:b);
- setWinner('money',fastest,'−'+money(track('wm',fastest.saved)),`${fmt((1-1/fastest.factor)*100,1)}% бюджета`);
- setWinner('published',published,'−'+money(track('wp',published.saved)),'среди опубликованных');
+  const top3=(rows,key)=>rows.filter(r=>r.ours).sort((a,b)=>key(b)-key(a)).slice(0,3);
+ setWins('money',top3(p.lanes,l=>l.saved).map(l=>({name:l.name,value:'−'+money(track('wm'+l.name,l.saved))})));
+ setWins('published',top3(p.lanes.filter(l=>LAB[l.name]&&!LAB[l.name].preliminary),l=>l.saved).map(l=>({name:l.name,value:'−'+fmt((1-1/l.factor)*100,1)+'%'})));
  // 2. Memory: GPUs needed to hold weights, gradients and optimizer state.
  const mems=ranked(p.mem,m=>m.memory.total),adam=p.mem[0],unit=adam.memory.gpus>40?8:1;place('mem',mems);
  for(const m of mems){
@@ -262,20 +274,16 @@ function drawEconomy(){
   row.querySelector('.value').textContent=m.name==='AdamW'?money(m.memory.gpus*costState.rate*HOURS_MONTH)+'/мес':m.freed?'−'+money(track('mm'+m.name,m.monthly))+'/мес':'как AdamW';
  }
  $('chip-unit').textContent=unit===8?'квадрат = 8 H100':'квадрат = 1 H100';
- const lightest=p.mem.filter(m=>m.ours).reduce((a,b)=>a.memory.total<b.memory.total?a:b);
- setWinner('mem',lightest,'−'+fmt(track('wg',(adam.memory.total-lightest.memory.total)/1e9),0)+' ГБ',`${fmt(lightest.memory.gpus,0)} H100 вместо ${fmt(adam.memory.gpus,0)}${lightest.freed?' · −'+money(lightest.monthly)+' в месяц':''}`);
- // 3. Communication between nodes: gradient bits per parameter, time per step and traffic over the whole run.
- const [ca,cs]=p.comm;
- place('comm',p.comm);
- for(const c of p.comm){const row=$('comm-'+c.name);
-  row.querySelector('.fill').style.width=Math.max(.6,track('ct'+c.name,c.seconds/ca.seconds*100))+'%';
-  row.querySelector('.k').textContent=c.bits+' бит';
-  row.querySelector('.value').textContent=c===ca?secs(c.seconds)+' на шаг':'в '+times(ca.seconds/c.seconds)+' быстрее';}
- $('comm-traffic').innerHTML=`${bytesText(ca.total)} <i>→</i> <b>${bytesText(cs.total)}</b>`;
- $('comm-share').innerHTML=`${fmt(ca.share*100,ca.share<.1?1:0)}% <i>→</i> <b>${fmt(cs.share*100,cs.share<.1?1:0)}%</b>`;
- $('comm-time').innerHTML=`${commTime(ca.hours)} <i>→</i> <b>${commTime(cs.hours)}</b>`;
- const nodes=Math.max(2,p.gpus/8),nl=nodes%10,nt=nodes%100>10&&nodes%100<15;$('comm-nodes').textContent=`${fmt(nodes,0)} ${nt||nl<2||nl>4?(nl===1&&!nt?'узел':'узлов'):'узла'} по ${p.gpus/nodes} H100 · сеть 100 Гбит/с`;
- setWinner('step',{name:'SoftSignum'},'в '+times(ca.bits/cs.bits)+' меньше',`трафика между узлами · связь за обучение ${commTime(ca.hours)} → ${commTime(cs.hours)}`);
+ setWins('mem',top3(p.mem,m=>-m.memory.total).map(m=>({name:m.name,value:'−'+fmt(track('wg'+m.name,(adam.memory.total-m.memory.total)/1e9),0)+' ГБ'})));
+ // 3. Communication between nodes: time the cluster waits for gradient exchange over the run, and what it costs.
+ const cms=ranked(p.comm,c=>c.cost),ca=p.comm[0];place('comm',cms);
+ for(const c of cms){const row=$('comm-'+c.name);
+  row.querySelector('.fill').style.width=Math.max(.6,track('ct'+c.name,c.hours/ca.hours*92))+'%';
+  row.querySelector('.k').textContent=fmt(c.bits,c.bits<2&&c.bits%1?1:0)+' бит';
+  row.querySelector('.ctime').textContent=commTime(c.hours);
+  row.querySelector('.value').textContent=c===ca?money(track('cc',c.cost)):'−'+money(track('cs'+c.name,c.saved));}
+ const nodes=Math.max(2,p.gpus/8),nl=nodes%10,nt=nodes%100>10&&nodes%100<15;$('comm-nodes').textContent=`${fmt(nodes,0)} ${nt||nl<2||nl>4?(nl===1&&!nt?'узел':'узлов'):'узла'} · сеть 400 Гбит/с`;
+ setWins('step',top3(p.comm,c=>c.saved).map(c=>({name:c.name,value:'−'+money(track('wc'+c.name,c.saved))})));
  // 4. Speed-up versus model size.
  for(const l of p.lanes){const pt=$('sc-pt-'+l.name);if(pt){pt.setAttribute('cx',scX(p.N/1e9));pt.setAttribute('cy',SPEED_CHART.y(l.tokenFactor));}}
  moveCursor('sc',p.N);
@@ -311,15 +319,15 @@ function lineChart(c){
 function moveCursor(id,N){const x=scX(N/1e9),line=$(id+'-cursor');if(line){line.setAttribute('x1',x);line.setAttribute('x2',x);}}
 function renderEconomy(){
  const ticks=LANDMARKS.map(([N,t])=>`<button class="landmark" data-size="${Math.log10(N)}" style="left:${(Math.log10(N)-8)/(11.7-8)*100}%">${t}</button>`).join('');
- const win=(id,title)=>`<div class="win" id="win-${id}"><span class="eyebrow">${title}</span><div><span class="tag"></span><strong></strong></div><small></small></div>`;
+ const win=(id,title)=>`<div class="win" id="win-${id}"><span class="eyebrow">${title}</span><ol class="win-list">${'<li><span class="tag"></span><strong></strong></li>'.repeat(3)}</ol></div>`;
  const memBody=name=>`<div class="mem-body"><div class="stack"><span class="base"></span><span class="state ${COLORS[name]||'other'}"></span></div><div class="chips ${COLORS[name]||'other'}"></div></div>`;
  $('controls').innerHTML='';
  $('result').innerHTML=`<div class="scale-dock"><div class="scale-read"><div><span class="eyebrow">Размер модели</span><strong id="scale-params"></strong></div><div><span class="eyebrow">Токенов</span><strong id="scale-tokens"></strong></div><div><span class="eyebrow">Вычислений с AdamW</span><strong id="scale-hours"></strong></div><div><span class="eyebrow">Стоимость с AdamW</span><strong id="scale-money"></strong></div><div><span class="eyebrow">Срок с AdamW</span><strong id="scale-days"></strong></div></div><input type="range" id="scale" min="8" max="11.7" step="any" value="${costState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div><p class="scale-hint" id="scale-hint"></p></div>
- <div class="wins">${win('money','Дешевле всего обучить')}${win('published','Лучший опубликованный')}${win('mem','Меньше всего памяти')}${win('step','Меньше всего трафика')}</div>
+ <div class="wins">${win('money','Дешевле обучить')}${win('published','Опубликованные: бюджет')}${win('mem','Меньше памяти')}${win('step','Меньше трафика')}</div>
  <div class="quads">
  ${panel('money','Гонка до качества AdamW','<span>метод · ускорение</span><span>время обучения</span><span>стоимость</span>',MONEY_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:${100/1.08}%"></div></div>`+MONEY_NAMES.map(n=>lane('money',n,bar(n))).join(''),'<span class="meta" id="race-clock"></span>')}
  ${panel('mem','Память GPU под обучение','<span>метод · GPU</span><span><i class="key base"></i>веса и градиенты <i class="key st"></i>состояние</span><span>аренда минимума</span>',MEM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:66%"></div></div>`+MEM_NAMES.map(n=>lane('mem',n,memBody(n))).join(''),'<span class="meta" id="chip-unit"></span>')}
- ${panel('comm','Связь при распределённом обучении','<span>метод · бит на параметр</span><span>обмен градиентами за шаг</span><span>время связи</span>',COMM_NAMES.length,COMM_NAMES.map(n=>lane('comm',n,`<div class="comm-body"><div class="bits ${COLORS[n]||'other'}">${Array.from({length:16},(_,i)=>`<i class="${i<COMM_BITS[n]?'on':''}"></i>`).join('')}</div><div class="lane-track"><div class="fill ${COLORS[n]||'other'}"></div></div></div>`)).join(''),'<span class="meta" id="comm-nodes"></span>').replace('</section>',`<div class="comm-stats"><div><span>трафик узла за обучение</span><strong id="comm-traffic"></strong></div><div><span>связь от вычислений шага</span><strong id="comm-share"></strong></div><div><span>время связи за обучение</span><strong id="comm-time"></strong></div></div></section>`)}
+ ${panel('comm','Связь при распределённом обучении','<span>метод · бит на параметр</span><span>время связи за обучение</span><span>простой</span>',COMM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:92%"></div></div>`+COMM_NAMES.map(n=>lane('comm',n,`<div class="lane-track"><div class="fill ${COLORS[n]||'other'}"></div><span class="ctime"></span></div>`)).join(''),'<span class="meta" id="comm-nodes"></span>')}
  <section class="board quad"><div class="board-head"><h3>Ускорение по данным и размер модели</h3></div>${lineChart(SPEED_CHART)}</section>
  </div>`;
  for(const b of document.querySelectorAll('.landmark'))b.addEventListener('click',()=>{costState.position=Number(b.dataset.size);$('scale').value=costState.position;tick();});
@@ -614,7 +622,9 @@ render();
 fitToScreen();
 // Values fill in on the first animation frames; refit whenever the page's own height changes.
 // Our own width changes also trigger the observer: refit only when the height at the chosen width actually changed.
-new ResizeObserver(()=>requestAnimationFrame(()=>{const shell=document.querySelector('.shell'),cut=shell.querySelector('.below-fold'),key=shell.style.width.replace('px','')+':'+(cut?cut.offsetTop-shell.offsetTop:shell.scrollHeight);if(key!==fitKey)fitToScreen();})).observe(document.querySelector('.shell'));
+// While a slider is held the layout must not rescale under the cursor; refit once it is released.
+let dragging=false;addEventListener('pointerdown',e=>{if(e.target.type==='range')dragging=true;});addEventListener('pointerup',()=>{if(dragging){dragging=false;requestAnimationFrame(fitToScreen);}});
+new ResizeObserver(()=>requestAnimationFrame(()=>{if(dragging)return;const shell=document.querySelector('.shell'),cut=shell.querySelector('.below-fold'),key=shell.style.width.replace('px','')+':'+(cut?cut.offsetTop-shell.offsetTop:shell.scrollHeight);if(key!==fitKey)fitToScreen();})).observe(document.querySelector('.shell'));
 </script>
 </body>
 </html>
