@@ -205,13 +205,16 @@ const MONEY_NAMES=['AdamW','LionMuon','DyKAF','SoftMuon','SoftSignum','Muon','SO
 // embedding and head, which it trains with Adam, so its average bits per parameter depend on the model's shape.
 // DDP overlaps most of the exchange with the backward pass: we count the exposed 30% as the whole cluster waiting.
 const OVERLAP=.7;
-const NET_BW=50e9,COMM_NAMES=['AdamW','SoftSignum','FRUGAL ρ=0','FRUGAL ρ=0,25'];
+// Compressed exchange is not free: packing, per-block scales and the two-phase 1-bit all-reduce. 1-bit Adam (Tang et al.,
+// 2021) measured a 5,5–6,2× faster communication stage, not 16×; we add a fixed 0,104 of the bf16 time so 1 bit gives 6×.
+// Signum and Lion (other groups) send sign updates too.
+const NET_BW=50e9,PACK=1/6-1/16,SIGN=['SoftSignum','Signum','Lion'],COMM_NAMES=['AdamW','SoftSignum','Signum','Lion','FRUGAL ρ=0','FRUGAL ρ=0,25'];
 function commBits(name,N){
- if(name==='SoftSignum')return 1;if(!name.startsWith('FRUGAL'))return 16;
+ if(SIGN.includes(name))return 1;if(!name.startsWith('FRUGAL'))return 16;
  const {d}=shape(N),emb=Math.min(1,2*VOCAB*d/N),rho=name==='FRUGAL ρ=0'?0:.25;return 16*emb+(16*rho+(1-rho))*(1-emb);
 }
 function comm(name,N,gpus){
- const bits=commBits(name,N),nodes=Math.max(2,gpus/8),bytes=2*(nodes-1)/nodes*N*bits/8,steps=20*N/batchTokens(N);
+ const bits=commBits(name,N),nodes=Math.max(2,gpus/8),bytes=2*(nodes-1)/nodes*N*2*(bits<16?bits/16+PACK:1),steps=20*N/batchTokens(N);
  const compute=6*N*batchTokens(N)/(gpus*PEAK_FLOPS*costState.mfu/100),seconds=bytes/NET_BW*(1-OVERLAP);
  const hours=seconds*steps/3600;return {name,ours:OURS.includes(name),bits,bytes,seconds,share:seconds/compute,total:bytes*steps,hours,cost:hours*gpus*costState.rate};
 }
@@ -269,7 +272,7 @@ function drawEconomy(){
   const top3=(rows,key)=>rows.filter(r=>r.ours).sort((a,b)=>key(b)-key(a)).slice(0,3);
  const both=(share,rub)=>'−'+fmt(share*100,share<.1?1:0)+'% · ≈ '+money(rub);
  setWins('money',top3(p.lanes,l=>l.saved).map(l=>({name:l.name,value:both(l.share,track('wm'+l.name,l.saved))})));
- setWins('published',top3(p.lanes.filter(l=>LAB[l.name]&&!LAB[l.name].preliminary),l=>l.saved).map(l=>({name:l.name,value:both(l.share,track('wp'+l.name,l.saved))})));
+ setWins('published',top3(p.lanes,l=>l.tokenFactor).map(l=>{const d=1-1/l.tokenFactor;return {name:l.name,value:'−'+fmt(d*100,d<.1?1:0)+'% · ≈ '+tokensText(track('wp'+l.name,p.tokens*d))+' токенов'};}));
  // 2. Memory: GPUs needed to hold weights, gradients and optimizer state.
  const mems=ranked(p.mem,m=>m.memory.total),adam=p.mem[0],unit=adam.memory.gpus>40?8:1;place('mem',mems);
  for(const m of mems){
@@ -332,7 +335,7 @@ function renderEconomy(){
  const memBody=name=>`<div class="mem-body"><div class="stack"><span class="base"></span><span class="state ${COLORS[name]||'other'}"></span></div><div class="chips ${COLORS[name]||'other'}"></div></div>`;
  $('controls').innerHTML='';
  $('result').innerHTML=`<div class="scale-dock"><div class="scale-read"><div><span class="eyebrow">Размер модели</span><strong id="scale-params"></strong></div><div><span class="eyebrow">Токенов</span><strong id="scale-tokens"></strong></div><div><span class="eyebrow">Вычислений · стандарт</span><strong id="scale-hours"></strong></div><div><span class="eyebrow">Стоимость · стандарт</span><strong id="scale-money"></strong></div><div><span class="eyebrow">Срок · стандарт</span><strong id="scale-days"></strong></div></div><input type="range" id="scale" min="8" max="11.7" step="any" value="${costState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div><p class="scale-hint" id="scale-hint"></p></div>
- <div class="wins">${win('money','Дешевле обучить')}${win('published','Опубликованные: бюджет')}${win('mem','Меньше памяти')}${win('step','Меньше трафика')}</div>
+ <div class="wins">${win('money','Дешевле обучить')}${win('published','Меньше данных')}${win('mem','Меньше памяти')}${win('step','Меньше трафика')}</div>
  <div class="quads">
  ${panel('money','Гонка до одного качества','<span>метод · экономия</span><span>время обучения</span><span>стоимость</span>',MONEY_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:${100/1.08}%"></div></div>`+MONEY_NAMES.map(n=>lane('money',n,bar(n))).join(''),'<span class="meta" id="race-clock"></span>')}
  ${panel('mem','Память GPU под обучение','<span>метод · GPU</span><span><i class="key base"></i>веса и градиенты <i class="key st"></i>состояние</span><span>аренда минимума</span>',MEM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:66%"></div></div>`+MEM_NAMES.map(n=>lane('mem',n,memBody(n))).join(''),'<span class="meta" id="chip-unit"></span>')}
