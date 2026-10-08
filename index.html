@@ -94,6 +94,7 @@
 .quad-legend,.quad .lane{grid-template-columns:250px minmax(0,1fr) 120px}.quad .lane-grid{left:262px}.win .win-list strong{font-size:15px}
 .ft-rent{border-left:1px solid var(--line);padding-left:16px;margin-left:8px!important;gap:6px 14px!important}.ft-rent dt{font-size:12px;align-self:center}.ft-rent dd{white-space:nowrap;font-size:17px;font-weight:500}.ft-rent dd:last-child{color:var(--c1)}
 .sk-money{font-style:normal;color:var(--c1)}.zo-head2,.zo-row{grid-template-columns:180px minmax(0,1fr) 84px minmax(0,1fr) 250px}
+#comm .ctime{position:absolute;left:93.5%;margin:0}
 </style>
 </head>
 <body>
@@ -279,7 +280,7 @@ function drawEconomy(){
   const top3=(rows,key)=>rows.filter(r=>r.ours).sort((a,b)=>key(b)-key(a)).slice(0,3);
  const both=(share,rub)=>'−'+fmt(share*100,share<.1?1:0)+'% · ≈ '+money(rub);
  setWins('money',top3(p.lanes,l=>l.saved).map(l=>({name:l.name,value:both(l.share,track('wm'+l.name,l.saved))})));
- setWins('published',top3(p.lanes,l=>l.tokenFactor).map(l=>{const d=1-1/l.tokenFactor;return {name:l.name,value:'−'+fmt(d*100,d<.1?1:0)+'% · ≈ '+tokensText(track('wp'+l.name,p.tokens*d))+' токенов'};}));
+ setWins('published',top3(p.lanes,l=>l.saved).map(l=>({name:l.name,value:'−'+fmt(l.share*100,l.share<.1?1:0)+'% · ≈ '+duration(track('wp'+l.name,(p.hours-l.hours)/p.gpus/24))})));
  // 2. Memory: GPUs needed to hold weights, gradients and optimizer state.
  const mems=ranked(p.mem,m=>m.memory.total),adam=p.mem[0],unit=adam.memory.gpus>40?8:1;place('mem',mems);
  for(const m of mems){
@@ -295,9 +296,9 @@ function drawEconomy(){
  $('chip-unit').textContent=unit===8?'квадрат = 8 H100':'квадрат = 1 H100';
  setWins('mem',top3(p.mem,m=>-m.memory.total).map(m=>({name:m.name,value:'≈ −'+fmt(track('wg'+m.name,(adam.memory.total-m.memory.total)/1e9),0)+' ГБ'})));
  // 3. Communication between nodes: time the cluster waits for gradient exchange over the run, and what it costs.
- const cms=ranked(p.comm,c=>c.cost),ca=p.comm[0];place('comm',cms);
+ const ca=p.comm[0],cms=[ca,...p.comm.slice(1).sort((a,b)=>(b.ours-a.ours)||(a.cost-b.cost))];place('comm',cms);
  for(const c of cms){const row=$('comm-'+c.name);
-  row.querySelector('.fill').style.width=Math.max(.6,track('ct'+c.name,c.hours/ca.hours*92))+'%';
+  const cw=Math.max(.6,track('ct'+c.name,c.hours/ca.hours*92));row.querySelector('.fill').style.width=cw+'%';row.querySelector('.gap').style.cssText=`left:${cw}%;width:${Math.max(0,92-cw)}%`;
   row.querySelector('.k').textContent=fmt(c.bits,c.bits<2&&c.bits%1?1:0)+' бит';
   row.querySelector('.ctime').textContent=commTime(c.hours);
   row.querySelector('.value').textContent=money(track('cc'+c.name,c.cost));}
@@ -342,11 +343,11 @@ function renderEconomy(){
  const memBody=name=>`<div class="mem-body"><div class="stack"><span class="base"></span><span class="state ${COLORS[name]||'other'}"></span></div><div class="chips ${COLORS[name]||'other'}"></div></div>`;
  $('controls').innerHTML='';
  $('result').innerHTML=`<div class="scale-dock"><div class="scale-read"><div><span class="eyebrow">Размер модели</span><strong id="scale-params"></strong></div><div><span class="eyebrow">Токенов</span><strong id="scale-tokens"></strong></div><div><span class="eyebrow">Вычислений · стандарт</span><strong id="scale-hours"></strong></div><div><span class="eyebrow">Стоимость · стандарт</span><strong id="scale-money"></strong></div><div><span class="eyebrow">Срок · стандарт</span><strong id="scale-days"></strong></div></div><input type="range" id="scale" min="8" max="11.7" step="any" value="${costState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div><p class="scale-hint" id="scale-hint"></p></div>
- <div class="wins">${win('money','Дешевле обучить')}${win('published','Меньше данных')}${win('mem','Меньше памяти')}${win('step','Меньше трафика')}</div>
+ <div class="wins">${win('money','Дешевле обучить')}${win('published','Быстрее обучить')}${win('mem','Меньше памяти')}${win('step','Меньше трафика')}</div>
  <div class="quads">
  ${panel('money','Гонка до одного качества','<span>метод · экономия</span><span>время обучения</span><span>стоимость</span>',MONEY_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:${100/1.08}%"></div></div>`+MONEY_NAMES.map(n=>lane('money',n,bar(n))).join(''),'<span class="meta" id="race-clock"></span>')}
  ${panel('mem','Память GPU под обучение','<span>метод · GPU</span><span><i class="key base"></i>веса и градиенты <i class="key st"></i>состояние</span><span>карты под память</span>',MEM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:66%"></div></div>`+MEM_NAMES.map(n=>lane('mem',n,memBody(n))).join(''),'<span class="meta" id="chip-unit"></span>')}
- ${panel('comm','Связь при распределённом обучении','<span>метод · бит градиента</span><span>ожидание сети за обучение</span><span>стоимость ожидания</span>',COMM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:92%"></div></div>`+COMM_NAMES.map(n=>lane('comm',n,`<div class="lane-track"><div class="fill ${COLORS[n]||'other'}"></div><span class="ctime"></span></div>`)).join(''),'<span class="meta" id="comm-nodes"></span>')}
+ ${panel('comm','Связь при распределённом обучении','<span>метод · бит градиента</span><span>ожидание сети за обучение</span><span>стоимость ожидания</span>',COMM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:92%"></div></div>`+COMM_NAMES.map(n=>lane('comm',n,`<div class="lane-track"><div class="fill ${COLORS[n]||'other'}"></div><div class="gap"></div><span class="ctime"></span></div>`)).join(''),'<span class="meta" id="comm-nodes"></span>')}
  <section class="board quad"><div class="board-head"><h3>Ускорение по данным и размер модели</h3></div>${lineChart(SPEED_CHART)}</section>
  </div>`;
  for(const b of document.querySelectorAll('.landmark'))b.addEventListener('click',()=>{costState.position=Number(b.dataset.size);$('scale').value=costState.position;tick();});
