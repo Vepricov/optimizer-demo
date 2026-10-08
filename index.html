@@ -90,12 +90,15 @@
 #comm .lane-track{display:flex;align-items:center}.ctime{position:relative;margin-left:8px;font-size:12px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}#comm .fill{position:relative;flex:none;height:100%}
 .wins .win{padding:7px 12px 8px}.win-list{gap:2px;margin-top:2px}.win-list li{height:24px}.win .win-list .tag{font-size:12.5px;padding:1px 9px}.win .win-list strong{font-size:17px}
 .quad .sc-chart{height:calc(7 * var(--row) + 26px)}
+.lname{display:flex;flex-direction:column;min-width:0;line-height:1.08}.lname b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lname small{font-size:10px;color:var(--muted);font-weight:400}.quad .lane-name{font-size:13px}
+.quad-legend,.quad .lane{grid-template-columns:250px minmax(0,1fr) 120px}.quad .lane-grid{left:262px}.win .win-list strong{font-size:15px}
+.ft-rent{border-left:1px solid var(--line);padding-left:16px;margin-left:8px!important;gap:6px 14px!important}.ft-rent dt{font-size:12px;align-self:center}.ft-rent dd{white-space:nowrap;font-size:17px;font-weight:500}.ft-rent dd:last-child{color:var(--c1)}
 </style>
 </head>
 <body>
 <div class="shell">
  <header class="topbar"><div class="wordmark">OPTIMIZER <span>/</span> ATLAS</div><div class="top-actions"><span class="meta"><i class="dot"></i>ОТКРЫТЫЕ ИССЛЕДОВАНИЯ</span><button class="quiet" id="theme" aria-label="Переключить светлую тему">Светлая тема</button><button class="quiet" id="sources-button" aria-expanded="false">Источники ↗</button></div></header>
- <section class="intro"><div><div class="eyebrow">Интерактивный обзор исследований</div><h1 id="page-title">То же качество.<br>Меньше затрат на обучение.</h1></div><p class="intro-note" id="intro-note">Двигайте размер модели. Все оптимизаторы обучаются одновременно до качества AdamW: видно, кто финиширует раньше, сколько это стоит и сколько GPU нужно под память.</p></section>
+ <section class="intro"><div><div class="eyebrow">Интерактивный обзор исследований</div><h1 id="page-title">То же качество.<br>Меньше затрат на обучение.</h1></div><p class="intro-note" id="intro-note">Двигайте размер модели. Все оптимизаторы обучаются одновременно до качества стандартного обучения: видно, кто финиширует раньше, сколько это стоит и сколько GPU нужно под память.</p></section>
  <nav class="domain-nav" aria-label="Раздел"><button class="domain active" data-domain="economy" aria-pressed="true">Предобучение</button><button class="domain" data-domain="finetune" aria-pressed="false">Дообучение</button></nav>
  <main>
   <section class="workspace" id="workspace"><aside class="controls" id="controls" aria-label="Параметры сравнения"></aside><div id="result"></div></section>
@@ -121,6 +124,9 @@ function bindSelect(id,key){$(id).addEventListener('change',e=>{state[key]=e.tar
 const money = value => new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',notation:'compact',maximumFractionDigits:1}).format(value);
 // One slider drives everything: model size N, Chinchilla tokens D=20N, compute 6ND.
 const OURS=['SoftMuon','LionMuon','SoftSignum','DyKAF','FRUGAL ρ=0','FRUGAL ρ=0,25'];
+// What the audience reads: our methods by their one-line idea, the method name underneath.
+const LABEL={AdamW:'Стандартное обучение',LionMuon:'Знак + ортогонализация',DyKAF:'Адаптивный Кронекер',SoftMuon:'Мягкая ортогонализация',SoftSignum:'Однобитный шаг','FRUGAL ρ=0':'Без состояния','FRUGAL ρ=0,25':'Состояние на 25%'};
+const label=n=>LABEL[n]||n;
 const COLORS={AdamW:'adam',SoftMuon:'c1',LionMuon:'c2',SoftSignum:'c3',DyKAF:'c4','FRUGAL ρ=0':'c5','FRUGAL ρ=0,25':'c5 soft'};
 // Lab methods: speed-up over the parent method under the paper's own protocol, times the parent's factor in the common benchmark.
 const LAB={
@@ -136,7 +142,7 @@ const VOCAB=32000,GPU_BYTES=80e9,PEAK_FLOPS=989e12,HOURS_MONTH=730;
 // FRUGAL, arXiv 2411.07837 Table 2: LLaMA on C4, validation perplexity and optimizer-state memory (GB).
 const FRUGAL={sizes:[6e7,1.3e8,3.5e8,1e9],rows:{AdamW:{ppl:[22.73,18.13,14.43,12.02],mem:[.43,1,2.74,9.98]},'FRUGAL ρ=0':{ppl:[24.06,18.9,15.03,12.63],mem:[.24,.37,.49,.98]},'FRUGAL ρ=0,25':{ppl:[23.59,18.6,14.79,12.32],mem:[.29,.52,1.05,3.23]},'BAdam ρ=0,25':{ppl:[24.86,20.34,16.41,13.75],mem:[.29,.52,1.05,3.23]},'GaLore ρ=0,25':{ppl:[25.68,21.11,16.88,13.69],mem:[.3,.54,1.1,3.41]}}};
 const MEM_NAMES=['AdamW','FRUGAL ρ=0','FRUGAL ρ=0,25','SoftSignum','SoftMuon','LionMuon','GaLore ρ=0,25'];
-const costState={position:Math.log10(8e9),rate:250,mfu:40,maxDays:182.5,raced:false};
+const costState={position:Math.log10(8e9),rate:200,mfu:40,maxDays:182.5,raced:false};
 // Cluster size: the smallest power of two, at least one 8×H100 node, that finishes AdamW training within maxDays.
 const clusterFor=hours=>Math.max(8,2**Math.ceil(Math.log2(hours/(costState.maxDays*24))));
 const sizeAt=position=>10**position;
@@ -197,25 +203,27 @@ const MONEY_NAMES=['AdamW','LionMuon','DyKAF','SoftMuon','SoftSignum','Muon','SO
 // DyKAF exchange bf16 gradients (16 bits per parameter); SoftSignum exchanges signs with one scale per block (1 bit).
 // FRUGAL sends signs for the state-free part of linear layers and bf16 for its state-full subspace (share ρ) and for the
 // embedding and head, which it trains with Adam, so its average bits per parameter depend on the model's shape.
-// Communication is priced as the whole cluster waiting for it.
+// DDP overlaps most of the exchange with the backward pass: we count the exposed 30% as the whole cluster waiting.
+const OVERLAP=.7;
 const NET_BW=50e9,COMM_NAMES=['AdamW','SoftSignum','FRUGAL ρ=0','FRUGAL ρ=0,25'];
 function commBits(name,N){
- if(name==='AdamW')return 16;if(name==='SoftSignum')return 1;
+ if(name==='SoftSignum')return 1;if(!name.startsWith('FRUGAL'))return 16;
  const {d}=shape(N),emb=Math.min(1,2*VOCAB*d/N),rho=name==='FRUGAL ρ=0'?0:.25;return 16*emb+(16*rho+(1-rho))*(1-emb);
 }
 function comm(name,N,gpus){
  const bits=commBits(name,N),nodes=Math.max(2,gpus/8),bytes=2*(nodes-1)/nodes*N*bits/8,steps=20*N/batchTokens(N);
- const compute=6*N*batchTokens(N)/(gpus*PEAK_FLOPS*costState.mfu/100),seconds=bytes/NET_BW;
+ const compute=6*N*batchTokens(N)/(gpus*PEAK_FLOPS*costState.mfu/100),seconds=bytes/NET_BW*(1-OVERLAP);
  const hours=seconds*steps/3600;return {name,ours:OURS.includes(name),bits,bytes,seconds,share:seconds/compute,total:bytes*steps,hours,cost:hours*gpus*costState.rate};
 }
 function project(settings){
  const N=sizeAt(settings.position),tokens=20*N,flops=6*N*tokens;
- const hours=flops/(PEAK_FLOPS*settings.mfu/100*3600),gpus=clusterFor(hours);
- const lanes=MONEY_NAMES.map(name=>{const tokenFactor=factorAt(name,N/1e9),overhead=stepOverhead(name,N),factor=tokenFactor/(1+overhead),h=hours/factor;
-  return {name,ours:OURS.includes(name),tokenFactor,overhead,factor,hours:h,saved:(hours-h)*settings.rate,days:h/gpus/24};});
+ const compute=flops/(PEAK_FLOPS*settings.mfu/100*3600),gpus=clusterFor(compute),wait=name=>comm(name,N,gpus).share,hours=compute*(1+wait('AdamW'));
+ // Wall-clock to the standard quality: fewer tokens, a heavier or lighter optimizer step, and the exposed gradient exchange.
+ const lanes=MONEY_NAMES.map(name=>{const tokenFactor=factorAt(name,N/1e9),overhead=stepOverhead(name,N),h=compute*(1+overhead+wait(name))/tokenFactor,factor=hours/h;
+  return {name,ours:OURS.includes(name),tokenFactor,overhead,factor,hours:h,saved:(hours-h)*settings.rate,share:1-h/hours,days:h/gpus/24};});
  const mem=MEM_NAMES.map(name=>({name,ours:OURS.includes(name),memory:memory(name,N)}));
  for(const m of mem){m.freed=mem[0].memory.gpus-m.memory.gpus;m.monthly=m.freed*settings.rate*HOURS_MONTH;}
- const cm=COMM_NAMES.map(n=>comm(n,N,gpus));for(const c of cm)c.saved=cm[0].cost-c.cost;
+ const cm=COMM_NAMES.map(n=>comm(n,N,gpus));for(const c of cm){c.saved=cm[0].cost-c.cost;c.budget=c.saved/(hours*settings.rate);}
  return {N,tokens,flops,hours,gpus,cost:hours*settings.rate,lanes,mem,comm:cm};
 }
 function duration(days){
@@ -233,7 +241,7 @@ function startRace(){race.start=performance.now();race.running=true;costState.ra
 function tick(){cancelAnimationFrame(frame);frame=requestAnimationFrame(drawEconomy);}
 const place=(id,order)=>order.forEach((r,i)=>{$(id+'-'+r.name).style.transform=`translateY(${i*100}%)`;});
 // Winner tiles list our top three methods for the criterion, with approximate values.
-function setWins(id,rows){const el=$('win-'+id);rows.forEach((r,i)=>{const li=el.querySelectorAll('li')[i],tag=li.querySelector('.tag');tag.textContent=r.name;tag.className='tag '+COLORS[r.name];li.querySelector('strong').textContent='≈ '+r.value;});}
+function setWins(id,rows){const el=$('win-'+id);rows.forEach((r,i)=>{const li=el.querySelectorAll('li')[i],tag=li.querySelector('.tag');tag.textContent=label(r.name);tag.className='tag '+COLORS[r.name];li.querySelector('strong').textContent=r.value;});}
 function setWinner(id,row,value,note){const el=$('win-'+id);el.querySelector('.tag').textContent=row.name;el.querySelector('.tag').className='tag '+COLORS[row.name];el.querySelector('strong').textContent=value;el.querySelector('small').textContent=note;}
 function drawEconomy(){
  if(!$('scale'))return;
@@ -255,12 +263,13 @@ function drawEconomy(){
   row.querySelector('.gap').style.cssText=`left:${Math.min(finishAt,adamAt)}%;width:${finished?Math.abs(adamAt-finishAt):0}%`;
   if(finished&&!row.classList.contains('finished')&&race.running)row.classList.add('pop');
   row.classList.toggle('finished',finished);
-  row.querySelector('.k').textContent=fmt(l.factor)+'×';
+  row.querySelector('.k').textContent=l.name==='AdamW'?'':'−'+fmt(l.share*100,l.share<.1?1:0)+'%';
   row.querySelector('.value').textContent=l.name==='AdamW'?money(track('c'+l.name,p.cost)):finished?'−'+money(track('s'+l.name,l.saved)):'…';
  }
   const top3=(rows,key)=>rows.filter(r=>r.ours).sort((a,b)=>key(b)-key(a)).slice(0,3);
- setWins('money',top3(p.lanes,l=>l.saved).map(l=>({name:l.name,value:'−'+money(track('wm'+l.name,l.saved))})));
- setWins('published',top3(p.lanes.filter(l=>LAB[l.name]&&!LAB[l.name].preliminary),l=>l.saved).map(l=>({name:l.name,value:'−'+fmt((1-1/l.factor)*100,1)+'%'})));
+ const both=(share,rub)=>'−'+fmt(share*100,share<.1?1:0)+'% · ≈ '+money(rub);
+ setWins('money',top3(p.lanes,l=>l.saved).map(l=>({name:l.name,value:both(l.share,track('wm'+l.name,l.saved))})));
+ setWins('published',top3(p.lanes.filter(l=>LAB[l.name]&&!LAB[l.name].preliminary),l=>l.saved).map(l=>({name:l.name,value:both(l.share,track('wp'+l.name,l.saved))})));
  // 2. Memory: GPUs needed to hold weights, gradients and optimizer state.
  const mems=ranked(p.mem,m=>m.memory.total),adam=p.mem[0],unit=adam.memory.gpus>40?8:1;place('mem',mems);
  for(const m of mems){
@@ -271,19 +280,19 @@ function drawEconomy(){
   while(box.children.length<chips)box.appendChild(document.createElement('i'));
   while(box.children.length>chips)box.lastChild.remove();
   row.querySelector('.k').textContent=fmt(m.memory.gpus,0)+' GPU';
-  row.querySelector('.value').textContent=m.name==='AdamW'?money(m.memory.gpus*costState.rate*HOURS_MONTH)+'/мес':m.freed?'−'+money(track('mm'+m.name,m.monthly))+'/мес':'как AdamW';
+  row.querySelector('.value').textContent=m.name==='AdamW'?money(m.memory.gpus*costState.rate*HOURS_MONTH)+'/мес':m.freed?'−'+money(track('mm'+m.name,m.monthly))+'/мес':'как стандарт';
  }
  $('chip-unit').textContent=unit===8?'квадрат = 8 H100':'квадрат = 1 H100';
- setWins('mem',top3(p.mem,m=>-m.memory.total).map(m=>({name:m.name,value:'−'+fmt(track('wg'+m.name,(adam.memory.total-m.memory.total)/1e9),0)+' ГБ'})));
+ setWins('mem',top3(p.mem,m=>-m.memory.total).map(m=>({name:m.name,value:'≈ −'+fmt(track('wg'+m.name,(adam.memory.total-m.memory.total)/1e9),0)+' ГБ'})));
  // 3. Communication between nodes: time the cluster waits for gradient exchange over the run, and what it costs.
  const cms=ranked(p.comm,c=>c.cost),ca=p.comm[0];place('comm',cms);
  for(const c of cms){const row=$('comm-'+c.name);
   row.querySelector('.fill').style.width=Math.max(.6,track('ct'+c.name,c.hours/ca.hours*92))+'%';
   row.querySelector('.k').textContent=fmt(c.bits,c.bits<2&&c.bits%1?1:0)+' бит';
   row.querySelector('.ctime').textContent=commTime(c.hours);
-  row.querySelector('.value').textContent=c===ca?money(track('cc',c.cost)):'−'+money(track('cs'+c.name,c.saved));}
+  row.querySelector('.value').textContent=money(track('cc'+c.name,c.cost));}
  const nodes=Math.max(2,p.gpus/8),nl=nodes%10,nt=nodes%100>10&&nodes%100<15;$('comm-nodes').textContent=`${fmt(nodes,0)} ${nt||nl<2||nl>4?(nl===1&&!nt?'узел':'узлов'):'узла'} · сеть 400 Гбит/с`;
- setWins('step',top3(p.comm,c=>c.saved).map(c=>({name:c.name,value:'−'+money(track('wc'+c.name,c.saved))})));
+ setWins('step',top3(p.comm,c=>c.saved).map(c=>({name:c.name,value:both(c.budget,track('wc'+c.name,c.saved))})));
  // 4. Speed-up versus model size.
  for(const l of p.lanes){const pt=$('sc-pt-'+l.name);if(pt){pt.setAttribute('cx',scX(p.N/1e9));pt.setAttribute('cy',SPEED_CHART.y(l.tokenFactor));}}
  moveCursor('sc',p.N);
@@ -296,12 +305,12 @@ const secs=v=>v<.1?fmt(v*1000,0)+' мс':v<10?fmt(v,1)+' с':fmt(v,0)+' с';
 const commTime=h=>h<1/60?fmt(h*3600,0)+' с':duration(h/24);
 const bytesText=v=>v>=1e15?fmt(v/1e15,1)+' ПБ':v>=1e12?fmt(v/1e12,v<1e13?1:0)+' ТБ':fmt(v/1e9,0)+' ГБ';
 const easeRace=t=>t<.5?2*t*t:1-(-2*t+2)**2/2;
-const mark=name=>`<i class="mark ${COLORS[name]||'other'}"></i><b>${esc(name)}</b>`;
+const mark=name=>`<i class="mark ${COLORS[name]||'other'}"></i><span class="lname"><b>${esc(label(name))}</b>${LABEL[name]?`<small>${esc(name)}</small>`:''}</span>`;
 const lane=(id,name,body,extra='')=>`<div class="lane ${id==='mem'?'mem-lane':''} ${OURS.includes(name)?'ours':''} ${name==='AdamW'?'base':''}" id="${id}-${esc(name)}"><div class="lane-name">${mark(name)}${extra}<span class="k"></span></div>${body}<div class="lane-money"><span class="value"></span></div></div>`;
 const bar=name=>`<div class="lane-track"><div class="fill ${COLORS[name]||'other'}"></div><div class="gap"></div></div>`;
 const panel=(id,title,legend,rows,note,extra='')=>`<section class="board quad"><div class="board-head"><h3>${title}</h3>${extra}</div><div class="lane-legend quad-legend">${legend}</div><div class="lanes" id="${id}" style="height:calc(${rows} * var(--row))">${note}</div></section>`;
 // Shared line chart over model size (log x) with a cursor that follows the slider.
-const CH={w:640,h:236,l:44,r:92,t:12,b:30,x0:8,x1:11.7};
+const CH={w:640,h:236,l:44,r:150,t:12,b:30,x0:8,x1:11.7};
 const scX=N=>CH.l+(Math.log10(N*1e9)-CH.x0)/(CH.x1-CH.x0)*(CH.w-CH.l-CH.r);
 const chartY=(y0,y1)=>v=>CH.t+(y1-Math.min(y1,Math.max(y0,v)))/(y1-y0)*(CH.h-CH.t-CH.b);
 const SPEED_CHART={id:'sc',names:['SOAP','Muon','SoftSignum','SoftMuon','DyKAF','LionMuon'],value:factorAt,y:chartY(.95,1.6),ticks:[1,1.1,1.2,1.3,1.4,1.5],tick:v=>fmt(v,1)+'×',base:1,
@@ -314,7 +323,7 @@ function lineChart(c){
  const over=labels.length?labels[labels.length-1].y-(CH.h-CH.b):0;if(over>0)labels.forEach(l=>l.y-=over);
  const ticksX=[[1e8,'100M'],[1e9,'1B'],[1e10,'10B'],[1e11,'100B']].map(([N,t])=>`<text x="${scX(N/1e9)}" y="${CH.h-10}" text-anchor="middle">${t}</text>`).join('');
  const ticksY=c.ticks.map(v=>`<line x1="${CH.l}" x2="${CH.w-CH.r}" y1="${c.y(v)}" y2="${c.y(v)}" class="${v===c.base?'sc-base':'sc-grid'}"/><text x="${CH.l-8}" y="${c.y(v)+4}" text-anchor="end">${c.tick(v)}</text>`).join('');
- return `<svg class="sc-chart" viewBox="0 0 ${CH.w} ${CH.h}" role="img" aria-label="Ускорение над AdamW в зависимости от размера модели">${ticksY}${ticksX}${c.names.map(n=>`<path class="sc-line ${COLORS[n]||'other'}" d="${path(n)}" stroke-width="${mine(n)?2.5:1.3}"/>`).join('')}${c.dots().map(([n,N,v,cls])=>`<circle class="${cls} ${COLORS[n]||'other'}" cx="${scX(N)}" cy="${c.y(v)}" r="${cls==='sc-ring'?5:3.5}"><title>${n}, ${paramsText(N*1e9)}: ${fmt(v)}×</title></circle>`).join('')}${labels.map(l=>`<text x="${CH.w-CH.r+8}" y="${l.y+4}" class="sc-label">${l.n}</text>`).join('')}<line id="${c.id}-cursor" y1="${CH.t}" y2="${CH.h-CH.b}" class="sc-cursor"/>${c.names.map(n=>`<circle id="${c.id}-pt-${n}" r="${mine(n)?5:3.5}" class="sc-pt ${COLORS[n]||'other'}"/>`).join('')}</svg>`;
+ return `<svg class="sc-chart" viewBox="0 0 ${CH.w} ${CH.h}" role="img" aria-label="Ускорение над стандартным обучением в зависимости от размера модели">${ticksY}${ticksX}${c.names.map(n=>`<path class="sc-line ${COLORS[n]||'other'}" d="${path(n)}" stroke-width="${mine(n)?2.5:1.3}"/>`).join('')}${c.dots().map(([n,N,v,cls])=>`<circle class="${cls} ${COLORS[n]||'other'}" cx="${scX(N)}" cy="${c.y(v)}" r="${cls==='sc-ring'?5:3.5}"><title>${n}, ${paramsText(N*1e9)}: ${fmt(v)}×</title></circle>`).join('')}${labels.map(l=>`<text x="${CH.w-CH.r+8}" y="${l.y+4}" class="sc-label">${label(l.n)}</text>`).join('')}<line id="${c.id}-cursor" y1="${CH.t}" y2="${CH.h-CH.b}" class="sc-cursor"/>${c.names.map(n=>`<circle id="${c.id}-pt-${n}" r="${mine(n)?5:3.5}" class="sc-pt ${COLORS[n]||'other'}"/>`).join('')}</svg>`;
 }
 function moveCursor(id,N){const x=scX(N/1e9),line=$(id+'-cursor');if(line){line.setAttribute('x1',x);line.setAttribute('x2',x);}}
 function renderEconomy(){
@@ -322,12 +331,12 @@ function renderEconomy(){
  const win=(id,title)=>`<div class="win" id="win-${id}"><span class="eyebrow">${title}</span><ol class="win-list">${'<li><span class="tag"></span><strong></strong></li>'.repeat(3)}</ol></div>`;
  const memBody=name=>`<div class="mem-body"><div class="stack"><span class="base"></span><span class="state ${COLORS[name]||'other'}"></span></div><div class="chips ${COLORS[name]||'other'}"></div></div>`;
  $('controls').innerHTML='';
- $('result').innerHTML=`<div class="scale-dock"><div class="scale-read"><div><span class="eyebrow">Размер модели</span><strong id="scale-params"></strong></div><div><span class="eyebrow">Токенов</span><strong id="scale-tokens"></strong></div><div><span class="eyebrow">Вычислений с AdamW</span><strong id="scale-hours"></strong></div><div><span class="eyebrow">Стоимость с AdamW</span><strong id="scale-money"></strong></div><div><span class="eyebrow">Срок с AdamW</span><strong id="scale-days"></strong></div></div><input type="range" id="scale" min="8" max="11.7" step="any" value="${costState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div><p class="scale-hint" id="scale-hint"></p></div>
+ $('result').innerHTML=`<div class="scale-dock"><div class="scale-read"><div><span class="eyebrow">Размер модели</span><strong id="scale-params"></strong></div><div><span class="eyebrow">Токенов</span><strong id="scale-tokens"></strong></div><div><span class="eyebrow">Вычислений · стандарт</span><strong id="scale-hours"></strong></div><div><span class="eyebrow">Стоимость · стандарт</span><strong id="scale-money"></strong></div><div><span class="eyebrow">Срок · стандарт</span><strong id="scale-days"></strong></div></div><input type="range" id="scale" min="8" max="11.7" step="any" value="${costState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div><p class="scale-hint" id="scale-hint"></p></div>
  <div class="wins">${win('money','Дешевле обучить')}${win('published','Опубликованные: бюджет')}${win('mem','Меньше памяти')}${win('step','Меньше трафика')}</div>
  <div class="quads">
- ${panel('money','Гонка до качества AdamW','<span>метод · ускорение</span><span>время обучения</span><span>стоимость</span>',MONEY_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:${100/1.08}%"></div></div>`+MONEY_NAMES.map(n=>lane('money',n,bar(n))).join(''),'<span class="meta" id="race-clock"></span>')}
+ ${panel('money','Гонка до одного качества','<span>метод · экономия</span><span>время обучения</span><span>стоимость</span>',MONEY_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:${100/1.08}%"></div></div>`+MONEY_NAMES.map(n=>lane('money',n,bar(n))).join(''),'<span class="meta" id="race-clock"></span>')}
  ${panel('mem','Память GPU под обучение','<span>метод · GPU</span><span><i class="key base"></i>веса и градиенты <i class="key st"></i>состояние</span><span>аренда минимума</span>',MEM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:66%"></div></div>`+MEM_NAMES.map(n=>lane('mem',n,memBody(n))).join(''),'<span class="meta" id="chip-unit"></span>')}
- ${panel('comm','Связь при распределённом обучении','<span>метод · бит на параметр</span><span>время связи за обучение</span><span>простой</span>',COMM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:92%"></div></div>`+COMM_NAMES.map(n=>lane('comm',n,`<div class="lane-track"><div class="fill ${COLORS[n]||'other'}"></div><span class="ctime"></span></div>`)).join(''),'<span class="meta" id="comm-nodes"></span>')}
+ ${panel('comm','Связь при распределённом обучении','<span>метод · бит на параметр</span><span>ожидание сети за обучение</span><span>стоимость ожидания</span>',COMM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:92%"></div></div>`+COMM_NAMES.map(n=>lane('comm',n,`<div class="lane-track"><div class="fill ${COLORS[n]||'other'}"></div><span class="ctime"></span></div>`)).join(''),'<span class="meta" id="comm-nodes"></span>')}
  <section class="board quad"><div class="board-head"><h3>Ускорение по данным и размер модели</h3></div>${lineChart(SPEED_CHART)}</section>
  </div>`;
  for(const b of document.querySelectorAll('.landmark'))b.addEventListener('click',()=>{costState.position=Number(b.dataset.size);$('scale').value=costState.position;tick();});
@@ -421,6 +430,10 @@ function drawFinetune(){
  const track=(key,target)=>{const v=ease(key,target);if(v!==target)moving=true;return v;};
  $('ft-r').textContent='r = '+fmt(rank,rank<10&&rank%1?1:0);$('ft-share').textContent=fmt(ftShare(rank),2)+'%';
  $('ft-count').textContent=fmt(ftShare(rank)/100*8e9/1e6,0)+' млн';$('ft-size').textContent=fmt(ftShare(rank)/100*8e9*2/1e6,0)+' МБ';$('ft-wlora').textContent=fmt(ftShare(rank)/2,2)+'%';
+ // Monthly rent for an 8B fine-tune: full fine-tuning holds bf16 weights and grads, fp32 master and Adam state (16 B/param);
+ // LoRA keeps frozen bf16 weights plus the adapter with the same 16 B per trainable parameter.
+ const rent=gb=>{const n=Math.ceil(gb/80);return `${n}×H100 · ${money(n*costState.rate*HOURS_MONTH)}/мес`;};
+ $('ft-full').textContent=rent(memory('AdamW',8e9).total/1e9);$('ft-lora').textContent=rent((2*8e9+16*ftShare(rank)/100*8e9)/1e9);
  $('ft-ring').style.setProperty('--p',track('fring',Math.min(100,Math.log2(ftShare(rank)/.05)/Math.log2(9.2/.05)*100)));
  skills.forEach((s,i)=>{
   const card=$('ft-skill-'+i);
@@ -428,7 +441,7 @@ function drawFinetune(){
   const scale=Math.max(3,...order.map(([,v])=>Math.max(v.gain,-v.gain*4.4)));
   card.querySelector('.tag').textContent=top;card.querySelector('.tag').className='tag '+FT_METHODS[top].color;
   card.querySelector('.sk-value').textContent=`на ${fmt(Math.abs(track('sk'+i,best.gain)),1)}% ${best.gain>=0?'лучше':'хуже'}`;
-  card.querySelector('.sk-base').textContent=FT_METHODS[top].base;
+  card.querySelector('.sk-base').textContent={AdamW:'обычное дообучение','AdamW-LoRA':'обычная LoRA'}[FT_METHODS[top].base]||FT_METHODS[top].base;
   order.forEach(([m,v],j)=>{const row=card.querySelector(`.sk-row[data-m="${m}"]`);row.style.transform=`translateY(${j*100}%)`;
    const w=track('skw'+i+m,v.gain)/scale*80,fill=row.querySelector('.sk-fill');fill.style.left=(w>=0?18:18+w)+'%';fill.style.width=Math.abs(w)+'%';
    fill.classList.toggle('neg',v.gain<0);fill.classList.toggle('est',!!v.est&&!v.imputed);fill.classList.toggle('imp',!!v.imputed);row.querySelector('.sk-v').textContent=pct(v.gain);});
@@ -536,7 +549,7 @@ function renderFinetune(){
  const heat=`<section class="board hm below-fold"><div class="board-head"><h3>По задачам</h3><span class="meta">насколько лучше базового метода из той же статьи</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th><i class="mark ${FT_METHODS[m].color}"></i>${m}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${t.name}<small>${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?t.rows.filter(r=>r.m===m).map(r=>r.model).join(', '):'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table></section>`;
  const zo=zoSection();
  $('controls').innerHTML='';
- $('result').innerHTML=`<div class="scale-dock ft-dock"><div class="ft-dock-row"><div><span class="eyebrow" style="display:block;margin:0">Ранг адаптера LoRA</span><strong id="ft-r" class="ft-big"></strong></div><div class="ft-ring-wrap"><div class="ft-ring" id="ft-ring"><div><strong id="ft-share"></strong><small>весов 8B</small></div></div><dl><dt>Обучаемых параметров</dt><dd id="ft-count"></dd><dt>Размер адаптера</dt><dd id="ft-size"></dd><dt>WLoRA оставляет</dt><dd id="ft-wlora"></dd></dl></div><input type="range" id="ft-rank" min="0" max="7" step="any" value="${ftState.position}" aria-label="Ранг адаптера"></div></div>
+ $('result').innerHTML=`<div class="scale-dock ft-dock"><div class="ft-dock-row"><div><span class="eyebrow" style="display:block;margin:0">Ранг адаптера LoRA</span><strong id="ft-r" class="ft-big"></strong></div><div class="ft-ring-wrap"><div class="ft-ring" id="ft-ring"><div><strong id="ft-share"></strong><small>весов 8B</small></div></div><dl><dt>Обучаемых параметров</dt><dd id="ft-count"></dd><dt>Размер адаптера</dt><dd id="ft-size"></dd><dt>WLoRA оставляет</dt><dd id="ft-wlora"></dd></dl><dl class="ft-rent"><dt>Обычное дообучение 8B</dt><dd id="ft-full"></dd><dt>LoRA</dt><dd id="ft-lora"></dd></dl></div><input type="range" id="ft-rank" min="0" max="7" step="any" value="${ftState.position}" aria-label="Ранг адаптера"></div></div>
  <div class="sk-grid">${skills.map(skill).join('')}</div>${zo}${heat}`;
  $('ft-rank').addEventListener('input',e=>{ftState.position=Number(e.target.value);drawFinetune();});
  $('zo-size').addEventListener('input',e=>{zoState.position=Number(e.target.value);drawZO();});
@@ -593,7 +606,7 @@ function renderDiffusion(){
 function render(){
  const economy=state.domain==='economy'||state.domain==='finetune';$('workspace').classList.toggle('economy',economy);document.body.classList.toggle('economy-view',economy);
  $('page-title').innerHTML=economy?'То же качество. <br>Меньше затрат на обучение.':'Как оптимизатор<br>меняет качество модели';
- $('intro-note').textContent=economy?'Двигайте размер модели. Все оптимизаторы обучаются одновременно до качества AdamW: видно, кто финиширует раньше, сколько это стоит и сколько GPU нужно под память.':'Выберите задачу. Сравните итог обучения с AdamW и современными оптимизаторами на опубликованных результатах.';
+ $('intro-note').textContent=economy?'Двигайте размер модели. Все оптимизаторы обучаются одновременно до качества стандартного обучения: видно, кто финиширует раньше, сколько это стоит и сколько GPU нужно под память.':'Выберите задачу. Сравните итог обучения с AdamW и современными оптимизаторами на опубликованных результатах.';
  document.querySelectorAll('[data-domain]').forEach(b=>{b.classList.toggle('active',b.dataset.domain===state.domain);b.setAttribute('aria-pressed',String(b.dataset.domain===state.domain));});
  if(state.domain==='finetune')renderFinetune();else if(economy)renderEconomy();else if(state.domain==='llm')renderLLM();else if(state.domain==='tabular')renderTabular();else renderDiffusion();
 }
