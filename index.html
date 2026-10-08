@@ -179,8 +179,11 @@ const SCALING=Object.fromEntries(D.economy.methods.filter(m=>!LAB[m.name]).map(m
  return [m.name,{points,decays,amp:decays?Math.exp(points.reduce((a,[n,k])=>a+Math.log(k-1)+GAMMA*Math.log(n),0)/points.length):0,flat:median(points.map(p=>p[1]))}];
 }));
 function baseFactor(name,N){if(name==='AdamW')return 1;const s=SCALING[name];return s.decays?1+s.amp*N**-GAMMA:s.flat;}
+// The decline is measured up to 1,2B; beyond the last measurement we hold the speed-up instead of extrapolating the power law
+// two orders of magnitude (Moonlight, 16B MoE, still reports a large Muon gain); a smooth minimum avoids a kink at 1,2B.
+const N_MEASURED=1.2;
 function factorAt(name,N){
- const lab=LAB[name];if(!lab)return baseFactor(name,N);
+ N=(N**-2+N_MEASURED**-2)**-.5;const lab=LAB[name];if(!lab)return baseFactor(name,N);
  const ratio=N<=lab.ref?lab.ratio:1+(lab.ratio-1)*(N/lab.ref)**-GAMMA;
  return baseFactor(lab.parent,N)*ratio;
 }
@@ -207,14 +210,15 @@ const MONEY_NAMES=['AdamW','LionMuon','DyKAF','SoftMuon','SoftSignum','Muon','SO
 const OVERLAP=.7;
 // Compressed exchange is not free: packing, per-block scales and the two-phase 1-bit all-reduce. 1-bit Adam (Tang et al.,
 // 2021) measured a 5,5–6,2× faster communication stage, not 16×; we add a fixed 0,104 of the bf16 time so 1 bit gives 6×.
-// Signum and Lion (other groups) send sign updates too.
+// Signum and Lion (other groups) send sign updates too. Models this size are sharded (FSDP/ZeRO-3): every step the network
+// also gathers the bf16 weights for the forward and the backward pass, twice the gradient volume, and signs do not shrink it.
 const NET_BW=50e9,PACK=1/6-1/16,SIGN=['SoftSignum','Signum','Lion'],COMM_NAMES=['AdamW','SoftSignum','Signum','Lion','FRUGAL ρ=0','FRUGAL ρ=0,25'];
 function commBits(name,N){
  if(SIGN.includes(name))return 1;if(!name.startsWith('FRUGAL'))return 16;
  const {d}=shape(N),emb=Math.min(1,2*VOCAB*d/N),rho=name==='FRUGAL ρ=0'?0:.25;return 16*emb+(16*rho+(1-rho))*(1-emb);
 }
 function comm(name,N,gpus){
- const bits=commBits(name,N),nodes=Math.max(2,gpus/8),bytes=2*(nodes-1)/nodes*N*2*(bits<16?bits/16+PACK:1),steps=20*N/batchTokens(N);
+ const bits=commBits(name,N),nodes=Math.max(2,gpus/8),bytes=(nodes-1)/nodes*N*2*(2+(bits<16?bits/16+PACK:1)),steps=20*N/batchTokens(N);
  const compute=6*N*batchTokens(N)/(gpus*PEAK_FLOPS*costState.mfu/100),seconds=bytes/NET_BW*(1-OVERLAP);
  const hours=seconds*steps/3600;return {name,ours:OURS.includes(name),bits,bytes,seconds,share:seconds/compute,total:bytes*steps,hours,cost:hours*gpus*costState.rate};
 }
@@ -339,7 +343,7 @@ function renderEconomy(){
  <div class="quads">
  ${panel('money','Гонка до одного качества','<span>метод · экономия</span><span>время обучения</span><span>стоимость</span>',MONEY_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:${100/1.08}%"></div></div>`+MONEY_NAMES.map(n=>lane('money',n,bar(n))).join(''),'<span class="meta" id="race-clock"></span>')}
  ${panel('mem','Память GPU под обучение','<span>метод · GPU</span><span><i class="key base"></i>веса и градиенты <i class="key st"></i>состояние</span><span>аренда минимума</span>',MEM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:66%"></div></div>`+MEM_NAMES.map(n=>lane('mem',n,memBody(n))).join(''),'<span class="meta" id="chip-unit"></span>')}
- ${panel('comm','Связь при распределённом обучении','<span>метод · бит на параметр</span><span>ожидание сети за обучение</span><span>стоимость ожидания</span>',COMM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:92%"></div></div>`+COMM_NAMES.map(n=>lane('comm',n,`<div class="lane-track"><div class="fill ${COLORS[n]||'other'}"></div><span class="ctime"></span></div>`)).join(''),'<span class="meta" id="comm-nodes"></span>')}
+ ${panel('comm','Связь при распределённом обучении','<span>метод · бит градиента</span><span>ожидание сети за обучение</span><span>стоимость ожидания</span>',COMM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:92%"></div></div>`+COMM_NAMES.map(n=>lane('comm',n,`<div class="lane-track"><div class="fill ${COLORS[n]||'other'}"></div><span class="ctime"></span></div>`)).join(''),'<span class="meta" id="comm-nodes"></span>')}
  <section class="board quad"><div class="board-head"><h3>Ускорение по данным и размер модели</h3></div>${lineChart(SPEED_CHART)}</section>
  </div>`;
  for(const b of document.querySelectorAll('.landmark'))b.addEventListener('click',()=>{costState.position=Number(b.dataset.size);$('scale').value=costState.position;tick();});
