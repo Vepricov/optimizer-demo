@@ -93,7 +93,7 @@
 .lname{display:flex;flex-direction:column;min-width:0;line-height:1.08}.lname b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lname small{font-size:10px;color:var(--muted);font-weight:400}.quad .lane-name{font-size:13px}
 .quad-legend,.quad .lane{grid-template-columns:250px minmax(0,1fr) 120px}.quad .lane-grid{left:262px}.win .win-list strong{font-size:15px}
 .ft-rent{border-left:1px solid var(--line);padding-left:16px;margin-left:8px!important;gap:6px 14px!important}.ft-rent dt{font-size:12px;align-self:center}.ft-rent dd{white-space:nowrap;font-size:17px;font-weight:500}.ft-rent dd:last-child{color:var(--c1)}
-.sk-money{font-style:normal;color:var(--c1)}.zo-head2,.zo-row{grid-template-columns:180px minmax(0,1fr) 84px minmax(0,1fr) 250px}
+.sk-money{flex-basis:100%;font-size:13px;color:var(--muted);margin-top:2px}.sk-money b{display:block;font-size:19px;font-weight:500;color:var(--c1)}.zo-head2,.zo-row{grid-template-columns:180px minmax(0,1fr) 84px minmax(0,1fr) 250px}
 #comm .ctime{position:absolute;left:93.5%;margin:0}
 </style>
 </head>
@@ -452,7 +452,7 @@ function drawFinetune(){
   const scale=Math.max(3,...order.map(([,v])=>Math.max(v.gain,-v.gain*4.4)));
   card.querySelector('.tag').textContent=top;card.querySelector('.tag').className='tag '+FT_METHODS[top].color;
   card.querySelector('.sk-value').textContent=`на ${fmt(Math.abs(track('sk'+i,best.gain)),1)}% ${best.gain>=0?'лучше':'хуже'}`;
-  card.querySelector('.sk-money').textContent=` · на той же 1 H100 ≈ ${cards(1)}`;
+  card.querySelector('.sk-money').innerHTML=`<b>1 H100 ≈ ${cards(1)}</b> вместо ${cards(Math.ceil(memory('AdamW',8e9).total/GPU_BYTES))} на обычное дообучение`;
   card.querySelector('.sk-base').textContent='обычная LoRA';
   order.forEach(([m,v],j)=>{const row=card.querySelector(`.sk-row[data-m="${m}"]`);row.style.transform=`translateY(${j*100}%)`;
    const w=track('skw'+i+m,v.gain)/scale*80,fill=row.querySelector('.sk-fill');fill.style.left=(w>=0?18:18+w)+'%';fill.style.width=Math.abs(w)+'%';
@@ -557,7 +557,7 @@ function zoSection(){
 function renderFinetune(){
  const {skills}=ftTable(ftRank());
  const bar=m=>{const c=FT_METHODS[m]?FT_METHODS[m].color:'other';return `<div class="sk-row ${FT_METHODS[m]?'ours':'other'} ${c}" data-m="${m}"><span><i class="mark"></i>${m}</span><div class="sk-track"><div class="sk-fill"></div></div><em class="sk-v"></em></div>`;};
- const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs">чем <span class="sk-base"></span><em class="sk-money"></em></span></div><svg class="sk-chart" viewBox="0 0 400 70" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${FT_ALL.length} * 19px)"><div class="sk-zero"></div>${FT_ALL.map(bar).join('')}</div></section>`;
+ const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs">чем <span class="sk-base"></span></span><span class="sk-money"></span></div><svg class="sk-chart" viewBox="0 0 400 70" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${FT_ALL.length} * 19px)"><div class="sk-zero"></div>${FT_ALL.map(bar).join('')}</div></section>`;
  const heat=`<section class="board hm below-fold"><div class="board-head"><h3>По задачам</h3><span class="meta">насколько лучше базового метода из той же статьи</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th><i class="mark ${FT_METHODS[m].color}"></i>${m}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${t.name}<small>${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?t.rows.filter(r=>r.m===m).map(r=>r.model).join(', '):'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table></section>`;
  const zo=zoSection();
  $('controls').innerHTML='';
