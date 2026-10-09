@@ -438,6 +438,12 @@ function ftTable(rank){
  return {tasks,skills};
 }
 const pct=v=>(v>=0?'+':'−')+fmt(Math.abs(v),1)+'%';
+// Quality gain in money. Fine-tuning quality grows roughly log-linearly with data: we take +2% (relative) per doubling of
+// the fine-tuning set. Plain LoRA would need 2^(gain/2) times more data to match, and the extra data costs LoRA compute,
+// 4·N·T FLOPs (no weight gradients), for an 8B model and a 10B-token fine-tuning project at the page's MFU and rent.
+const FT_N=8e9,FT_TOKENS=10e9,FT_PER_DOUBLING=2;
+const ftRunCost=()=>4*FT_N*FT_TOKENS/(PEAK_FLOPS*costState.mfu/100)/3600*costState.rate;
+const ftGainMoney=g=>ftRunCost()*(2**(g/FT_PER_DOUBLING)-1);
 const ftState={position:3};
 const ftRank=()=>2**ftState.position;
 function drawFinetune(){
@@ -456,8 +462,9 @@ function drawFinetune(){
   const order=Object.entries(s.methods).sort((a,b)=>b[1].gain-a[1].gain),[top,best]=order.find(([m,v])=>FT_METHODS[m]&&!v.imputed);
   const scale=Math.max(3,...order.map(([,v])=>Math.max(v.gain,-v.gain*4.4)));
   card.querySelector('.tag').textContent=top;card.querySelector('.tag').className='tag '+FT_METHODS[top].color;
-  card.querySelector('.sk-value').textContent=`на ${fmt(Math.abs(track('sk'+i,best.gain)),1)}% ${best.gain>=0?'лучше':'хуже'}`;
-  card.querySelector('.sk-base').textContent='обычная LoRA';
+  const g=track('sk'+i,best.gain),mul=2**(g/FT_PER_DOUBLING);
+  card.querySelector('.sk-value').textContent=`−${money(ftGainMoney(g))}`;
+  card.querySelector('.sk-base').textContent=`обычной LoRA для того же качества нужно в ${fmt(mul,1)} раза больше данных`;
   card.querySelector('.sk-money').innerHTML=`<b>1 H100 ≈ ${cards(1)}</b> вместо ${cards(Math.ceil(memory('AdamW',8e9).total/GPU_BYTES))} на обычное дообучение`;
   order.forEach(([m,v],j)=>{const row=card.querySelector(`.sk-row[data-m="${m}"]`);row.style.transform=`translateY(${j*100}%)`;
    const w=track('skw'+i+m,v.gain)/scale*80,fill=row.querySelector('.sk-fill');fill.style.left=(w>=0?18:18+w)+'%';fill.style.width=Math.abs(w)+'%';
@@ -562,7 +569,7 @@ function zoSection(){
 function renderFinetune(){
  const {skills}=ftTable(ftRank());
  const bar=m=>{const c=FT_METHODS[m]?FT_METHODS[m].color:'other';return `<div class="sk-row ${FT_METHODS[m]?'ours':'other'} ${c}" data-m="${m}"><span><i class="mark"></i>${m}</span><div class="sk-track"><div class="sk-fill"></div></div><em class="sk-v"></em></div>`;};
- const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs">чем <span class="sk-base"></span></span><span class="sk-money"></span></div><svg class="sk-chart" viewBox="0 0 400 70" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${FT_ALL.length} * 19px)"><div class="sk-zero"></div>${FT_ALL.map(bar).join('')}</div></section>`;
+ const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs"><span class="sk-base"></span></span><span class="sk-money"></span></div><svg class="sk-chart" viewBox="0 0 400 70" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${FT_ALL.length} * 19px)"><div class="sk-zero"></div>${FT_ALL.map(bar).join('')}</div></section>`;
  const heat=`<section class="board hm below-fold"><div class="board-head"><h3>По задачам</h3><span class="meta">насколько лучше базового метода из той же статьи</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th><i class="mark ${FT_METHODS[m].color}"></i>${m}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${t.name}<small>${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?t.rows.filter(r=>r.m===m).map(r=>r.model).join(', '):'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table></section>`;
  const zo=zoSection();
  $('controls').innerHTML='';
