@@ -440,8 +440,8 @@ function ftTable(rank){
 const pct=v=>(v>=0?'+':'−')+fmt(Math.abs(v),1)+'%';
 // Quality gain in money. Fine-tuning quality grows roughly log-linearly with data: we take +2% (relative) per doubling of
 // the fine-tuning set. Plain LoRA would need 2^(gain/2) times more data to match, and the extra data costs LoRA compute,
-// 4·N·T FLOPs (no weight gradients), for an 8B model and a 10B-token fine-tuning project at the page's MFU and rent.
-const FT_N=8e9,FT_TOKENS=10e9,FT_PER_DOUBLING=2;
+// 4·N·T FLOPs (no weight gradients), for an 8B model and a 100B-token domain fine-tuning project at the page's MFU and rent.
+const FT_N=8e9,FT_TOKENS=100e9,FT_PER_DOUBLING=2;
 const ftRunCost=()=>4*FT_N*FT_TOKENS/(PEAK_FLOPS*costState.mfu/100)/3600*costState.rate;
 const ftGainMoney=g=>ftRunCost()*(2**(g/FT_PER_DOUBLING)-1);
 const ftState={position:3};
