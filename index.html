@@ -392,22 +392,21 @@ const ftRows=(task,m)=>FT_METHODS[m]?task.rows.filter(r=>r.m===m):FT_OTHERS[m].f
 const ftShare=r=>.57*r/8;
 // Rank model. Each method has its own trend of gain versus rank, fitted on all of its rows measured at several ranks: the
 // median relative change of the gain per doubling of r (WLoRA+ ≈ flat, SimplexLoRA falls with r). Methods measured at one rank
-// follow the saturation law r^−0.3 (LoRA approaches full fine-tuning, so every gain shrinks with rank). A row is
-// g(r) = G·2^{q·(log2 r − c)} with G fitted by least squares; beyond the largest measured rank it decays as (r/r_max)^−0.3,
+// have no trend in the data and stay flat; an assumed r^−0.3 decline made every gain fall with rank without evidence. A row is
+// g(r) = G·2^{q·(log2 r − c)} with G fitted by least squares; beyond the largest measured rank it stays at that value,
 // below the smallest one it keeps the trend at half the rate (no blow-up at r = 1).
-const FT_BETA=.3;
 const gainAt=(row,r)=>(row.pts[r][0]-row.pts[r][1])/row.pts[r][1]*100;
 function rowSlope(row){const rs=Object.keys(row.pts).map(Number);if(rs.length<3)return null;const xs=rs.map(Math.log2),ys=rs.map(r=>gainAt(row,r)),mx=xs.reduce((a,b)=>a+b)/xs.length,my=ys.reduce((a,b)=>a+b)/ys.length;if(Math.abs(my)<.3)return null;return xs.reduce((a,x,i)=>a+(x-mx)*(ys[i]-my),0)/xs.reduce((a,x)=>a+(x-mx)**2,0)/my;}
 const FT_TREND=(()=>{const per={};for(const t of FT_TASKS)for(const row of t.rows){const s=rowSlope(row);if(s!==null)(per[row.m]=per[row.m]||[]).push(s);}
  const pooled=median(Object.values(per).flat()),q=s=>Math.log2(1+Math.max(-.5,Math.min(.5,s)));
- return Object.fromEntries(FT_ALL.map(m=>[m,per[m]?q(median(per[m])):-FT_BETA]));})();
+ return Object.fromEntries(FT_ALL.map(m=>[m,per[m]?q(median(per[m])):0]));})();
 function ftRowFit(row){
  if(row.fit_)return row.fit_;
  const rs=Object.keys(row.pts).map(Number),q=FT_TREND[row.m],c=rs.reduce((a,r)=>a+Math.log2(r),0)/rs.length,w=rs.map(r=>2**(q*(Math.log2(r)-c)));
  const G=rs.reduce((a,r,i)=>a+gainAt(row,r)*w[i],0)/w.reduce((a,v)=>a+v*v,0);
  return row.fit_={G,c,q,lo:Math.min(...rs),hi:Math.max(...rs)};
 }
-const ftCurve=(f,rank)=>{const r=Math.max(f.lo,Math.min(rank,f.hi));return f.G*2**(f.q*(Math.log2(r)-f.c))*(rank>f.hi?(rank/f.hi)**-FT_BETA:1)*(rank<f.lo?(rank/f.lo)**(f.q/2):1);};
+const ftCurve=(f,rank)=>{const r=Math.max(f.lo,Math.min(rank,f.hi));return f.G*2**(f.q*(Math.log2(r)-f.c))*(rank<f.lo?(rank/f.lo)**(f.q/2):1);};
 function ftGain(row,rank){const f=ftRowFit(row);return {gain:ftCurve(f,rank),est:rank<f.lo/1.05||rank>f.hi*1.05};}
 function ftMeasured(rows,rank){const g=rows.map(r=>ftGain(r,rank));return g.length?{gain:g.reduce((a,x)=>a+x.gain,0)/g.length,est:g.every(x=>x.est)}:null;}
 // Missing task × method cells: gain ≈ strength(method) × response(task) at r = 8, fitted alternately on measured gains winsorized
@@ -440,10 +439,10 @@ function ftTable(rank){
 const pct=v=>(v>=0?'+':'−')+fmt(Math.abs(v),1)+'%';
 // Quality gain in money. Fine-tuning quality grows roughly log-linearly with data: we take +2% (relative) per doubling of
 // the fine-tuning set. Plain LoRA would need 2^(gain/2) times more data to match, and the extra data costs LoRA compute,
-// 4·N·T FLOPs (no weight gradients), for an 8B model and a 100B-token domain fine-tuning project at the page's MFU and rent.
+// 4·N·T FLOPs (no weight gradients) plus 6 FLOPs per token for each trainable adapter parameter, so a larger rank costs more, for an 8B model and a 100B-token domain fine-tuning project at the page's MFU and rent.
 const FT_N=8e9,FT_TOKENS=100e9,FT_PER_DOUBLING=2;
-const ftRunCost=()=>4*FT_N*FT_TOKENS/(PEAK_FLOPS*costState.mfu/100)/3600*costState.rate;
-const ftGainMoney=g=>ftRunCost()*(2**(g/FT_PER_DOUBLING)-1);
+const ftRunCost=(rank=8)=>(4+6*ftShare(rank)/100)*FT_N*FT_TOKENS/(PEAK_FLOPS*costState.mfu/100)/3600*costState.rate;
+const ftGainMoney=(g,rank)=>ftRunCost(rank)*(2**(g/FT_PER_DOUBLING)-1);
 const ftState={position:3};
 const ftRank=()=>2**ftState.position;
 function drawFinetune(){
@@ -463,7 +462,7 @@ function drawFinetune(){
   const scale=Math.max(3,...order.map(([,v])=>Math.max(v.gain,-v.gain*4.4)));
   card.querySelector('.tag').textContent=top;card.querySelector('.tag').className='tag '+FT_METHODS[top].color;
   const g=track('sk'+i,best.gain),mul=2**(g/FT_PER_DOUBLING);
-  card.querySelector('.sk-value').textContent=`−${money(ftGainMoney(g))}`;
+  card.querySelector('.sk-value').textContent=`−${money(ftGainMoney(g,rank))}`;
   card.querySelector('.sk-base').textContent=`обычной LoRA для того же качества нужно в ${fmt(mul,1)} раза больше данных`;
   card.querySelector('.sk-money').innerHTML=`<b>1 H100 ≈ ${cards(1)}</b> вместо ${cards(Math.ceil(memory('AdamW',8e9).total/GPU_BYTES))} на обычное дообучение`;
   order.forEach(([m,v],j)=>{const row=card.querySelector(`.sk-row[data-m="${m}"]`);row.style.transform=`translateY(${j*100}%)`;
