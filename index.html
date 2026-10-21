@@ -96,7 +96,7 @@
 .zo-head2,.zo-row{grid-template-columns:180px minmax(0,1fr) 84px minmax(0,1fr) 250px}
 #comm .ctime{position:absolute;left:93.5%;margin:0}
 .quad .lane-money .value.gain,#mem .lane .value.gain,#comm .lane .value.gain{color:var(--c1)}.quad .lane-money .value.plain{color:var(--text)}
-.sk-money{flex-basis:100%;font-size:13px;color:var(--muted);margin-top:2px}.sk-money b{display:block;font-size:19px;font-weight:500;color:var(--c1)}
+.ft-facts{margin:0 auto 0 40px;font-size:13px;display:grid;grid-template-columns:auto auto;gap:4px 14px}.ft-facts dt{color:var(--muted)}.ft-facts dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ft-dock input{display:block;width:100%;height:36px;margin:8px 0 0;accent-color:var(--c2)}.ft-dock .landmarks{height:24px}.sk-card .sk-row{grid-template-columns:104px minmax(0,1fr) 92px}.sk-card .sk-zero{left:calc(110px + (100% - 110px - 98px) * .18)}#zo-h100 b{top:auto!important;bottom:-16px}
 </style>
 </head>
 <body>
@@ -439,51 +439,46 @@ function ftTable(rank){
 const pct=v=>(v>=0?'+':'−')+fmt(Math.abs(v),1)+'%';
 // Quality gain in money. Fine-tuning quality grows roughly log-linearly with data: we take +2% (relative) per doubling of
 // the fine-tuning set. Plain LoRA would need 2^(gain/2) times more data to match, and the extra data costs LoRA compute,
-// 4·N·T FLOPs (no weight gradients) plus 6 FLOPs per token for each trainable adapter parameter, so a larger rank costs more, for an 8B model and a 100B-token domain fine-tuning project at the page's MFU and rent.
-const FT_N=8e9,FT_TOKENS=100e9,FT_PER_DOUBLING=2;
-const ftRunCost=(rank=8)=>(4+6*ftShare(rank)/100)*FT_N*FT_TOKENS/(PEAK_FLOPS*costState.mfu/100)/3600*costState.rate;
-const ftGainMoney=(g,rank)=>ftRunCost(rank)*(2**(g/FT_PER_DOUBLING)-1);
-const ftState={position:3};
-const ftRank=()=>2**ftState.position;
+// 4·N·T FLOPs (no weight gradients) plus 6 FLOPs per token for each trainable adapter parameter, for a 100B-token domain
+// fine-tuning project at the page's MFU and rent. Most gains are measured at r = 8 and only two methods were measured at
+// several ranks, so the page fixes r = 8 and lets the model size move instead (gains are relative, cost scales with N).
+const FT_RANK=8,FT_TOKENS=100e9,FT_PER_DOUBLING=2;
+const ftRunCost=N=>(4+6*ftShare(FT_RANK)/100)*N*FT_TOKENS/(PEAK_FLOPS*costState.mfu/100)/3600*costState.rate;
+const ftGainMoney=(g,N)=>ftRunCost(N)*(2**(g/FT_PER_DOUBLING)-1);
+// One model-size slider for the whole tab (billions of parameters), shared by fine-tuning and zero-order.
+const ftState={position:Math.log10(8)};
+const ftSize=()=>10**ftState.position;
+const FT_SIZES=[[.35,'350M'],[1.3,'1.3B'],[8,'8B'],[13,'13B'],[30,'30B'],[70,'70B']];
+const sizeText=N=>N>=1?fmt(N,N<10&&Math.abs(N-Math.round(N))>.05?1:0)+'B':fmt(N*1000,0)+'M';
 function drawFinetune(){
- if(!$('ft-rank'))return;
- const rank=ftRank(),{tasks,skills}=ftTable(rank);let moving=false;
+ if(!$('ft-size'))return;
+ const N=ftSize(),Np=N*1e9,{tasks,skills}=ftTable(FT_RANK);let moving=false;
  const track=(key,target)=>{const v=ease(key,target);if(v!==target)moving=true;return v;};
- $('ft-r').textContent='r = '+fmt(rank,rank<10&&rank%1?1:0);$('ft-share').textContent=fmt(ftShare(rank),2)+'%';
- $('ft-count').textContent=fmt(ftShare(rank)/100*8e9/1e6,0)+' млн';$('ft-size').textContent=fmt(ftShare(rank)/100*8e9*2/1e6,0)+' МБ';$('ft-wlora').textContent=fmt(ftShare(rank)/2,2)+'%';
- // Cards needed for an 8B fine-tune: full fine-tuning holds bf16 weights and grads, fp32 master and Adam state (16 B/param);
- // LoRA keeps frozen bf16 weights plus the adapter with the same 16 B per trainable parameter.
+ $('ft-n').textContent=sizeText(N);
+ $('ft-share').textContent=fmt(ftShare(FT_RANK),2)+'%';$('ft-count').textContent=fmt(ftShare(FT_RANK)/100*Np/1e6,0)+' млн';
+ $('ft-cost').textContent=money(ftRunCost(Np));
+ // Cards needed: full fine-tuning from the same measured table as the zero-order panel (MeZO Table 22, Adam with activations);
+ // LoRA keeps frozen bf16 weights plus the adapter with 16 B per trainable parameter.
  const rent=gb=>{const n=Math.ceil(gb/80);return `${n}×H100 · ${cards(n)}`;};
- $('ft-full').textContent=rent(memory('AdamW',8e9).total/1e9);$('ft-lora').textContent=rent((2*8e9+16*ftShare(rank)/100*8e9)/1e9);
- $('ft-ring').style.setProperty('--p',track('fring',Math.min(100,Math.log2(ftShare(rank)/.05)/Math.log2(9.2/.05)*100)));
+ $('ft-full').textContent=rent(adamGB(N));$('ft-lora').textContent=rent((2*Np+16*ftShare(FT_RANK)/100*Np)/1e9);
+ // Every row of a skill card is money: what plain LoRA would spend on extra data to reach the method's quality.
  skills.forEach((s,i)=>{
   const card=$('ft-skill-'+i);
   const order=Object.entries(s.methods).sort((a,b)=>b[1].gain-a[1].gain),[top,best]=order.find(([m,v])=>FT_METHODS[m]&&!v.imputed);
-  const scale=Math.max(3,...order.map(([,v])=>Math.max(v.gain,-v.gain*4.4)));
+  const rub=g=>ftGainMoney(g,Np),scale=Math.max(...order.map(([,v])=>Math.max(rub(v.gain),-rub(v.gain)*4.4)));
   card.querySelector('.tag').textContent=top;card.querySelector('.tag').className='tag '+FT_METHODS[top].color;
-  const g=track('sk'+i,best.gain),mul=2**(g/FT_PER_DOUBLING);
-  card.querySelector('.sk-value').textContent=`−${money(ftGainMoney(g,rank))}`;
-  card.querySelector('.sk-base').textContent=`обычной LoRA для того же качества нужно в ${fmt(mul,1)} раза больше данных`;
-  card.querySelector('.sk-money').innerHTML=`<b>1 H100 ≈ ${cards(1)}</b> вместо ${cards(Math.ceil(memory('AdamW',8e9).total/GPU_BYTES))} на обычное дообучение`;
+  const g=best.gain;
+  card.querySelector('.sk-value').textContent=`−${money(track('sk'+i,rub(g)))}`;
+  card.querySelector('.sk-base').textContent=`качество +${fmt(g,1)}% к LoRA: ей нужно в ${times(2**(g/FT_PER_DOUBLING))} больше данных`;
   order.forEach(([m,v],j)=>{const row=card.querySelector(`.sk-row[data-m="${m}"]`);row.style.transform=`translateY(${j*100}%)`;
-   const w=track('skw'+i+m,v.gain)/scale*80,fill=row.querySelector('.sk-fill');fill.style.left=(w>=0?18:18+w)+'%';fill.style.width=Math.abs(w)+'%';
-   fill.classList.toggle('neg',v.gain<0);fill.classList.toggle('est',!!v.est&&!v.imputed);fill.classList.toggle('imp',!!v.imputed);row.querySelector('.sk-v').textContent=pct(v.gain);});
-  skillChart(card,i,rank);
+   const r=rub(v.gain),w=r/scale*80,fill=row.querySelector('.sk-fill');fill.style.left=(w>=0?18:18+w)+'%';fill.style.width=Math.abs(w)+'%';
+   fill.classList.toggle('neg',v.gain<0);fill.classList.toggle('est',!!v.est&&!v.imputed);fill.classList.toggle('imp',!!v.imputed);
+   row.querySelector('.sk-v').textContent=Math.abs(r)<500?'0 ₽':(r>0?'−':'+')+money(Math.abs(r));});
  });
  tasks.forEach((t,i)=>{const best=Object.entries(t.cells).filter(([m])=>FT_METHODS[m]).filter(([,c])=>!c.imputed).sort((a,b)=>b[1].gain-a[1].gain)[0][0];
   for(const m of FT_NAMES){const c=t.cells[m];const cell=$(`ft-c-${i}-${FT_NAMES.indexOf(m)}`);cell.classList.toggle('top',m===best);
    const fill=cell.querySelector('.hm-fill');fill.style.width=Math.min(100,Math.abs(c.gain)/10*100)+'%';fill.classList.toggle('neg',c.gain<0);fill.classList.toggle('est',c.est&&!c.imputed);cell.querySelector('b').textContent=pct(c.gain);}});
  if(moving)requestAnimationFrame(drawFinetune);
-}
-// Gain versus rank for our methods in one skill, with the slider position marked.
-const FT_GRID=Array.from({length:29},(_,i)=>2**(i/4));
-let FT_TABLES=null;
-function skillChart(card,i,rank){
- const svg=card.querySelector('.sk-chart'),W=400,H=70,px=r=>6+Math.log2(r)/7*(W-12),tables=FT_TABLES||(FT_TABLES=FT_GRID.map(ftTable));
- const series=FT_NAMES.map(m=>({m,ys:tables.map(tb=>tb.skills[i].methods[m].gain),imp:tables[0].skills[i].methods[m].imputed}));
- const top=Math.max(2,...series.flatMap(x=>x.ys)),bottom=Math.min(0,...series.flatMap(x=>x.ys)),py=v=>4+(top-v)/(top-bottom)*(H-16);
- if(!svg.dataset.ready){svg.innerHTML=`<line x1="0" x2="${W}" y1="${py(0)}" y2="${py(0)}" class="sk-axis"/>`+series.map(x=>`<path class="sk-line ${FT_METHODS[x.m].color} ${x.imp?'imp':''}" d="${x.ys.map((v,k)=>(k?'L':'M')+px(FT_GRID[k]).toFixed(1)+','+py(v).toFixed(1)).join('')}"/>`).join('')+`<line class="sk-cursor" y1="0" y2="${H-10}"/>`+[1,8,128].map(r=>`<text x="${px(r)}" y="${H-1}" text-anchor="${r===1?'start':r===128?'end':'middle'}">r=${r}</text>`).join('');svg.dataset.ready=1;}
- svg.querySelector('.sk-cursor').setAttribute('x1',px(rank));svg.querySelector('.sk-cursor').setAttribute('x2',px(rank));
 }
 // Zero-order fine-tuning over model size. Memory: MeZO Table 22 (OPT-1.3B…66B, MultiRC, 400 tokens) interpolated in log-log for MeZO and
 // full fine-tuning with Adam; every other method is MeZO × its memory ratio to MeZO/ZO-SGD in its own paper (ZO-Bench Table 4,
@@ -522,9 +517,6 @@ for(const m of ZO_METHODS){
  m.gain=N=>m.base?0:m.fo?flat:Math.max(lo,Math.min(hi,my+b*(Math.log10(N)-mx)));
  m.mem=N=>m.gb?m.gb(N):mezoGB(N)*m.ratio;m.range=[Math.min(...sizes),Math.max(...sizes)];
 }
-const ZO_SIZES=[[.35,'350M'],[1.3,'1.3B'],[7,'7B'],[13,'13B'],[30,'30B'],[66,'66B']];
-const zoState={position:Math.log10(13)};
-const zoSize=()=>10**zoState.position;
 const gpuCount=gb=>Math.max(1,Math.ceil(gb/80));
 const gpuText=gb=>{const n=gpuCount(gb);return n===1?'1 H100':n+'×H100';};
 const ZO_COLORS={'JAGUAR SignSGD':'c1','JAGUAR Muon':'c2','ZO-Muon':'c3','ZO-LDSD':'c5'};
@@ -537,16 +529,15 @@ function zoRows(N){const rows=ZO_METHODS.map((m,i)=>({m,i,gain:m.gain(N),gb:m.me
 const zoTone=m=>m.ours?ZO_COLORS[m.name]:m.fo?'adam':'other';
 function zoWin(id,m,value,note){const el=$('zw-'+id),tag=el.querySelector('.tag');if(m){tag.textContent=m.name;tag.className='tag '+zoTone(m);}el.querySelector('strong').textContent=value;el.querySelector('small').textContent=note;}
 function drawZO(){
- if(!$('zo-size'))return;
- const N=zoSize(),{adam,all,rows}=zoRows(N);
+ if(!$('zo-list'))return;
+ const N=ftSize(),{adam,all,rows}=zoRows(N);
  const gmax=Math.max(1,...rows.map(r=>r.gain)),gmin=Math.min(0,...rows.map(r=>r.gain)),x=v=>(v-gmin)/(gmax-gmin)*100,w=gb=>gb/adam.gb*100;
- $('zo-n').textContent=N>=1?fmt(N,N<10?1:0)+'B':fmt(N*1000,0)+'M';
  document.querySelectorAll('.zo-row').forEach(el=>el.classList.add('gone'));
  rows.forEach((r,k)=>{const el=$('zo-r-'+r.i);el.classList.remove('gone');el.style.transform=`translateY(${k*100}%)`;
   const q=el.querySelector('.zo-q');q.style.left=Math.min(x(0),x(r.gain))+'%';q.style.width=Math.max(.6,Math.abs(x(r.gain)-x(0)))+'%';
   el.querySelector('.zo-qv').textContent=r.m.base?'база':(r.gain>=0?'+':'−')+fmt(Math.abs(r.gain),1)+' п.п.';
   el.querySelector('.zo-s').style.width=Math.max(.8,w(r.gb))+'%';
-  el.querySelector('.zo-sv').innerHTML=`${fmt(r.gb,r.gb<10?1:0)} ГБ · ${cards(gpuCount(r.gb))} <small>${r.m.fo?gpuText(r.gb):'в '+times(r.save)+' меньше'}</small>`;});
+  el.querySelector('.zo-sv').innerHTML=`${fmt(r.gb,r.gb<10?1:0)} ГБ <small>${r.m.fo?gpuText(r.gb):'в '+times(r.save)+' меньше'}</small>`;});
  $('zo-list').style.height=`calc(${rows.length} * 25px)`;
  document.querySelectorAll('.zo-q-zero').forEach(z=>z.style.left=x(0)+'%');
  const h=$('zo-h100');h.style.left=w(80)+'%';h.style.height=rows.length*25+14+'px';h.style.opacity=w(80)<98?1:0;h.classList.toggle('flip',w(80)>70);
@@ -554,29 +545,29 @@ function drawZO(){
  const gbs=gb=>fmt(gb,gb<10?1:0)+' ГБ';
  zoWin('mem',light.m,'в '+times(light.save)+' меньше',`${gbs(light.gb)} на ${gpuText(light.gb)} вместо ${gbs(adam.gb)} на ${gpuText(adam.gb)}`);
  zoWin('q',best.m,'+'+fmt(best.gain,1)+' п.п.',`к базовому ZO (MeZO) при ${gbs(best.gb)} памяти`);
- const freed=gpuCount(adam.gb)-gpuCount(light.gb);
- zoWin('money',null,freed?'−'+cards(freed):'−'+gbs(adam.gb-light.gb),freed?`на картах: ${gpuText(light.gb)} ≈ ${cards(gpuCount(light.gb))} вместо ${gpuText(adam.gb)} ≈ ${cards(gpuCount(adam.gb))}`:'памяти · обоим хватает одной H100 ≈ '+cards(1));
+ // Freed memory is priced at the H100 price per gigabyte, so the saving is in rubles at every size (whole cards jump in steps).
+ zoWin('money',null,'−'+money((adam.gb-light.gb)/80*H100_PRICE),`${gbs(adam.gb-light.gb)} памяти по цене H100: ${cards(1)} за 80 ГБ`);
 }
 function zoSection(){
- const ticks=ZO_SIZES.map(([n,t])=>`<button class="landmark" data-zo="${Math.log10(n)}" style="left:${(Math.log10(n)-Math.log10(.35))/(Math.log10(70)-Math.log10(.35))*100}%">${t}</button>`).join('');
  const row=(m,i)=>`<div class="zo-row gone ${m.ours?'ours':''} ${m.fo?'fo':''} ${m.base?'base':''} ${zoTone(m)}" id="zo-r-${i}"><span title="${m.info}"><i class="mark"></i>${m.fo?'Обычное дообучение':m.name}</span><div class="zo-qt"><div class="zo-q-zero"></div><div class="zo-q"></div></div><em class="zo-qv"></em><div class="zo-st"><div class="zo-s"></div></div><em class="zo-sv"></em></div>`;
  const win=(id,title,tag)=>`<div class="win" id="zw-${id}"><span class="eyebrow">${title}</span><div>${tag?'<span class="tag"></span>':''}<strong></strong></div><small></small></div>`;
- return `<section class="board zo2"><div class="zo-top"><h3 class="zo-title">Нулевой порядок<small>дообучение без обратного прохода</small></h3><div class="zo-size"><span class="eyebrow">Размер модели</span><strong id="zo-n" class="zo-big-n"></strong></div><div class="zo-slider"><input type="range" id="zo-size" min="${Math.log10(.35)}" max="${Math.log10(70)}" step="any" value="${zoState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div></div></div>
+ return `<section class="board zo2"><div class="zo-top"><h3 class="zo-title">Нулевой порядок<small>дообучение без обратного прохода, тот же размер модели</small></h3></div>
  <div class="zo-body2"><div><div class="zo-head2"><span></span><span>качество: прирост к базовому ZO (MeZO)</span><span></span><span class="zo-mh">память под дообучение<i id="zo-h100"><b>1 H100</b></i></span><span></span></div>
- <div class="zo-list" id="zo-list">${ZO_METHODS.map(row).join('')}</div></div><div class="zo-wins">${win('mem','Меньше всего памяти',true)}${win('q','Лучшее качество',true)}${win('money','Экономия на картах',false)}</div></div></section>`;
+ <div class="zo-list" id="zo-list">${ZO_METHODS.map(row).join('')}</div></div><div class="zo-wins">${win('mem','Меньше всего памяти',true)}${win('q','Лучшее качество',true)}${win('money','Экономия на памяти',false)}</div></div></section>`;
 }
 function renderFinetune(){
- const {skills}=ftTable(ftRank());
+ const {skills}=ftTable(FT_RANK);
  const bar=m=>{const c=FT_METHODS[m]?FT_METHODS[m].color:'other';return `<div class="sk-row ${FT_METHODS[m]?'ours':'other'} ${c}" data-m="${m}"><span><i class="mark"></i>${m}</span><div class="sk-track"><div class="sk-fill"></div></div><em class="sk-v"></em></div>`;};
- const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs"><span class="sk-base"></span></span><span class="sk-money"></span></div><svg class="sk-chart" viewBox="0 0 400 70" preserveAspectRatio="none"></svg><div class="sk-rows" style="height:calc(${FT_ALL.length} * 19px)"><div class="sk-zero"></div>${FT_ALL.map(bar).join('')}</div></section>`;
- const heat=`<section class="board hm below-fold"><div class="board-head"><h3>По задачам</h3><span class="meta">насколько лучше базового метода из той же статьи</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th><i class="mark ${FT_METHODS[m].color}"></i>${m}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${t.name}<small>${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?t.rows.filter(r=>r.m===m).map(r=>r.model).join(', '):'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table></section>`;
+ const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${s.tasks.map(t=>t.name).join(' · ')}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs"><span class="sk-base"></span></span></div><div class="sk-rows" style="height:calc(${FT_ALL.length} * 19px)"><div class="sk-zero"></div>${FT_ALL.map(bar).join('')}</div></section>`;
+ const heat=`<section class="board hm below-fold"><div class="board-head"><h3>По задачам</h3><span class="meta">прирост качества к базовому методу из той же статьи, LoRA r = 8</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th><i class="mark ${FT_METHODS[m].color}"></i>${m}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${t.name}<small>${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?t.rows.filter(r=>r.m===m).map(r=>r.model).join(', '):'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table></section>`;
  const zo=zoSection();
  $('controls').innerHTML='';
- $('result').innerHTML=`<div class="scale-dock ft-dock"><div class="ft-dock-row"><div><span class="eyebrow" style="display:block;margin:0">Ранг адаптера LoRA</span><strong id="ft-r" class="ft-big"></strong></div><div class="ft-ring-wrap"><div class="ft-ring" id="ft-ring"><div><strong id="ft-share"></strong><small>весов 8B</small></div></div><dl><dt>Обучаемых параметров</dt><dd id="ft-count"></dd><dt>Размер адаптера</dt><dd id="ft-size"></dd><dt>WLoRA оставляет</dt><dd id="ft-wlora"></dd></dl><dl class="ft-rent"><dt>Обычное дообучение 8B</dt><dd id="ft-full"></dd><dt>LoRA</dt><dd id="ft-lora"></dd></dl></div><input type="range" id="ft-rank" min="0" max="7" step="any" value="${ftState.position}" aria-label="Ранг адаптера"></div></div>
+ const ticks=FT_SIZES.map(([n,t])=>`<button class="landmark" data-ft="${Math.log10(n)}" style="left:${(Math.log10(n)-Math.log10(.35))/(Math.log10(70)-Math.log10(.35))*100}%">${t}</button>`).join('');
+ $('result').innerHTML=`<div class="scale-dock ft-dock"><div class="ft-dock-row"><div><span class="eyebrow" style="display:block;margin:0">Размер модели</span><strong id="ft-n" class="ft-big"></strong></div><dl class="ft-facts"><dt>Проект дообучения</dt><dd>100 млрд токенов</dd><dt>Адаптер LoRA, r = 8</dt><dd><span id="ft-count"></span> · <span id="ft-share"></span> весов</dd><dt>Аренда на LoRA</dt><dd id="ft-cost"></dd></dl><dl class="ft-rent"><dt>Карты · обычное дообучение</dt><dd id="ft-full"></dd><dt>Карты · LoRA</dt><dd id="ft-lora"></dd></dl></div><input type="range" id="ft-size" min="${Math.log10(.35)}" max="${Math.log10(70)}" step="any" value="${ftState.position}" aria-label="Размер модели"><div class="landmarks">${ticks}</div></div>
  <div class="sk-grid">${skills.map(skill).join('')}</div>${zo}${heat}`;
- $('ft-rank').addEventListener('input',e=>{ftState.position=Number(e.target.value);drawFinetune();});
- $('zo-size').addEventListener('input',e=>{zoState.position=Number(e.target.value);drawZO();});
- document.querySelectorAll('[data-zo]').forEach(b=>b.addEventListener('click',()=>{zoState.position=Number(b.dataset.zo);$('zo-size').value=zoState.position;drawZO();}));
+ const move=v=>{ftState.position=v;drawFinetune();drawZO();};
+ $('ft-size').addEventListener('input',e=>move(Number(e.target.value)));
+ document.querySelectorAll('[data-ft]').forEach(b=>b.addEventListener('click',()=>{$('ft-size').value=b.dataset.ft;move(Number(b.dataset.ft));}));
  drawFinetune();drawZO();
 }
 function llmValues(row){return state.model==='nano'?[row.adamw1,row['muon'+state.batch]]:[row.hybrid_adamw1,row.hybrid_muon2];}
