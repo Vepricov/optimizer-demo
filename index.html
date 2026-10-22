@@ -93,10 +93,10 @@
 .lname{display:flex;flex-direction:column;min-width:0;line-height:1.08}.lname b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lname small{font-size:10px;color:var(--muted);font-weight:400}.quad .lane-name{font-size:13px}
 .quad-legend,.quad .lane{grid-template-columns:250px minmax(0,1fr) 120px}.quad .lane-grid{left:262px}.win .win-list strong{font-size:15px}
 .ft-rent{border-left:1px solid var(--line);padding-left:16px;margin-left:8px!important;gap:6px 14px!important}.ft-rent dt{font-size:12px;align-self:center}.ft-rent dd{white-space:nowrap;font-size:17px;font-weight:500}.ft-rent dd:last-child{color:var(--c1)}
-.zo-head2,.zo-row{grid-template-columns:220px minmax(0,1fr) 56px minmax(0,1fr) 230px}.zo-row.ours>span{font-size:14px}
+.zo-head2,.zo-row{grid-template-columns:220px minmax(0,1fr) 56px minmax(0,1.15fr)}.zo-st .zo-sv{position:absolute;top:50%;transform:translateY(-50%);margin-left:8px;transition:left .35s cubic-bezier(.2,.8,.2,1)}.zo-st .zo-sv.inside{margin-left:0;transform:translate(calc(-100% - 8px),-50%)}.zo-row.fo .zo-sv.inside,.zo-row.fo .zo-sv.inside small{color:#1b1d1c}.zo-body2>div:first-child{padding-bottom:20px}.zo-row.ours>span{font-size:14px}
 #comm .ctime{position:absolute;left:93.5%;margin:0}
 .quad .lane-money .value.gain,#mem .lane .value.gain,#comm .lane .value.gain{color:var(--c1)}.quad .lane-money .value.plain{color:var(--text)}
-.ft-facts{margin:0 auto 0 40px;font-size:13px;display:grid;grid-template-columns:auto auto;gap:4px 14px}.ft-facts dt{color:var(--muted)}.ft-facts dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ft-dock input{display:block;width:100%;height:36px;margin:8px 0 0;accent-color:var(--c2)}.ft-dock .landmarks{height:24px}.sk-card .sk-row{grid-template-columns:164px minmax(0,1fr) 82px;height:24px}.sk-card .sk-row .lname small{font-size:9px}.sk-card .sk-row>span{display:flex;align-items:center;gap:6px;min-width:0}.sk-card .sk-zero{left:calc(170px + (100% - 170px - 88px) * .18)}.zo-row .lname small{font-size:10px}.hm-table thead th{white-space:normal}.hm-table thead th:first-child{width:220px}#zo-h100 b{top:auto!important;bottom:-16px}
+.ft-facts{margin:0 auto 0 40px;font-size:13px;display:grid;grid-template-columns:auto auto;gap:4px 14px}.ft-facts dt{color:var(--muted)}.ft-facts dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ft-dock input{display:block;width:100%;height:36px;margin:8px 0 0;accent-color:var(--c2)}.ft-dock .landmarks{height:24px}.sk-card .sk-row{grid-template-columns:162px minmax(0,1fr) 70px;height:27px}.sk-card .sk-row .lname small{font-size:9px}.sk-card .sk-row>span{display:flex;align-items:center;gap:6px;min-width:0}.sk-card .sk-zero{left:calc(168px + (100% - 168px - 76px) * .18)}.zo-row .lname small{font-size:10px}.hm-table thead th{white-space:normal}.hm-table thead th:first-child{width:220px}#zo-h100 b{top:auto!important;bottom:-16px}
 </style>
 </head>
 <body>
@@ -543,7 +543,8 @@ function drawZO(){
   const q=el.querySelector('.zo-q');q.style.left=Math.min(x(0),x(r.gain))+'%';q.style.width=Math.max(.6,Math.abs(x(r.gain)-x(0)))+'%';
   el.querySelector('.zo-qv').textContent=r.m.base?'база':(r.gain>=0?'+':'−')+fmt(Math.abs(r.gain),1);
   el.querySelector('.zo-s').style.width=Math.max(.8,w(r.gb))+'%';
-  el.querySelector('.zo-sv').innerHTML=`${fmt(r.gb,r.gb<10?1:0)} ГБ <small>${r.m.fo?gpuText(r.gb):'в '+times(r.save)+' меньше'}</small>`;});
+  const sv=el.querySelector('.zo-sv'),ws=Math.max(.8,w(r.gb));sv.style.left=ws+'%';sv.classList.toggle('inside',ws>55);
+  sv.innerHTML=`${fmt(r.gb,r.gb<10?1:0)} ГБ <small>${r.m.fo?gpuText(r.gb):'в '+times(r.save)+' меньше'}</small>`;});
  $('zo-list').style.height=`calc(${rows.length} * 30px)`;
  document.querySelectorAll('.zo-q-zero').forEach(z=>z.style.left=x(0)+'%');
  const h=$('zo-h100');h.style.left=w(80)+'%';h.style.height=rows.length*30+14+'px';h.style.opacity=w(80)<98?1:0;h.classList.toggle('flip',w(80)>70);
@@ -555,16 +556,16 @@ function drawZO(){
  zoWin('money',null,freed?'−'+cards(freed):'0 ₽',freed?`${gpuText(light.gb)} · ${cards(nOurs)} вместо ${gpuText(adam.gb)} · ${cards(nFull)}`:`модель небольшая: обоим хватает одной H100 · ${cards(1)}`);
 }
 function zoSection(){
- const row=(m,i)=>`<div class="zo-row gone ${m.ours?'ours':''} ${m.fo?'fo':''} ${m.base?'base':''} ${zoTone(m)}" id="zo-r-${i}"><span title="${m.info}"><i class="mark"></i>${m.fo?'Учить всю модель':m.label?`<span class="lname"><b>${m.label}</b><small>${m.name}</small></span>`:m.name}</span><div class="zo-qt"><div class="zo-q-zero"></div><div class="zo-q"></div></div><em class="zo-qv"></em><div class="zo-st"><div class="zo-s"></div></div><em class="zo-sv"></em></div>`;
+ const row=(m,i)=>`<div class="zo-row gone ${m.ours?'ours':''} ${m.fo?'fo':''} ${m.base?'base':''} ${zoTone(m)}" id="zo-r-${i}"><span title="${m.info}"><i class="mark"></i>${m.fo?'Учить всю модель':m.label?`<span class="lname"><b>${m.label}</b><small>${m.name}</small></span>`:m.name}</span><div class="zo-qt"><div class="zo-q-zero"></div><div class="zo-q"></div></div><em class="zo-qv"></em><div class="zo-st"><div class="zo-s"></div><em class="zo-sv"></em></div></div>`;
  const win=(id,title,tag)=>`<div class="win" id="zw-${id}"><span class="eyebrow">${title}</span><div>${tag?'<span class="tag"></span>':''}<strong></strong></div><small></small></div>`;
  return `<section class="board zo2"><div class="zo-top"><h3 class="zo-title">Безградиентное дообучение<small>модель учится только прямыми прогонами: памяти почти как для запуска</small></h3></div>
- <div class="zo-body2"><div><div class="zo-head2"><span></span><span>точность, пункты к базовому</span><span></span><span class="zo-mh">память видеокарт<i id="zo-h100"><b>1 H100</b></i></span><span></span></div>
+ <div class="zo-body2"><div><div class="zo-head2"><span></span><span>точность, пункты к базовому</span><span></span><span class="zo-mh">память видеокарт<i id="zo-h100"><b>1 H100</b></i></span></div>
  <div class="zo-list" id="zo-list">${ZO_METHODS.map(row).join('')}</div></div><div class="zo-wins">${win('mem','Меньше всего памяти',true)}${win('money','Экономия на картах',false)}</div></div></section>`;
 }
 function renderFinetune(){
  const {skills}=ftTable(FT_RANK);
  const bar=m=>{const c=FT_METHODS[m]?FT_METHODS[m].color:'other';return `<div class="sk-row ${FT_METHODS[m]?'ours':'other'} ${c}" data-m="${m}"><span>${ftMark(m)}</span><div class="sk-track"><div class="sk-fill"></div></div><em class="sk-v"></em></div>`;};
- const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${FT_SKILL_NOTE[s.skill]}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs"><span class="sk-base"></span></span></div><div class="sk-rows" style="height:calc(${FT_ALL.length} * 24px)"><div class="sk-zero"></div>${FT_ALL.map(bar).join('')}</div></section>`;
+ const skill=(s,i)=>`<section class="board sk-card" id="ft-skill-${i}"><div class="sk-head"><span class="eyebrow">${s.skill}</span><small>${FT_SKILL_NOTE[s.skill]}</small></div><div class="sk-top"><span class="tag"></span><strong class="sk-value"></strong><span class="sk-vs"><span class="sk-base"></span></span></div><div class="sk-rows" style="height:calc(${FT_ALL.length} * 27px)"><div class="sk-zero"></div>${FT_ALL.map(bar).join('')}</div></section>`;
  const heat=`<section class="board hm below-fold"><div class="board-head"><h3>По задачам</h3><span class="meta">насколько точнее обычного дообучения из той же статьи, %</span></div><table class="hm-table"><thead><tr><th></th>${FT_NAMES.map(m=>`<th title="${m}"><i class="mark ${FT_METHODS[m].color}"></i>${FT_LABEL[m]}</th>`).join('')}</tr></thead><tbody>${FT_TASKS.map((t,i)=>`<tr><th>${FT_TASK_LABEL[t.name]}<small>${t.name} · ${t.skill}</small></th>${FT_NAMES.map((m,j)=>`<td id="ft-c-${i}-${j}" class="${t.rows.some(r=>r.m===m)?'':'imp'}" title="${t.rows.some(r=>r.m===m)?t.rows.filter(r=>r.m===m).map(r=>r.model).join(', '):'оценка: сила метода × отзывчивость задачи'}"><div class="hm-bar"><div class="hm-fill ${FT_METHODS[m].color}"></div></div><b></b></td>`).join('')}</tr>`).join('')}</tbody></table></section>`;
  const zo=zoSection();
  $('controls').innerHTML='';
