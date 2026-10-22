@@ -551,16 +551,17 @@ function drawZO(){
  const ours=all.filter(r=>r.m.ours),best=ours.reduce((a,b)=>b.gain>a.gain?b:a),minGB=Math.min(...ours.map(r=>r.gb)),lightest=ours.filter(r=>r.gb<minGB*1.005),light=lightest.find(r=>r!==best)||lightest[0];
  const gbs=gb=>fmt(gb,gb<10?1:0)+' ГБ';
  zoWin('mem',light.m,'в '+times(light.save)+' меньше',`${gbs(light.gb)} на ${gpuText(light.gb)} вместо ${gbs(adam.gb)} на ${gpuText(adam.gb)}`);
- // Saving = the cards full fine-tuning needs minus the cards our method needs, at the same card price as everywhere on the page.
- const nFull=gpuCount(adam.gb),nOurs=gpuCount(light.gb),freed=nFull-nOurs;
- zoWin('money',null,freed?'−'+cards(freed):'0 ₽',freed?`${gpuText(light.gb)} · ${cards(nOurs)} вместо ${gpuText(adam.gb)} · ${cards(nFull)}`:`модель небольшая: обоим хватает одной H100 · ${cards(1)}`);
+ // Saving = memory of full fine-tuning minus memory of our method, each priced per gigabyte of H100 (3 mln ₽ for 80 GB),
+ // so it grows smoothly with the model; both amounts are shown so the difference checks by eye.
+ const memCost=gb=>round3(gb*H100_PRICE/80),costFull=memCost(adam.gb),costOurs=memCost(light.gb);
+ zoWin('money',null,'−'+money3(costFull-costOurs),`${gbs(light.gb)} · ${money3(costOurs)} вместо ${gbs(adam.gb)} · ${money3(costFull)}, H100: 3 млн ₽ за 80 ГБ`);
 }
 function zoSection(){
  const row=(m,i)=>`<div class="zo-row gone ${m.ours?'ours':''} ${m.fo?'fo':''} ${m.base?'base':''} ${zoTone(m)}" id="zo-r-${i}"><span title="${m.info}"><i class="mark"></i>${m.fo?'Учить всю модель':m.label?`<span class="lname"><b>${m.label}</b><small>${m.name}</small></span>`:m.name}</span><div class="zo-qt"><div class="zo-q-zero"></div><div class="zo-q"></div></div><em class="zo-qv"></em><div class="zo-st"><div class="zo-s"></div><em class="zo-sv"></em></div></div>`;
  const win=(id,title,tag)=>`<div class="win" id="zw-${id}"><span class="eyebrow">${title}</span><div>${tag?'<span class="tag"></span>':''}<strong></strong></div><small></small></div>`;
  return `<section class="board zo2"><div class="zo-top"><h3 class="zo-title">Безградиентное дообучение<small>модель учится только прямыми прогонами: памяти почти как для запуска</small></h3></div>
  <div class="zo-body2"><div><div class="zo-head2"><span></span><span>точность, пункты к базовому</span><span></span><span class="zo-mh">память видеокарт<i id="zo-h100"><b>1 H100</b></i></span></div>
- <div class="zo-list" id="zo-list">${ZO_METHODS.map(row).join('')}</div></div><div class="zo-wins">${win('mem','Меньше всего памяти',true)}${win('money','Экономия на картах',false)}</div></div></section>`;
+ <div class="zo-list" id="zo-list">${ZO_METHODS.map(row).join('')}</div></div><div class="zo-wins">${win('mem','Меньше всего памяти',true)}${win('money','Экономия на памяти',false)}</div></div></section>`;
 }
 function renderFinetune(){
  const {skills}=ftTable(FT_RANK);
