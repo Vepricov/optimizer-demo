@@ -241,19 +241,20 @@ const MONEY_NAMES=['AdamW','LionMuon','DyKAF','SoftMuon','SoftSignum','Muon','SO
 // DyKAF exchange bf16 gradients (16 bits per parameter); SoftSignum exchanges signs with one scale per block (1 bit).
 // FRUGAL sends signs for the state-free part of linear layers and bf16 for its state-full subspace (share ρ) and for the
 // embedding and head, which it trains with Adam, so its average bits per parameter depend on the model's shape.
+// Distributed runs use at least 32 nodes (256 GPUs), a typical rented cluster for an 8B model; smaller runs are priced on it too.
 // DDP overlaps most of the exchange with the backward pass: we count the exposed 30% as the whole cluster waiting.
 const OVERLAP=.7;
 // Compressed exchange is not free: packing, per-block scales and the two-phase 1-bit all-reduce. 1-bit Adam (Tang et al.,
 // 2021) measured a 5,5–6,2× faster communication stage, not 16×; we add a fixed 0,104 of the bf16 time so 1 bit gives 6×.
 // Signum and Lion (other groups) send sign updates too. Models this size are sharded (FSDP/ZeRO-3): every step the network
 // also gathers the bf16 weights for the forward and the backward pass, twice the gradient volume, and signs do not shrink it.
-const NET_BW=12.5e9,PACK=1/6-1/16,SIGN=['SoftSignum','Signum','Lion'],COMM_NAMES=['AdamW','SoftSignum','Signum','Lion','FRUGAL ρ=0','FRUGAL ρ=0,25'];
+const MIN_NODES=32,NET_BW=12.5e9,PACK=1/6-1/16,SIGN=['SoftSignum','Signum','Lion'],COMM_NAMES=['AdamW','SoftSignum','Signum','Lion','FRUGAL ρ=0','FRUGAL ρ=0,25'];
 function commBits(name,N){
  if(SIGN.includes(name))return 1;if(!name.startsWith('FRUGAL'))return 16;
  const {d}=shape(N),emb=Math.min(1,2*VOCAB*d/N),rho=name==='FRUGAL ρ=0'?0:.25;return 16*emb+(16*rho+(1-rho))*(1-emb);
 }
 function comm(name,N,gpus){
- const bits=commBits(name,N),nodes=Math.max(2,gpus/8),bytes=(nodes-1)/nodes*N*2*(2+(bits<16?bits/16+PACK:1)),steps=20*N/batchTokens(N);
+ const bits=commBits(name,N),nodes=Math.max(MIN_NODES,gpus/8),bytes=(nodes-1)/nodes*N*2*(2+(bits<16?bits/16+PACK:1)),steps=20*N/batchTokens(N);
  const compute=6*N*batchTokens(N)/(gpus*PEAK_FLOPS*costState.mfu/100),seconds=bytes/NET_BW*(1-OVERLAP);
  const hours=seconds*steps/3600;return {name,ours:OURS.includes(name),bits,bytes,seconds,share:seconds/compute,total:bytes*steps,hours,cost:hours*nodes*8*costState.rate};
 }
@@ -333,7 +334,7 @@ function drawEconomy(){
   row.querySelector('.k').textContent=fmt(c.bits,c.bits<2&&c.bits%1?1:0)+' бит';
   row.querySelector('.ctime').textContent=commTime(c.hours);
   const cv=row.querySelector('.value');cv.textContent=c===ca?money(track('cc'+c.name,c.cost)):'−'+money(track('cc'+c.name,ca.cost-c.cost));cv.className='value'+(c===ca?' plain':' gain');}
- const nodes=Math.max(2,Math.ceil(p.gpus/8)),nl=nodes%10,nt=nodes%100>10&&nodes%100<15;$('comm-nodes').textContent=`${fmt(nodes,0)} ${nt||nl<2||nl>4?(nl===1&&!nt?'узел':'узлов'):'узла'} · сеть 100 Гбит/с`;
+ const nodes=Math.max(MIN_NODES,Math.ceil(p.gpus/8)),nl=nodes%10,nt=nodes%100>10&&nodes%100<15;$('comm-nodes').textContent=`${fmt(nodes,0)} ${nt||nl<2||nl>4?(nl===1&&!nt?'узел':'узлов'):'узла'} · сеть 100 Гбит/с`;
  setWins('step',top3(p.comm,c=>c.saved).map(c=>({name:c.name,value:both(c.budget,track('wc'+c.name,c.saved))})));
  // 4. Speed-up versus model size.
  for(const l of p.lanes){const pt=$('sc-pt-'+l.name);if(pt){pt.setAttribute('cx',scX(p.N/1e9));pt.setAttribute('cy',SPEED_CHART.y(l.tokenFactor));}}
