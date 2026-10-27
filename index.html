@@ -265,7 +265,9 @@ function project(settings){
  const lanes=MONEY_NAMES.map(name=>{const tokenFactor=factorAt(name,N/1e9),overhead=stepOverhead(name,N),h=compute*(1+overhead+wait(name))/tokenFactor,factor=hours/h;
   return {name,ours:OURS.includes(name),tokenFactor,overhead,factor,hours:h,saved:(hours-h)*settings.rate,share:1-h/hours,days:h/gpus/24};});
  const mem=MEM_NAMES.map(name=>({name,ours:OURS.includes(name),memory:memory(name,N)}));
- for(const m of mem){m.freed=mem[0].memory.gpus-m.memory.gpus;m.monthly=m.freed*H100_PRICE;}
+ // Memory priced as H100 rent for the run's wall-clock: GPU-memory share (80 GB = one card) × hours × rate.
+ const memRent=b=>b/GPU_BYTES*hours/gpus*settings.rate;
+ for(const m of mem){m.freed=mem[0].memory.gpus-m.memory.gpus;m.rent=memRent(m.memory.total);m.monthly=memRent(mem[0].memory.total-m.memory.total);}
  const cm=COMM_NAMES.map(n=>comm(n,N,gpus));for(const c of cm){c.saved=cm[0].cost-c.cost;c.budget=c.saved/(hours*settings.rate);}
  return {N,tokens,flops,hours,gpus,cost:hours*settings.rate,lanes,mem,comm:cm};
 }
@@ -323,7 +325,7 @@ function drawEconomy(){
   while(box.children.length<chips)box.appendChild(document.createElement('i'));
   while(box.children.length>chips)box.lastChild.remove();
   row.querySelector('.k').textContent=fmt(m.memory.gpus,0)+' GPU';
-  const mv=row.querySelector('.value');mv.textContent=m.name==='AdamW'?cards(m.memory.gpus):m.freed?'−'+money(track('mm'+m.name,m.monthly)):'как стандарт';mv.className='value'+(m.name!=='AdamW'&&m.freed?' gain':' plain');
+  const mv=row.querySelector('.value');mv.textContent=m.name==='AdamW'?money(m.rent):m.monthly>0?'−'+money(track('mm'+m.name,m.monthly)):'как стандарт';mv.className='value'+(m.name!=='AdamW'&&m.monthly>0?' gain':' plain');
  }
  $('chip-unit').textContent=unit===8?'квадрат = 8 H100':'квадрат = 1 H100';
  setWins('mem',top3(p.mem,m=>-m.memory.total).map(m=>({name:m.name,value:'≈ −'+fmt(track('wg'+m.name,(adam.memory.total-m.memory.total)/1e9),0)+' ГБ'})));
@@ -378,7 +380,7 @@ function renderEconomy(){
  <div class="wins">${win('money','Дешевле обучить')}${win('published','Быстрее обучить')}${win('mem','Меньше памяти')}${win('step','Меньше трафика')}</div>
  <div class="quads">
  ${panel('money','Гонка до одного качества','<span>метод · экономия</span><span>время обучения</span><span>стоимость</span>',MONEY_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:${100/1.08}%"></div></div>`+MONEY_NAMES.map(n=>lane('money',n,bar(n))).join(''),'<span class="meta" id="race-clock"></span>')}
- ${panel('mem','Память GPU под обучение','<span>метод · GPU</span><span><i class="key base"></i>веса и градиенты <i class="key st"></i>состояние</span><span>карты под память</span>',MEM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:66%"></div></div>`+MEM_NAMES.map(n=>lane('mem',n,memBody(n))).join(''),'<span class="meta" id="chip-unit"></span>')}
+ ${panel('mem','Память GPU под обучение','<span>метод · GPU</span><span><i class="key base"></i>веса и градиенты <i class="key st"></i>состояние</span><span>аренда под память</span>',MEM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:66%"></div></div>`+MEM_NAMES.map(n=>lane('mem',n,memBody(n))).join(''),'<span class="meta" id="chip-unit"></span>')}
  ${panel('comm','Связь при распределённом обучении','<span>метод · бит градиента</span><span>ожидание сети за обучение</span><span>стоимость ожидания</span>',COMM_NAMES.length,`<div class="lane-grid"><div class="finish" style="left:92%"></div></div>`+COMM_NAMES.map(n=>lane('comm',n,`<div class="lane-track"><div class="fill ${COLORS[n]||'other'}"></div><div class="gap"></div><span class="ctime"></span></div>`)).join(''),'<span class="meta" id="comm-nodes"></span>')}
  <section class="board quad"><div class="board-head"><h3>Ускорение по данным и размер модели</h3></div>${lineChart(SPEED_CHART)}</section>
  </div>`;
