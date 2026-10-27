@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Обучение — это оптимизация</title>
 <style>
-:root{--bg:#191c1b;--panel:#212624;--text:#f4f1e9;--muted:#acb6ae;--line:#3b4540;--adam:#cf6f33;--c1:#22a684;--new:#80d6be;--c3:#5b8fe0;--c5:#8a5cf0;--c2:#b08717}
+:root{--bg:#0b1426;--panel:#111d35;--text:#f3f7ff;--muted:#a6b5d0;--line:#25375c;--adam:#cf6f33;--c1:#2f8cff;--new:#8fd0ff;--c3:#c4d3ff;--c5:#6b7cff;--c2:#43cde6}
 *{box-sizing:border-box}
 body{margin:0;width:1920px;height:1080px;background:var(--bg);color:var(--text);font:22px/1.4 "Avenir Next","Helvetica Neue",sans-serif;overflow:hidden}
 .shell{padding:48px 72px;height:100%;display:flex;flex-direction:column}
@@ -69,9 +69,9 @@ h1 em{font-style:normal;color:var(--new)}
    <div class="plot">
     <div class="eyebrow">Ошибка модели: путь вниз, к хорошему качеству</div>
     <svg viewBox="0 0 760 470" aria-hidden="true">
-     <defs><radialGradient id="g" cx="62%" cy="70%" r="70%"><stop offset="0" stop-color="#22a684" stop-opacity=".22"/><stop offset="1" stop-color="#22a684" stop-opacity="0"/></radialGradient></defs>
+     <defs><radialGradient id="g" cx="62%" cy="70%" r="70%"><stop offset="0" stop-color="#2f8cff" stop-opacity=".22"/><stop offset="1" stop-color="#2f8cff" stop-opacity="0"/></radialGradient></defs>
      <rect width="760" height="470" fill="url(#g)"/>
-     <g fill="none" stroke="#3b4540" stroke-width="1.5">
+     <g fill="none" stroke="#25375c" stroke-width="1.5">
       <ellipse cx="520" cy="330" rx="40" ry="18" transform="rotate(-24 520 330)"/>
       <ellipse cx="520" cy="330" rx="95" ry="42" transform="rotate(-24 520 330)"/>
       <ellipse cx="520" cy="330" rx="160" ry="72" transform="rotate(-24 520 330)"/>
@@ -81,12 +81,12 @@ h1 em{font-style:normal;color:var(--new)}
      </g>
      <polyline fill="none" stroke="#cf6f33" stroke-width="3.5" stroke-linejoin="round" points="110,90 210,250 250,120 320,290 350,170 410,320 430,230 470,345 480,290 505,338"/>
      <g fill="#cf6f33"><circle cx="210" cy="250" r="6"/><circle cx="250" cy="120" r="6"/><circle cx="320" cy="290" r="6"/><circle cx="350" cy="170" r="6"/><circle cx="410" cy="320" r="6"/><circle cx="430" cy="230" r="6"/><circle cx="470" cy="345" r="6"/><circle cx="480" cy="290" r="6"/><circle cx="505" cy="338" r="6"/></g>
-     <polyline fill="none" stroke="#80d6be" stroke-width="4.5" stroke-linejoin="round" points="110,90 260,190 390,270 470,312 515,331"/>
-     <g fill="#80d6be"><circle cx="260" cy="190" r="7"/><circle cx="390" cy="270" r="7"/><circle cx="470" cy="312" r="7"/></g>
-     <circle cx="110" cy="90" r="10" fill="#f4f1e9"/>
-     <text x="128" y="78" fill="#acb6ae" font-size="20">θ₀ · случайная модель</text>
-     <circle cx="520" cy="330" r="13" fill="#22a684" stroke="#f4f1e9" stroke-width="3"/>
-     <text x="548" y="372" fill="#f4f1e9" font-size="21">обученная модель</text>
+     <polyline fill="none" stroke="#8fd0ff" stroke-width="4.5" stroke-linejoin="round" points="110,90 260,190 390,270 470,312 515,331"/>
+     <g fill="#8fd0ff"><circle cx="260" cy="190" r="7"/><circle cx="390" cy="270" r="7"/><circle cx="470" cy="312" r="7"/></g>
+     <circle cx="110" cy="90" r="10" fill="#f3f7ff"/>
+     <text x="128" y="78" fill="#a6b5d0" font-size="20">θ₀ · случайная модель</text>
+     <circle cx="520" cy="330" r="13" fill="#2f8cff" stroke="#f3f7ff" stroke-width="3"/>
+     <text x="548" y="372" fill="#f3f7ff" font-size="21">обученная модель</text>
     </svg>
     <div class="legend"><span><i style="background:var(--adam)"></i>стандартный метод (AdamW): больше шагов</span><span><i style="background:var(--new)"></i>наш метод: короче путь</span></div>
    </div>
