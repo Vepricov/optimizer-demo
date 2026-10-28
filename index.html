@@ -130,7 +130,7 @@
 <div class="shell">
  <header class="topbar"><div class="wordmark">OPTIMIZER <span>/</span> ATLAS</div><div class="top-actions"><span class="meta"><i class="dot"></i>ОТКРЫТЫЕ ИССЛЕДОВАНИЯ</span><button class="quiet" id="theme" aria-label="Переключить светлую тему">Светлая тема</button><button class="quiet" id="sources-button" aria-expanded="false">Источники ↗</button></div></header>
  <section class="intro"><div><div class="eyebrow">Интерактивный обзор исследований</div><h1 id="page-title">То же качество.<br>Меньше затрат на обучение.</h1></div><p class="intro-note" id="intro-note">Двигайте размер модели. Все оптимизаторы обучаются одновременно до качества стандартного обучения: видно, кто финиширует раньше, сколько это стоит и сколько GPU нужно под память.</p></section>
- <nav class="domain-nav" aria-label="Раздел"><button class="domain active" data-domain="intro" aria-pressed="true">Оптимизация</button><button class="domain" data-domain="economy" aria-pressed="false">Предобучение LLM</button><button class="domain" data-domain="finetune" aria-pressed="false">Дообучение LLM</button><button class="domain" data-domain="tabular" aria-pressed="false">ML для бизнеса</button></nav>
+ <nav class="domain-nav" aria-label="Раздел"><button class="domain active" data-domain="intro" aria-pressed="true">Оптимизация</button><button class="domain" data-domain="economy" aria-pressed="false">Предобучение моделей ИИ</button><button class="domain" data-domain="finetune" aria-pressed="false">Дообучение моделей ИИ</button><button class="domain" data-domain="tabular" aria-pressed="false">ML для бизнеса</button></nav>
  <main>
   <section class="workspace" id="workspace"><aside class="controls" id="controls" aria-label="Параметры сравнения"></aside><div id="result"></div></section>
   <section id="sources-panel" hidden aria-label="Источники данных"><div class="result-head"><div><h2>Каждое число можно проверить</h2><p>Таблицы и кривые авторов. В калькуляторе коэффициенты получены интерполяцией, денежные затраты рассчитаны по введённым условиям.</p></div></div><div class="source-list" id="source-list"></div></section>
@@ -646,8 +646,8 @@ function renderCover(){
  const names=[['Обучение',''],['Тренировка',''],['Предобучение','pretraining'],['Дообучение','fine-tuning'],['Training','']];
  $('result').innerHTML=`<div class="cv">
  <div>
-  <div class="cv-eyebrow">Как учатся большие языковые модели (LLM): ChatGPT, GigaChat, YandexGPT</div>
-  <h2>Обучение LLM —<br>это <em>оптимизация</em></h2>
+  <div class="cv-eyebrow">Как учатся модели ИИ: текст, изображения, таблицы и графы</div>
+  <h2>Обучение нейросетей —<br>это <em>оптимизация</em></h2>
   <div class="cv-names"><div class="cv-eyebrow">Как это ни назови</div>
    <div class="cv-chips">${names.map(([n,e])=>`<span>${n}${e?`<small>${e}</small>`:''}</span>`).join('')}</div>
    <div class="cv-brace"></div><div class="cv-opt"><b>Оптимизация</b></div></div>
@@ -656,9 +656,9 @@ function renderCover(){
     <div class="p"><span class="next">θ<sub>t+1</sub></span><small>параметры модели<br>на шаге t+1</small></div><span class="sym">=</span>
     <div class="p"><span class="meth">Метод</span><small>это мы<br>и разрабатываем</small></div><span class="sym">(</span>
     <div class="p"><span class="now">θ<sub>t</sub></span><small>параметры<br>на шаге t</small></div><span class="sym">,</span>
-    <div class="p"><span class="extra">данные, память</span><small>порция текста и то, что метод<br>запомнил с прошлых шагов</small></div><span class="sym">)</span>
+    <div class="p"><span class="extra">данные, память</span><small>порция данных и то, что метод<br>запомнил с прошлых шагов</small></div><span class="sym">)</span>
    </div>
-   <div class="cv-repeat">Параметры — это <b>миллиарды чисел</b> внутри модели. Шаг повторяют <b>сотни тысяч раз</b> на тысячах видеокарт, пока модель не станет умной.</div></div>
+   <div class="cv-repeat">Параметры — это <b>числа внутри нейронной сети</b>. Шаг повторяют <b>много раз</b>, пока модель не научится решать задачу. Чем больше модель и данные, тем дороже обучение.</div></div>
  </div>
  <div class="cv-right">
   <div class="cv-plot"><div class="cv-eyebrow">Ошибка модели: путь вниз, к хорошему качеству</div>
@@ -674,7 +674,7 @@ function renderCover(){
    <div class="cv-legend"><span><i style="background:#cf6f33"></i>стандартный метод (AdamW): больше шагов</span><span><i style="background:#8fd0ff"></i>наш метод: короче путь</span></div></div>
   <div class="cv-cards"><div><strong>Меньше шагов</strong><span>то же качество за меньшие деньги и время</span></div><div><strong>Меньше памяти</strong><span>нужно меньше видеокарт</span></div><div><strong>Меньше трафика</strong><span>кластер меньше ждёт сеть</span></div></div>
  </div>
- <div class="cv-cta"><span>Лучший метод оптимизации — это <b>та же модель дешевле и быстрее</b>. Сколько именно, в рублях, — на вкладках «Предобучение LLM» и «Дообучение LLM». А во вкладке «ML для бизнеса» — как качество модели влияет на выручку сервиса.</span><span class="cv-logos"><img class="lg-iii" src="logos/iii-white.png" alt="Институт искусственного интеллекта МФТИ"><img class="lg-mipt" src="logos/mipt.png" alt="МФТИ"><img class="lg-brain" src="logos/brainlab.svg" alt="BRAIn Lab"></span></div>
+ <div class="cv-cta"><span>Лучший метод оптимизации — это <b>та же модель дешевле и быстрее</b>. Сколько именно, в рублях, — на вкладках «Предобучение моделей ИИ» и «Дообучение моделей ИИ». А во вкладке «ML для бизнеса» — как качество модели влияет на выручку сервиса.</span><span class="cv-logos"><img class="lg-iii" src="logos/iii-white.png" alt="Институт искусственного интеллекта МФТИ"><img class="lg-mipt" src="logos/mipt.png" alt="МФТИ"><img class="lg-brain" src="logos/brainlab.svg" alt="BRAIn Lab"></span></div>
 </div>`;
 }
 function render(){

@@ -61,15 +61,24 @@ globalThis.PFN_CALCULATE = (econ, launches = 1, finetune = false) => {
     const c=current(), e=economics(), r=calculate();
     $('launch-count').textContent=state.launches;
     $('launches').value=state.launches;
-    $('launches').style.setProperty('--fill',`${(state.launches-1)/49*100}%`);
+    const range=$('launches'), min=Number(range.min), max=Number(range.max);
+    range.style.setProperty('--fill',`${(state.launches-min)/(max-min)*100}%`);
+    range.setAttribute('aria-valuetext',`${state.launches} ${plural(state.launches,'эксперимент','эксперимента','экспериментов')} в год`);
+    document.querySelectorAll('[data-launches]').forEach(button=>{
+      const value=Number(button.dataset.launches);
+      button.style.setProperty('--position',`${(value-min)/(max-min)*100}%`);
+      button.setAttribute('aria-label',`${value} ${plural(value,'эксперимент','эксперимента','экспериментов')} в год`);
+      button.setAttribute('aria-pressed',String(value===state.launches));
+    });
     $('scale-note').textContent=c.scale;
+    $('experiment-description').textContent=c.experiment.replace('{labels}',number(e.pfnLabels));
     $('saving').textContent=compact(r.saving);
-    $('saving-note').textContent=`${r.percent>=0?'На '+number(r.percent)+'% меньше бюджета':'Дополнительные затраты'} · ${state.launches} ${plural(state.launches,'пилот','пилота','пилотов')}`;
+    $('saving-note').textContent=`${r.percent>=0?'На '+number(r.percent)+'% меньше бюджета':'Дополнительные затраты'} · ${state.launches} ${plural(state.launches,'эксперимент','эксперимента','экспериментов')}`;
     $('expert-saving').textContent=number(r.expertSaving);
     $('pilot-time').innerHTML=pair(r.base.days,r.pfn.days,'дн.');
     const speed=r.base.days/r.pfn.days;
-    $('pilot-note').textContent=r.base.days===r.pfn.days?'По заданным условиям срок не изменился':speed>1?`До пилота в ${number(speed,1)} раза быстрее`:'По заданным условиям срок увеличился';
-    $('examples-label').textContent=c.id==='concrete'||c.id==='yacht'?'Измерения / пилот':'Проверенные примеры / пилот';
+    $('pilot-note').textContent=r.base.days===r.pfn.days?'По заданным условиям срок не изменился':speed>1?`Эксперимент в ${number(speed,1)} раза быстрее`:'По заданным условиям срок увеличился';
+    $('examples-label').textContent=c.id==='concrete'||c.id==='yacht'?'Измерения / эксперимент':'Проверенные примеры / эксперимент';
     $('example-count').innerHTML=pair(e.baseLabels,e.pfnLabels);
     $('example-note').textContent=e.baseLabels===e.pfnLabels?'Столько же':e.baseLabels>e.pfnLabels?`${number(e.baseLabels/e.pfnLabels,1)}× меньше`:`${number(e.pfnLabels/e.baseLabels,1)}× больше`;
     const maxCost=Math.max(r.base.total,r.pfn.total,1);
@@ -81,18 +90,42 @@ globalThis.PFN_CALCULATE = (econ, launches = 1, finetune = false) => {
 
   function plural(n,one,few,many){return n%100>=11&&n%100<=14?many:n%10===1?one:n%10>=2&&n%10<=4?few:many;}
 
-  function graphExample(c){
-    const points=[[27,40],[74,25],[123,39],[181,24],[221,65],[183,112],[230,153],[136,155],[83,132],[28,159],[34,94],[126,91]];
-    const edges=[[0,1],[0,10],[1,2],[1,10],[2,3],[2,11],[3,4],[4,5],[4,11],[5,6],[5,7],[5,11],[6,7],[7,8],[7,11],[8,9],[8,10],[8,11],[9,10],[10,11]];
-    const known=[2,5,8];
-    return `<div class="graph-example"><div><svg class="network" viewBox="0 0 258 185" role="img" aria-label="Граф связей: три проверенных объекта и новый объект, для которого нужен прогноз">${edges.map(([a,b])=>`<line class="edge${a===11||b===11?' context':''}" x1="${points[a][0]}" y1="${points[a][1]}" x2="${points[b][0]}" y2="${points[b][1]}"></line>`).join('')}${points.map(([x,y],index)=>`<circle class="node${known.includes(index)?' known':''}${index===11?` target${state.revealed?' revealed':''}`:''}" cx="${x}" cy="${y}" r="${index===11?19:known.includes(index)?10:7}"></circle>`).join('')}<text class="${state.revealed?'revealed-text':''}" x="126" y="97">${state.revealed?'✓':'?'}</text></svg><div class="graph-key"><span><i></i>Ответы эксперта</span><span><i class="query-dot"></i>Новый объект</span></div></div><div class="graph-context"><span class="label">Признаки нового объекта</span><strong>${esc(c.columns[0])}: ${esc(c.query[0])}<br>${esc(c.columns[1])}: ${esc(c.query[1])}</strong><span class="label">Признаки + связи + опорные ответы</span><div class="graph-answer" role="status">${state.revealed?`<span class="answer">${esc(c.predict)}</span>`:'Прогноз: ?'}</div></div></div>`;
+  function graphExample(c,{revealed=state.revealed,variant='business'}={}){
+    const {nodes,edges,title,relation,directed}=c.graph;
+    const marker=`arrow-${variant}-${c.id}`;
+    const lines=edges.map(([a,b])=>{
+      const from=nodes[a],to=nodes[b],dx=to.x-from.x,dy=to.y-from.y;
+      const inset=directed?(to.target?23:17)/Math.hypot(dx,dy):0;
+      return `<line class="edge${from.target||to.target?' context':''}" x1="${from.x}" y1="${from.y}" x2="${to.x-dx*inset}" y2="${to.y-dy*inset}"${directed?` marker-end="url(#${marker})"`:''}></line>`;
+    }).join('');
+    const shapes=nodes.map(node=>{
+      const {x,y,label,kind,known,target}=node;
+      const cls=`node${known?' known':''}${target?` target${revealed?' revealed':''}`:''}`;
+      const description=`<title>${esc(label)}${known?' · ответ эксперта известен':''}</title>`;
+      const shape=kind==='place'?`<rect class="${cls} place" x="${x-18}" y="${y-12}" width="36" height="24" rx="4">${description}</rect>`:kind==='task'?`<path class="${cls} task-node" d="M${x} ${y-14}l14 14-14 14-14-14z">${description}</path>`:`<circle class="${cls}" cx="${x}" cy="${y}" r="${target?19:12}">${description}</circle>`;
+      return `${shape}${target?`<text class="${revealed?'revealed-text':''}" x="${x}" y="${y+5}">${revealed?'✓':'?'}</text>`:''}<text class="node-label" x="${x}" y="${y+(target?33:27)}">${esc(label)}</text>`;
+    }).join('');
+    return `<div class="graph-example graph-${c.id}"><div><svg class="network" viewBox="0 0 320 198" role="img" aria-label="${esc(title)}. ${esc(relation)}. Выделен новый объект для прогноза.">${directed?`<defs><marker id="${marker}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--orange)"/></marker></defs>`:''}${lines}${shapes}</svg><div class="graph-key"><span><i></i>Ответы эксперта</span><span><i class="query-dot"></i>Новый объект</span></div><p class="graph-relation">${esc(relation)}</p></div><div class="graph-context"><span class="label">Признаки нового объекта</span><strong>${esc(c.columns[0])}: ${esc(c.query[0])}<br>${esc(c.columns[1])}: ${esc(c.query[1])}</strong><span class="label">${esc(title)}</span><div class="graph-answer" role="status">${revealed?`<span class="answer">${esc(c.predict)}</span>`:'Прогноз: ?'}</div></div></div>`;
+  }
+
+  function tableExample(c,revealed){
+    return `<table class="sample-table"><caption class="sr-only">Опорные данные для модели и новый объект</caption><thead><tr>${c.columns.map(label=>`<th scope="col">${esc(label)}</th>`).join('')}</tr></thead><tbody>${c.rows.map(row=>`<tr class="known">${row.map(value=>`<td>${esc(value)}</td>`).join('')}</tr>`).join('')}<tr class="query">${c.query.map(value=>`<td>${esc(value)}</td>`).join('')}<td role="status">${revealed?`<span class="answer">${esc(c.predict.split(': ').slice(1).join(': '))}</span>`:'?'}</td></tr></tbody></table><p class="table-note"><i></i>Проверенные ответы <span class="separator">/</span><i class="query-dot"></i>${revealed?'Прогноз PFN':'Новый объект'}</p>`;
+  }
+
+  function renderIntro(){
+    const reductions=cases.map(c=>c.econ.baseLabels/c.econ.pfnLabels);
+    $('intro-reduction').textContent=`≈${number(Math.min(...reductions))}–${number(Math.max(...reductions))}×`;
+    const example=cases.find(c=>c.id==='steel');
+    $('intro-label-example').textContent=`Например, дефекты стали: ${number(example.econ.baseLabels)} → ${number(example.econ.pfnLabels)} примеров`;
+    $('intro-table').innerHTML=tableExample(cases.find(c=>c.id==='concrete'),true);
+    $('intro-graph').innerHTML=graphExample(cases.find(c=>c.id==='reviews'),{revealed:true,variant:'intro'});
   }
 
   function renderExample(){
     const c=current();
     if(c.type==='graph') $('example').innerHTML=graphExample(c);
-    else $('example').innerHTML=`<table class="sample-table"><caption class="sr-only">Опорные данные для модели и новый объект</caption><thead><tr>${c.columns.map(label=>`<th scope="col">${esc(label)}</th>`).join('')}</tr></thead><tbody>${c.rows.map(row=>`<tr class="known">${row.map(value=>`<td>${esc(value)}</td>`).join('')}</tr>`).join('')}<tr class="query">${c.query.map(value=>`<td>${esc(value)}</td>`).join('')}<td role="status">${state.revealed?`<span class="answer">${esc(c.predict.split(': ').slice(1).join(': '))}</span>`:'?'}</td></tr></tbody></table><p class="table-note"><i></i>Проверенные ответы <span class="separator">/</span><i class="query-dot"></i>Новый объект</p>`;
-    $('example-explanation').textContent=state.revealed?'Показан ответ для нового объекта. Качество пилота проверяют на отдельных данных.':c.type==='graph'?'Эксперт проверил несколько объектов. Связи дают модели дополнительный контекст.':`${c.expert} проверяет ответы. Модель переносит закономерности на новые объекты.`;
+    else $('example').innerHTML=tableExample(c,state.revealed);
+    $('example-explanation').textContent=state.revealed?'Показан ответ для нового объекта. Качество эксперимента проверяют на отдельных данных.':c.type==='graph'?'Эксперт проверил несколько объектов. Связи дают модели дополнительный контекст.':`${c.expert} проверяет ответы. Модель переносит закономерности на новые объекты.`;
     $('predict').innerHTML=state.revealed?'Сначала <span>↺</span>':'Показать прогноз <span>→</span>';
     $('predict').setAttribute('aria-pressed',String(state.revealed));
   }
@@ -135,7 +168,7 @@ globalThis.PFN_CALCULATE = (econ, launches = 1, finetune = false) => {
     const scoreRows=[{name:c.metric.baseName,score:c.metric.base,sd:null,status:'baseline'},...c.models];
     const sourceKeys=[...new Set(c.models.map(item=>item.source))];
     const primarySources=sourceKeys.map(key=>`<div><a href="${sources[key].url}" target="_blank" rel="noopener noreferrer">${esc(sources[key].title)} ↗</a><p>${esc(sources[key].detail)}</p></div>`).join('');
-    $('details-content').innerHTML=`<section class="details-section" id="detail-evidence"><h3>Сравнение подходов · ${esc(c.metric.name)}</h3><table class="evidence-table"><thead><tr><th scope="col">Подход</th><th scope="col">Результат</th><th scope="col">Основание</th></tr></thead><tbody>${scoreRows.map(item=>`<tr class="${item===m?'selected':''}"><td>${esc(item.name)}</td><td class="${item.status==='estimate'?'estimated-value':''}">${score(c,item)}</td><td><span class="badge ${item.status==='estimate'?'estimate':'benchmark'}">${item.status==='estimate'?'Пример':'Бенчмарк'}</span></td></tr>`).join('')}</tbody></table><p>Числа с отметкой «Пример» заданы для иллюстрации: для этой модели и задачи они не взяты из бенчмарка. Разница в качестве не переводится автоматически в экономию или сокращение разметки.</p><p>Табличные строки и граф на основном экране — иллюстрация работы подхода. Кнопка «Показать прогноз» раскрывает заранее подготовленный ответ и не вызывает модель.</p><div class="source-list">${primarySources}</div></section><section class="details-section" id="detail-assumptions"><h3>Условия бизнес-сценария</h3><p>Количество примеров и затраты — плановые допущения. Это сценарий возможного пилота, а не измеренный эффект на датасете. Изменение условий пересчитывает экономику; опубликованные метрики остаются прежними.</p><form id="assumptions-form" class="assumptions-form">${fields.map(([key,label,min,max,step])=>`<label>${label}<input name="${key}" type="number" min="${min}" max="${max}" step="${step}" value="${e[key]}" required inputmode="decimal"></label>`).join('')}<div id="form-message" class="form-message" role="status"></div><div class="form-actions"><button class="predict-button" type="submit">Применить условия</button><button class="quiet" type="button" id="reset-assumptions">Сбросить сценарий</button></div></form><details><summary>Как считаются бюджет и сроки</summary><p class="formula">Экспертные часы = примеры × минуты / 60.<br>Экспертиза и испытания = часы × ставка + примеры × расходы на испытание.<br>Бюджет = подготовка данных + экспертиза и испытания + часы настройки × ставка инженера.<br>Срок = подготовка + физический цикл + ⌈экспертные часы / (эксперты × 6 ч/день)⌉ + ⌈настройка / 6 ч/день⌉.<br>Для режима с дообучением к настройке PFN добавляются 18 часов. Этапы идут последовательно; сроки указаны в условных днях проекта.<br>Годовая экономия = разница бюджетов × независимые новые пилоты за год.</p><p>В этот расчёт не включены вычислительная инфраструктура, лицензии и сопровождение после пилота. Данные, признаки, граф связей и процедура проверки должны быть доступны. Экономия на новых метках требует отдельной проверки кривой качества и не следует из приведённых бенчмарков.</p></details></section><section class="details-section"><h3>Другие источники стенда</h3><div class="source-list">${Object.entries(sources).filter(([key])=>!sourceKeys.includes(key)).map(([,source])=>`<div><a href="${source.url}" target="_blank" rel="noopener noreferrer">${esc(source.title)} ↗</a><p>${esc(source.detail)}</p></div>`).join('')}</div></section>`;
+    $('details-content').innerHTML=`<section class="details-section" id="detail-evidence"><h3>Сравнение подходов · ${esc(c.metric.name)}</h3><table class="evidence-table"><thead><tr><th scope="col">Подход</th><th scope="col">Результат</th><th scope="col">Основание</th></tr></thead><tbody>${scoreRows.map(item=>`<tr class="${item===m?'selected':''}"><td>${esc(item.name)}</td><td class="${item.status==='estimate'?'estimated-value':''}">${score(c,item)}</td><td><span class="badge ${item.status==='estimate'?'estimate':'benchmark'}">${item.status==='estimate'?'Пример':'Бенчмарк'}</span></td></tr>`).join('')}</tbody></table><div class="source-list">${primarySources}</div></section><section class="details-section" id="detail-assumptions"><h3>Условия бизнес-сценария</h3><p>Измените число примеров, стоимость экспертизы и время настройки — бюджет и сроки эксперимента пересчитаются. Опубликованные метрики качества остаются прежними.</p><form id="assumptions-form" class="assumptions-form">${fields.map(([key,label,min,max,step])=>`<label>${label}<input name="${key}" type="number" min="${min}" max="${max}" step="${step}" value="${e[key]}" required inputmode="decimal"></label>`).join('')}<div id="form-message" class="form-message" role="status"></div><div class="form-actions"><button class="predict-button" type="submit">Применить условия</button><button class="quiet" type="button" id="reset-assumptions">Сбросить сценарий</button></div></form><details><summary>Как считаются бюджет и сроки</summary><p class="formula">Экспертные часы = примеры × минуты / 60.<br>Экспертиза и испытания = часы × ставка + примеры × расходы на испытание.<br>Бюджет = подготовка данных + экспертиза и испытания + часы настройки × ставка инженера.<br>Срок = подготовка + физический цикл + ⌈экспертные часы / (эксперты × 6 ч/день)⌉ + ⌈настройка / 6 ч/день⌉.<br>Для режима с дообучением к настройке PFN добавляются 18 часов. Этапы идут последовательно; сроки указаны в днях проекта.<br>Годовая экономия = разница бюджетов × независимые новые эксперименты за год.</p><p>В этот расчёт не включены вычислительная инфраструктура, лицензии и сопровождение после эксперимента. Данные, признаки, граф связей и процедура проверки должны быть доступны. Экономия на новых метках требует отдельной проверки кривой качества и не следует из приведённых бенчмарков.</p></details></section><section class="details-section"><h3>Другие источники стенда</h3><div class="source-list">${Object.entries(sources).filter(([key])=>!sourceKeys.includes(key)).map(([,source])=>`<div><a href="${source.url}" target="_blank" rel="noopener noreferrer">${esc(source.title)} ↗</a><p>${esc(source.detail)}</p></div>`).join('')}</div></section>`;
     $('assumptions-form').addEventListener('submit',event=>{
       event.preventDefault();
       const form=event.currentTarget;
@@ -208,6 +241,7 @@ globalThis.PFN_CALCULATE = (econ, launches = 1, finetune = false) => {
   window.addEventListener('resize',queueFit);
   window.addEventListener('hashchange',()=>{const c=cases.find(item=>`#${item.id}`===location.hash);if(c){if(state.filter!=='all'&&c.type!==state.filter) state.filter='all';selectCase(c.id,false);}});
   document.querySelectorAll('.logos img').forEach(img=>img.addEventListener('load',queueFit));
+  renderIntro();
   renderCase();
   setView(state.view);
 })();
