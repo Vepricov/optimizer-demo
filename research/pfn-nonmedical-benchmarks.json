@@ -1,0 +1,138 @@
+{
+  "checked_on": "2026-10-28",
+  "scope": "Nonmedical published results only; no new inference or training.",
+  "active_learning_100_labels": {
+    "source": "https://arxiv.org/html/2603.27385v1",
+    "status": "verified_primary_paper_tables",
+    "tables": {"kappa": "V", "roc_auc": "VI"},
+    "software": "tabpfn==6.2.0; 32 ensemble members; checkpoint version not explicitly specified",
+    "protocol": {
+      "train_pool_fraction": 0.7,
+      "test_fraction": 0.3,
+      "stratified": true,
+      "label_budget": 100,
+      "acquisition_batch_size": 10,
+      "repeats": 10,
+      "uncertainty": "standard_deviation",
+      "labels": "Oracle reveals existing dataset labels; no human annotator is hired in the experiment."
+    },
+    "method_columns": ["TabPFN-Hybrid", "TabPFN-Margin", "TabPFN-Random", "CatBoost-Margin", "XGBoost-Margin"],
+    "datasets": [
+      {
+        "id": "Steel-Plates",
+        "display_name_ru": "Определение типа дефекта стального листа",
+        "description_source": "https://archive.ics.uci.edu/dataset/198/steel+plates+faults",
+        "classes": 7,
+        "kappa": {"mean": [0.617, 0.592, 0.574, 0.510, 0.465], "std": [0.019, 0.030, 0.034, 0.037, 0.042]},
+        "roc_auc": {"mean": [0.906, 0.906, 0.900, 0.884, 0.846], "std": [0.017, 0.024, 0.024, 0.015, 0.029]},
+        "demo_relevance_ru": "Разбор дефектов и настройка контроля качества под новый тип продукции. Стоимость проверки источник не измеряет."
+      },
+      {
+        "id": "Page Blocks",
+        "display_name_ru": "Классификация блоков сканированного документа",
+        "description_source": "https://archive.ics.uci.edu/dataset/78/page+blocks+classification",
+        "classes": 5,
+        "labels_ru": ["текст", "горизонтальная линия", "графика", "вертикальная линия", "изображение"],
+        "kappa": {"mean": [0.732, 0.807, 0.693, 0.751, 0.519], "std": [0.039, 0.026, 0.048, 0.042, 0.181]},
+        "roc_auc": {"mean": [0.977, 0.968, 0.968, 0.952, 0.874], "std": [0.006, 0.025, 0.012, 0.024, 0.064]},
+        "demo_relevance_ru": "Проверка типов блоков при оцифровке документов; признаки блоков уже извлечены. Это не распознавание полного текста или полей счета."
+      }
+    ],
+    "limits_ru": [
+      "ROC-AUC для многоклассовых задач — macro one-vs-rest; это не accuracy.",
+      "Каппа Коэна учитывает случайное совпадение; ее нельзя показывать как процент верных ответов.",
+      "Hybrid, Margin и Random различаются отбором примеров, а не только моделью.",
+      "Протокол моделирует получение меток; цены и реальная экономия ручной разметки не измерены.",
+      "Результаты поддерживают пользу отбора информативных примеров; это отдельный вопрос от правильности меток.",
+      "Бюджет 100 меток не означает, что модель предсказывает до получения хотя бы одной метки каждого класса."
+    ]
+  },
+  "wine_quality": {
+    "source": "https://tabularfoundationmodels.com/regression",
+    "description_source": "https://archive.ics.uci.edu/dataset/186/wine+quality",
+    "status": "verified_primary_worked_example_single_split",
+    "display_name_ru": "Оценка качества вина по физико-химическим показателям",
+    "target_ru": "Сенсорная оценка качества",
+    "protocol": {"test_fraction": 0.25, "random_state": 1, "catboost_search_trials": 40, "catboost_iterations": 500, "tabicl_ensemble_members": 8},
+    "method_columns": ["TabICLRegressor", "Tuned CatBoost"],
+    "metrics": {"mae": [0.388, 0.435], "rmse": [0.577, 0.602], "r2": [0.546, 0.507]},
+    "limits_ru": [
+      "Это пример автора книги на одном разбиении, без оценки разброса по разбиениям.",
+      "Берем числа непосредственно из книги: в сторонних заметках встречается другая версия результатов CatBoost.",
+      "Точную версию checkpoint и состав красного/белого поднабора авторский пример явно не фиксирует.",
+      "Не путать Wine Quality с задачей распознавания происхождения вина Wine."
+    ]
+  },
+  "istella_search_relevance": {
+    "source": "https://arxiv.org/html/2610.26794v1",
+    "table_location": "Appendix H, Istella / RMSE",
+    "description_source": "https://iris.cnr.it/retrieve/b01c53e5-6005-4b5f-a706-69c461a657cd/prod_469573-doc_190234.pdf",
+    "status": "verified_primary_paper_table",
+    "display_name_ru": "Оценка соответствия документа поисковому запросу",
+    "metric": "rmse",
+    "higher_is_better": false,
+    "context_sizes": [10000, 20000, 40000, 80000, 160000, 320000, 640000],
+    "repeats": 10,
+    "uncertainty": "standard_deviation",
+    "features": 200,
+    "split": "Query-group holdouts sampled from official test partition; distribution shift relative to training queries; fixed evaluation sets across sizes.",
+    "results": [
+      {"method": "TabICL v2", "mean": [0.1655, 0.1654, 0.1610, 0.1601, 0.1593, 0.1584, 0.1594], "std": [0.0007, 0.0009, 0.0006, 0.0006, 0.0009, 0.0011, 0.0013]},
+      {"method": "TabPFN v3.5", "mean": [0.1593, 0.1535, 0.1441, 0.1402, 0.1379, 0.1366, 0.1353], "std": [0.0008, 0.0017, 0.0010, 0.0009, 0.0007, 0.0004, 0.0005]},
+      {"method": "Kumo small", "mean": [0.1612, 0.1580, 0.1539, 0.1534, 0.1478, 0.1428, 0.1407], "std": [0.0013, 0.0014, 0.0010, 0.0013, 0.0010, 0.0011, 0.0016]},
+      {"method": "Kumo medium", "mean": [0.1594, 0.1572, 0.1496, 0.1481, 0.1423, 0.1384, 0.1371], "std": [0.0013, 0.0014, 0.0015, 0.0016, 0.0017, 0.0021, 0.0025]},
+      {"method": "Kumo large", "mean": [0.1576, 0.1556, 0.1502, 0.1489, 0.1431, 0.1383, 0.1350], "std": [0.0009, 0.0008, 0.0012, 0.0013, 0.0015, 0.0012, 0.0018]}
+    ],
+    "limits_ru": [
+      "Подтверждена экспертная разметка тестовых запросов в исходном Istella22; не утверждаем, что все обучающие отрицательные пары размечены вручную.",
+      "Это регрессия оценок релевантности, не NDCG и не измеренный рост качества поисковой выдачи.",
+      "Контекст содержит только обучающий поднабор; добавление валидации относится к отдельному эксперименту раздела 5.3.",
+      "Авторы отдельно оговаривают, что исследование не является прямым сравнением foundation-моделей и параметрических моделей; здесь сохранено сравнение только PFN-семейств.",
+      "При 640k разница Kumo large и TabPFN v3.5 меньше стандартного отклонения Kumo; не объявлять однозначного победителя."
+    ]
+  },
+  "kumo_engineering_examples": {
+    "source": "https://lazy-tfm.readthedocs.io/en/latest/tutorials/choosing_a_model.html",
+    "status": "verified_primary_library_tutorial_single_split",
+    "metric": "crps",
+    "higher_is_better": false,
+    "random_state": 299792458,
+    "method_columns": ["TabPFN v3.5", "TabICL v2", "Kumo v1-large", "Kumo v1-small"],
+    "datasets": [
+      {"id": "concrete", "display_name_ru": "Прочность бетона по составу и возрасту", "description_source": "https://archive.ics.uci.edu/dataset/165/concrete", "context_rows": 927, "test_rows": 103, "crps": [1.204, 1.230, 1.171, 1.256], "central_68_percent_coverage": [0.670, 0.767, 0.689, 0.670]},
+      {"id": "yacht", "display_name_ru": "Сопротивление корпуса яхты по геометрии и скорости", "description_source": "https://archive.ics.uci.edu/dataset/243/yacht+hydrodynamics", "context_rows": 277, "test_rows": 31, "crps": [0.244, 0.277, 0.171, 0.171], "central_68_percent_coverage": [0.806, 0.677, 0.742, 0.903]}
+    ],
+    "limits_ru": [
+      "Это дорогие физические измерения, а не ручная классификация объектов.",
+      "Один случайный сплит; особенно мал тест yacht на 31 объекте. Не использовать как доказательство устойчивого превосходства.",
+      "CRPS оценивает прогноз распределения; не подписывать как MAE или RMSE.",
+      "В этом примере нет CatBoost/XGBoost. Не добавлять числа бустинга с другого разбиения."
+    ]
+  },
+  "graph_product_categories": {
+    "source": "https://arxiv.org/html/2509.21489v4",
+    "table": 8,
+    "description_source": "https://papers.nips.cc/paper_files/paper/2025/file/8f54de761abc405145d8b4df8bef3f18-Paper-Datasets_and_Benchmarks_Track.pdf",
+    "status": "verified_primary_paper_table",
+    "dataset": "hm-categories",
+    "display_name_ru": "Категоризация товаров по признакам и совместным покупкам",
+    "classes": 21,
+    "metric": "accuracy",
+    "scale": "percent",
+    "higher_is_better": true,
+    "uncertainty": "standard_deviation",
+    "results": [
+      {"method": "GCN", "mode": "supervised", "mean": 63.53, "std": 0.25},
+      {"method": "GAT", "mode": "supervised", "mean": 67.60, "std": 0.51},
+      {"method": "Graph Transformer", "mode": "supervised", "mean": 69.27, "std": 0.36},
+      {"method": "GraphPFN", "mode": "icl", "mean": 55.25, "std": 0.75},
+      {"method": "GraphPFN", "mode": "finetuning", "mean": 78.67, "std": 0.20}
+    ],
+    "limits_ru": [
+      "ICL на этой задаче уступает GNN; хороший результат GraphPFN здесь требует дообучения.",
+      "Для 21 класса используется ECOC с 10 estimators.",
+      "Граф строится по совместным покупкам; сценарий не доказывает качество на полностью новых товарах без истории покупок.",
+      "Источник не измеряет стоимость ручного назначения категории."
+    ]
+  }
+}
