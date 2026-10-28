@@ -1,0 +1,117 @@
+{
+  "checked_on": "2026-10-28",
+  "purpose": "Published evidence for a PFN demo; no new model runs.",
+  "graph_comparison": {
+    "status": "verified_published_table",
+    "results_source": "https://arxiv.org/html/2509.21489v4#S4.T1",
+    "results_version": "GraphPFN, arXiv:2509.21489v4, Table 1",
+    "dataset_description_source": "https://papers.nips.cc/paper_files/paper/2025/file/8f54de761abc405145d8b4df8bef3f18-Paper-Datasets_and_Benchmarks_Track.pdf",
+    "split": {"name": "RL", "train": 0.1, "validation": 0.1, "test": 0.8, "type": "random"},
+    "metric": "average_precision",
+    "scale": "percent",
+    "higher_is_better": true,
+    "repeats": 10,
+    "uncertainty": "standard_deviation",
+    "datasets": [
+      {
+        "id": "artnet-exp",
+        "display_name_ru": "Модерация контента",
+        "target_ru": "Авторы explicit-контента на платформе создания изображений",
+        "edges_ru": "Дружеские связи пользователей",
+        "nodes": 50405,
+        "features": 75,
+        "note_ru": "Это модерация, а не антифрод и не оценка произведений искусства экспертами."
+      },
+      {
+        "id": "city-reviews",
+        "display_name_ru": "Поддельные отзывы",
+        "target_ru": "Пользователи, оставляющие мошеннические отзывы",
+        "edges_ru": "Пользователи часто пишут отзывы об одних организациях",
+        "nodes": 148801,
+        "features": 37
+      },
+      {
+        "id": "tolokers-2",
+        "display_name_ru": "Антифрод в краудсорсинге",
+        "target_ru": "Исполнители, заблокированные в одном из проектов",
+        "edges_ru": "Исполнители работали над одним заданием",
+        "nodes": 11758,
+        "features": 16
+      }
+    ],
+    "result_columns": ["artnet-exp", "city-reviews", "tolokers-2"],
+    "results": [
+      {"method": "LightGBM + NFA", "mode": "supervised", "mean": [46.13, 78.53, 56.34], "std": [0.04, 0.01, 0.06]},
+      {"method": "GAT", "mode": "supervised", "mean": [45.06, 77.74, 57.41], "std": [0.52, 0.21, 0.85]},
+      {"method": "GraphSAGE", "mode": "supervised", "mean": [45.14, 78.17, 54.43], "std": [0.36, 0.10, 0.34]},
+      {"method": "G2T-LimiX", "mode": "icl", "mean": [48.42, 78.98, 61.60], "std": [0.78, 0.44, 0.18]},
+      {"method": "GraphPFN", "mode": "icl", "mean": [51.79, 80.25, 61.29], "std": [0.11, 0.05, 0.12]},
+      {"method": "GraphPFN", "mode": "finetuning", "mean": [53.49, 80.90, 62.80], "std": [0.81, 0.03, 0.39]}
+    ],
+    "interpretation_limits_ru": [
+      "Average Precision не означает долю найденных нарушителей или точность при фиксированном пороге.",
+      "Из этой таблицы нельзя вывести экономию разметки или изменение качества при изменении числа меток.",
+      "Результаты GraphLand с RH/TH/THI нельзя добавлять в это сравнение RL.",
+      "LightGBM + NFA уже использует информацию о соседях; это не вариант без графа.",
+      "Стоимость ручной проверки в источнике не измерена."
+    ]
+  },
+  "tabular_fallback": {
+    "status": "published_primary_evaluation_summary_raw_uncertainty_not_verified",
+    "source": "https://aimultiple.com/tabular-models",
+    "publisher": "AIMultiple, own benchmark",
+    "protocol": "5-fold cross-validation on identical splits; default configurations, no task-specific gradient training for foundation models",
+    "metric": "roc_auc",
+    "scale": "unit_interval",
+    "higher_is_better": true,
+    "result_columns": ["CatBoost", "TabICLv2", "Kumo-Tabular", "TabPFN-3.5"],
+    "results": [
+      {"dataset": "breast-w", "n_rows": 699, "mean": [0.992, 0.994, 0.995, 0.995]},
+      {"dataset": "diabetes", "n_rows": 768, "mean": [0.833, 0.841, 0.844, 0.842]},
+      {"dataset": "credit-g", "n_rows": 1000, "mean": [0.783, 0.797, 0.810, 0.807]},
+      {"dataset": "default_credit", "n_rows": 30000, "mean": [0.773, 0.791, 0.793, 0.793]}
+    ],
+    "uncertainty": null,
+    "dataset_description_sources": {
+      "breast-w": "https://archive.ics.uci.edu/dataset/15/breast+cancer+wisconsin+original"
+    },
+    "interpretation_limits_ru": [
+      "Источник для резерва; перед основным показом желательно получить CSV, версии моделей и разброс по фолдам.",
+      "Размер всего датасета не равен числу примеров в контексте одного фолда.",
+      "breast-w — Original, 699 объектов; не путать с Diagnostic, 569 объектов.",
+      "ROC-AUC не означает процент правильных диагнозов.",
+      "Кредитный риск и диабет не доказывают дорогую ручную разметку: метки могут приходить из наблюдаемых исходов или анализов.",
+      "У TabPFN-3.5 отдельная non-commercial лицензия весов."
+    ]
+  },
+  "additional_candidates": {
+    "multabench": {
+      "paper": "https://arxiv.org/html/2605.10616v2",
+      "repository": "https://github.com/alanarazi7/MulTaBench",
+      "results_access": "Repository README documents load_published_results(); live leaderboard includes Kumo. Per-model candidate scores have not yet been extracted.",
+      "candidates": [
+        {"dataset": "Fake Job Postings", "task_ru": "Выявление мошеннических вакансий", "reason_ru": "Проверка подлинности объявления", "n_rows_in_paper": 12725},
+        {"dataset": "Jigsaw Toxicity", "task_ru": "Модерация токсичных комментариев", "reason_ru": "Согласование правил и проверка спорных текстов", "n_rows_in_paper": 100000},
+        {"dataset": "Mammography CMMD", "task_ru": "Различение доброкачественных и злокачественных находок", "reason_ru": "Медицинская верификация меток", "n_rows_in_paper": 5202},
+        {"dataset": "CheXpert", "task_ru": "Классификация медицинских снимков", "reason_ru": "Кандидат для истории об экспертной проверке; происхождение меток нужно проверить отдельно"}
+      ],
+      "interpretation_limits_ru": [
+        "Это мультимодальные таблицы: текст и изображения требуют отдельного представления.",
+        "Таблицы 11–12 статьи усредняют результаты по моделям и сравнивают Frozen/TAR; это не оценки Kumo или TabICL по отдельности.",
+        "Нельзя смешивать протокол статьи с протоколом обновляемого leaderboard.",
+        "Дороговизна разметки — обоснование сценария, а не измеренная стоимость из бенчмарка."
+      ]
+    },
+    "tabarena": {
+      "leaderboard": "https://huggingface.co/spaces/TabArena/leaderboard",
+      "results_documentation": "https://github.com/autogluon/tabarena#-tabarena-artifacts",
+      "historical_csv_reference": "https://github.com/autogluon/tabarena/issues/262",
+      "note_ru": "Предпочтительный источник общего протокола. CSV из issue опубликованы в марте 2026 и не подтверждают результаты Kumo Tabular, выпущенного позже. Нужен современный срез."
+    },
+    "talent": {
+      "published_baselines": "https://github.com/LAMDA-Tabular/TALENT/blob/08301d6/results/cls_bin.md",
+      "nvidia_evaluation_code": "https://github.com/NVIDIA/structured-data-models/blob/main/benchmark/tabular/talent/evaluate.py",
+      "note_ru": "Проверенная таблица baseline содержит tabpfn без Kumo/TabICLv2. Наличие кода оценки NVIDIA не означает доступность опубликованных результатов Kumo по каждой задаче."
+    }
+  }
+}

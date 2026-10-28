@@ -1,0 +1,6 @@
+/* One frame for every PFN section. Content height affects scale,
+   while the frame always spans the same viewport width. */
+.shell{width:100%;max-width:1600px;margin-inline:auto}
+.fit{overflow-x:hidden}
+.fit .shell{max-width:none;padding:18px 36px 16px}
+@media(max-width:800px){.shell{width:100%!important;max-width:none;padding:18px;zoom:1!important}}

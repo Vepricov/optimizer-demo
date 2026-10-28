@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="PFN Atlas: интерактивный бизнес-стенд о запуске прогнозирования на небольшом наборе проверенных примеров. Таблицы, графы, экспертные оценки и физические испытания.">
+  <meta name="color-scheme" content="dark light">
+  <title>PFN Atlas — от экспертизы к прогнозу</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1426'/%3E%3Cpath d='M16 46V18H34C48 18 48 36 34 36H16' fill='none' stroke='%238fd0ff' stroke-width='5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="pfn.css">
+  <link rel="stylesheet" href="pfn-layout.css">
+  <script src="pfn-layout.js" defer></script>
+  <script src="pfn-data.js" defer></script>
+  <script src="pfn.js" defer></script>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <a class="wordmark" href="pfn.html" aria-label="PFN Atlas, главная">PFN <span>/</span> ATLAS</a>
+    <div class="top-actions">
+      <span class="meta"><i class="dot"></i>ПРЕДОБУЧЕННЫЕ МОДЕЛИ · ПОНЯТНЫЙ ЭФФЕКТ</span>
+      <button class="quiet" id="theme" type="button">Светлая тема</button>
+      <button class="quiet" id="sources" type="button" aria-haspopup="dialog">Источники и условия ↗</button>
+    </div>
+  </header>
+  <nav class="domain-nav" aria-label="Раздел стенда">
+    <button class="domain active" data-view="explain" aria-pressed="true">Что такое PFN</button>
+    <button class="domain" data-view="business" aria-pressed="false">Эффект для бизнеса</button>
+    <div class="model-names" aria-label="Семейства моделей">TabICLv2 <span>·</span> Kumo <span>·</span> GraphPFN</div>
+  </nav>
+
+  <main id="business-view" hidden>
+    <section class="hero">
+      <div><p class="eyebrow">Экспертные знания → проверенные примеры → готовый прогноз</p><h1>Меньше подготовки.<br><em>Быстрее к работающему пилоту.</em></h1></div>
+      <p class="hero-note">Для первого пилота может быть достаточно небольшого количества размеченных примеров. Важно качество ответов и разнообразие случаев.</p>
+    </section>
+    <div class="case-tools"><span class="label">Выберите задачу бизнеса</span><div class="filters" role="group" aria-label="Тип данных"><button data-filter="all" aria-pressed="true">Все задачи</button><button data-filter="table" aria-pressed="false">Таблицы</button><button data-filter="graph" aria-pressed="false">Графы</button></div></div>
+    <div id="cases" class="cases" role="group" aria-label="Бизнес-сценарии"></div>
+    <section class="task" aria-labelledby="task-title">
+      <div class="task-icon" id="task-icon" aria-hidden="true"></div>
+      <div class="task-copy"><div class="task-heading"><h2 id="task-title"></h2><span class="type-tag" id="task-type"></span></div><p id="task-description"></p></div>
+      <div class="model-field"><label for="model">Предобученная модель</label><select id="model"></select><span id="model-mode"></span></div>
+    </section>
+    <section class="scale-dock" aria-label="Годовой масштаб">
+      <div class="scale-output"><label class="label" for="launches">Новых пилотов в год</label><output id="launch-count" for="launches">10</output></div>
+      <div class="scale-range"><input id="launches" type="range" min="1" max="50" step="1" value="10"><div class="landmarks"><button data-launches="1">1 пилот</button><button data-launches="10">10</button><button data-launches="25">25</button><button data-launches="50">50 пилотов</button></div></div>
+      <p class="scale-note" id="scale-note"></p>
+    </section>
+    <div class="kpi-caption"><span>Планируем эффект PFN-подхода</span><span class="scenario-badge">Бизнес-сценарий</span></div>
+    <section class="kpis" aria-label="Бизнес-эффект">
+      <article class="kpi highlight"><span class="label">Экономия бюджета / год</span><strong id="saving"></strong><small id="saving-note"></small></article>
+      <article class="kpi"><span class="label">Освобождаем время экспертов</span><strong id="expert-saving"></strong><small>человеко-часов / год</small></article>
+      <article class="kpi"><span class="label">Срок до одного пилота</span><strong id="pilot-time" class="pair-value"></strong><small id="pilot-note"></small></article>
+      <article class="kpi"><span class="label" id="examples-label">Проверенные примеры / пилот</span><strong id="example-count" class="pair-value"></strong><small id="example-note"></small></article>
+    </section>
+    <div class="panels">
+      <section class="panel budget-panel" aria-labelledby="budget-title">
+        <div class="panel-heading"><h3 id="budget-title">Бюджет одного пилота</h3><span>Расчёт сценария</span></div>
+        <div id="cost-comparison"></div>
+        <div class="cost-legend"><span><i class="legend-common"></i>Подготовка данных</span><span><i class="legend-expert"></i>Экспертиза / испытания</span><span><i class="legend-setup"></i>Настройка модели</span></div>
+        <div class="time-heading"><span class="label">Путь до первого пилота</span><span class="label">дни</span></div>
+        <div id="time-comparison"></div>
+        <p class="panel-note" id="budget-note"></p>
+      </section>
+      <section class="panel example-panel" aria-labelledby="example-title">
+        <div class="panel-heading"><h3 id="example-title">От опыта эксперта к прогнозу</h3><span>Иллюстрация</span></div>
+        <div id="example"></div>
+        <div class="example-bottom"><p id="example-explanation"></p><button class="predict-button" id="predict" type="button">Показать прогноз <span>→</span></button></div>
+      </section>
+    </div>
+    <section class="evidence-strip" aria-label="Результат исследования">
+      <span class="evidence-icon" aria-hidden="true">↗</span><div><span class="label" id="evidence-label"></span><p id="evidence-text"></p><small id="evidence-note"></small></div><button id="evidence-open" class="quiet" aria-haspopup="dialog">Подробнее ↗</button>
+    </section>
+    <div class="bottom-line"><p>Экономика — расчёт по условиям сценария. Прогнозы в иллюстрации условные. <button id="assumptions-open">Изменить условия</button></p><span>Качественные ответы + разнообразные примеры</span></div>
+  </main>
+
+  <main id="explain-view">
+    <section class="explain-hero"><p class="eyebrow">PFN · Prior-data Fitted Network</p><h1>Модель училась заранее.<br><em>Для старта достаточно немного разметки.</em></h1><p>PFN — предобученная модель для прогнозирования по таблицам и графам. Она переносит опыт множества задач на вашу: для первого пилота может быть достаточно небольшого количества качественно размеченных примеров. В режиме in-context learning они задают контекст, а веса модели остаются фиксированными.</p></section>
+    <div class="explain-steps">
+      <section class="panel"><span class="step-number">01 / ПРЕДОБУЧЕНИЕ</span><div class="mini-tables" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><h2>Опыт множества задач</h2><p>Модель заранее решает разнообразные синтетические задачи и учится находить закономерности между признаками и ответами.</p></section>
+      <section class="panel"><span class="step-number">02 / ВАША ЭКСПЕРТИЗА</span><div class="context-example" aria-hidden="true"><span>Пример 1 <b>✓</b></span><span>Пример 2 <b>✓</b></span><span>Новый объект <b>?</b></span></div><h2>Небольшой набор разметки</h2><p>Эксперт проверяет опорные примеры вашей задачи. Модель получает их как контекст и прогнозирует ответы для новых объектов — можно начать до накопления большого размеченного датасета.</p></section>
+      <section class="panel"><span class="step-number">03 / ПЕРВЫЙ ПИЛОТ</span><div class="mini-result" aria-hidden="true">Данные <span>→</span> PFN <span>→</span> Прогноз</div><h2>Быстрый старт</h2><p>В базовом режиме можно начать без обучения весов под каждую задачу. Дообучение помогает в отдельных сценариях — например, при категоризации товаров.</p></section>
+    </div>
+    <section class="explain-bottom"><div><h2>Начните с качества примеров</h2><p>Небольшой объём разметки снижает порог старта. Согласуйте критерии, перепроверьте спорные ответы, включите редкие случаи. Нужный объём зависит от задачи; качество пилота проверяют на отдельных данных.</p><button class="predict-button" id="back-to-business">Посмотреть бизнес-сценарии →</button></div><div class="model-list"><a href="https://github.com/NVIDIA/structured-data-models" target="_blank" rel="noopener noreferrer"><b>Kumo Tabular</b><span>Таблицы · код Apache-2.0 · веса OpenMDW-1.1 ↗</span></a><a href="https://github.com/soda-inria/tabicl" target="_blank" rel="noopener noreferrer"><b>TabICLv2</b><span>Таблицы · код и веса BSD-3-Clause ↗</span></a><a href="https://github.com/yandex-research/graphpfn" target="_blank" rel="noopener noreferrer"><b>GraphPFN</b><span>Графы · условия компонентов — в репозитории ↗</span></a></div></section>
+  </main>
+  <footer class="footer"><span>Таблицы и графы. <b>Один подход к новым задачам.</b></span><div class="logos"><img class="lg-iii" src="logos/iii-white.png" alt="Институт искусственного интеллекта МФТИ"><img class="lg-mipt" src="logos/mipt.png" alt="МФТИ"><img class="lg-brain" src="logos/brainlab.svg" alt="BRAIn Lab"></div></footer>
+  <noscript><p>Для переключения сценариев и расчёта бизнес-эффекта включите JavaScript в браузере.</p></noscript>
+</div>
+<dialog id="details" aria-labelledby="details-title"><div class="dialog-top"><div><span class="eyebrow">Источники · примеры · экономика</span><h2 id="details-title">Условия сценария</h2></div><button class="quiet" id="details-close" aria-label="Закрыть окно">Закрыть ×</button></div><div id="details-content"></div></dialog>
+</body>
+</html>
