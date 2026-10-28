@@ -31,8 +31,8 @@
 
   <main id="business-view" hidden>
     <section class="hero">
-      <div><p class="eyebrow">Экспертные знания → проверенные примеры → готовый прогноз</p><h1>Меньше подготовки.<br><em>Быстрее к работающему пилоту.</em></h1></div>
-      <p class="hero-note">Для первого пилота может быть достаточно небольшого количества размеченных примеров. Важно качество ответов и разнообразие случаев.</p>
+      <div><p class="eyebrow">Экспертные знания → проверенные примеры → готовый прогноз</p><h1>Меньше подготовки.<br><em>Быстрее первый эксперимент.</em></h1></div>
+      <p class="hero-note">Для первого эксперимента может быть достаточно небольшого количества размеченных примеров. Важно качество ответов и разнообразие случаев.</p>
     </section>
     <div class="case-tools"><span class="label">Выберите задачу бизнеса</span><div class="filters" role="group" aria-label="Тип данных"><button data-filter="all" aria-pressed="true">Все задачи</button><button data-filter="table" aria-pressed="false">Таблицы</button><button data-filter="graph" aria-pressed="false">Графы</button></div></div>
     <div id="cases" class="cases" role="group" aria-label="Бизнес-сценарии"></div>
@@ -41,24 +41,25 @@
       <div class="task-copy"><div class="task-heading"><h2 id="task-title"></h2><span class="type-tag" id="task-type"></span></div><p id="task-description"></p></div>
       <div class="model-field"><label for="model">Предобученная модель</label><select id="model"></select><span id="model-mode"></span></div>
     </section>
+    <section class="experiment-brief" aria-labelledby="experiment-title"><span class="label" id="experiment-title">Как выглядит эксперимент</span><p id="experiment-description"></p></section>
     <section class="scale-dock" aria-label="Годовой масштаб">
-      <div class="scale-output"><label class="label" for="launches">Новых пилотов в год</label><output id="launch-count" for="launches">10</output></div>
-      <div class="scale-range"><input id="launches" type="range" min="1" max="50" step="1" value="10"><div class="landmarks"><button data-launches="1">1 пилот</button><button data-launches="10">10</button><button data-launches="25">25</button><button data-launches="50">50 пилотов</button></div></div>
+      <div class="scale-output"><label class="label" for="launches">Новых экспериментов в год</label><output id="launch-count" for="launches">10</output></div>
+      <div class="scale-range"><input id="launches" type="range" min="1" max="50" step="1" value="10"><div class="landmarks"><button data-launches="1">1</button><button data-launches="10">10</button><button data-launches="25">25</button><button data-launches="50">50</button></div></div>
       <p class="scale-note" id="scale-note"></p>
     </section>
     <div class="kpi-caption"><span>Расчёт эффекта PFN-подхода</span></div>
     <section class="kpis" aria-label="Бизнес-эффект">
       <article class="kpi highlight"><span class="label">Экономия бюджета / год</span><strong id="saving"></strong><small id="saving-note"></small></article>
       <article class="kpi"><span class="label">Освобождаем время экспертов</span><strong id="expert-saving"></strong><small>человеко-часов / год</small></article>
-      <article class="kpi"><span class="label">Срок до одного пилота</span><strong id="pilot-time" class="pair-value"></strong><small id="pilot-note"></small></article>
-      <article class="kpi"><span class="label" id="examples-label">Проверенные примеры / пилот</span><strong id="example-count" class="pair-value"></strong><small id="example-note"></small></article>
+      <article class="kpi"><span class="label">Срок одного эксперимента</span><strong id="pilot-time" class="pair-value"></strong><small id="pilot-note"></small></article>
+      <article class="kpi"><span class="label" id="examples-label">Проверенные примеры / эксперимент</span><strong id="example-count" class="pair-value"></strong><small id="example-note"></small></article>
     </section>
     <div class="panels">
       <section class="panel budget-panel" aria-labelledby="budget-title">
-        <div class="panel-heading"><h3 id="budget-title">Бюджет одного пилота</h3></div>
+        <div class="panel-heading"><h3 id="budget-title">Бюджет одного эксперимента</h3></div>
         <div id="cost-comparison"></div>
         <div class="cost-legend"><span><i class="legend-common"></i>Подготовка данных</span><span><i class="legend-expert"></i>Экспертиза / испытания</span><span><i class="legend-setup"></i>Настройка модели</span></div>
-        <div class="time-heading"><span class="label">Путь до первого пилота</span><span class="label">дни</span></div>
+        <div class="time-heading"><span class="label">Длительность эксперимента</span><span class="label">дни</span></div>
         <div id="time-comparison"></div>
         <p class="panel-note" id="budget-note"></p>
       </section>
@@ -75,13 +76,14 @@
   </main>
 
   <main id="explain-view">
-    <section class="explain-hero"><p class="eyebrow">PFN · Prior-data Fitted Network</p><h1>Модель училась заранее.<br><em>Для старта достаточно немного разметки.</em></h1><p>PFN — предобученная модель для прогнозирования по таблицам и графам. Она переносит опыт множества задач на вашу: для первого пилота может быть достаточно небольшого количества качественно размеченных примеров. В режиме in-context learning они задают контекст, а веса модели остаются фиксированными.</p></section>
+    <div class="explain-intro"><section class="explain-hero"><p class="eyebrow">PFN · Prior-data Fitted Network</p><h1>Модель училась заранее.<br><em>Меньше разметки — быстрее прогноз.</em></h1><p>PFN — предобученная нейронная сеть для таблиц и графов. Дайте ей проверенные примеры вашей задачи — и получите ответы для новых объектов. В режиме in-context learning примеры задают контекст, а веса модели остаются фиксированными.</p></section><aside class="label-reduction"><span class="label">Размеченных примеров для старта</span><strong id="intro-reduction"></strong><p>меньше, чем для классического ML</p><span id="intro-label-example"></span></aside></div>
+    <div class="intro-examples" aria-label="Примеры предсказаний PFN"><section class="panel"><div class="panel-heading"><h3>Таблица → прогноз прочности бетона</h3><span>Рецептура + результаты испытаний</span></div><div id="intro-table"></div></section><section class="panel"><div class="panel-heading"><h3>Граф → проверка отзывов</h3><span>Признаки + связи + ответы эксперта</span></div><div id="intro-graph"></div></section></div>
     <div class="explain-steps">
-      <section class="panel"><span class="step-number">01 / ПРЕДОБУЧЕНИЕ</span><div class="mini-tables" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><h2>Опыт множества задач</h2><p>Модель заранее решает разнообразные синтетические задачи и учится находить закономерности между признаками и ответами.</p></section>
-      <section class="panel"><span class="step-number">02 / ВАША ЭКСПЕРТИЗА</span><div class="context-example" aria-hidden="true"><span>Пример 1 <b>✓</b></span><span>Пример 2 <b>✓</b></span><span>Новый объект <b>?</b></span></div><h2>Небольшой набор разметки</h2><p>Эксперт проверяет опорные примеры вашей задачи. Модель получает их как контекст и прогнозирует ответы для новых объектов — можно начать до накопления большого размеченного датасета.</p></section>
-      <section class="panel"><span class="step-number">03 / ПЕРВЫЙ ПИЛОТ</span><div class="mini-result" aria-hidden="true">Данные <span>→</span> PFN <span>→</span> Прогноз</div><h2>Быстрый старт</h2><p>В базовом режиме можно начать без обучения весов под каждую задачу. Дообучение помогает в отдельных сценариях — например, при категоризации товаров.</p></section>
+      <section class="panel"><span class="step-number">01 / ПРЕДОБУЧЕНИЕ</span><h2>Опыт множества задач</h2><p>Модель заранее решает разнообразные задачи и учится находить закономерности между признаками и ответами.</p></section>
+      <section class="panel"><span class="step-number">02 / ВАША ЭКСПЕРТИЗА</span><h2>Небольшой набор разметки</h2><p>Эксперт проверяет опорные примеры. Модель использует их как контекст и прогнозирует ответы для новых объектов.</p></section>
+      <section class="panel"><span class="step-number">03 / ПЕРВЫЙ ЭКСПЕРИМЕНТ</span><h2>Проверка на своей задаче</h2><p>Сравните прогнозы PFN с классическим ML на отдельных данных. Оцените качество, затраты на разметку и скорость старта.</p></section>
     </div>
-    <section class="explain-bottom"><div><h2>Начните с качества примеров</h2><p>Небольшой объём разметки снижает порог старта. Согласуйте критерии, перепроверьте спорные ответы, включите редкие случаи. Нужный объём зависит от задачи; качество пилота проверяют на отдельных данных.</p><button class="predict-button" id="back-to-business">Посмотреть бизнес-сценарии →</button></div><div class="model-list"><a href="https://github.com/NVIDIA/structured-data-models" target="_blank" rel="noopener noreferrer"><b>Kumo Tabular</b><span>Таблицы · код Apache-2.0 · веса OpenMDW-1.1 ↗</span></a><a href="https://github.com/soda-inria/tabicl" target="_blank" rel="noopener noreferrer"><b>TabICLv2</b><span>Таблицы · код и веса BSD-3-Clause ↗</span></a><a href="https://github.com/yandex-research/graphpfn" target="_blank" rel="noopener noreferrer"><b>GraphPFN</b><span>Графы · условия компонентов — в репозитории ↗</span></a></div></section>
+    <section class="explain-bottom"><div><h2>Начните с качества примеров</h2><p>Небольшой объём разметки снижает порог старта. Согласуйте критерии, перепроверьте спорные ответы, включите редкие случаи. Нужный объём зависит от задачи; качество эксперимента проверяют на отдельных данных.</p><button class="predict-button" id="back-to-business">Посмотреть бизнес-сценарии →</button></div><div class="model-list"><a href="https://github.com/NVIDIA/structured-data-models" target="_blank" rel="noopener noreferrer"><b>Kumo Tabular</b><span>Таблицы · код Apache-2.0 · веса OpenMDW-1.1 ↗</span></a><a href="https://github.com/soda-inria/tabicl" target="_blank" rel="noopener noreferrer"><b>TabICLv2</b><span>Таблицы · код и веса BSD-3-Clause ↗</span></a><a href="https://github.com/yandex-research/graphpfn" target="_blank" rel="noopener noreferrer"><b>GraphPFN</b><span>Графы · условия компонентов — в репозитории ↗</span></a></div></section>
   </main>
   <footer class="footer"><span>Таблицы и графы. <b>Один подход к новым задачам.</b></span><div class="logos"><img class="lg-iii" src="logos/iii-white.png" alt="Институт искусственного интеллекта МФТИ"><img class="lg-mipt" src="logos/mipt.png" alt="МФТИ"><img class="lg-brain" src="logos/brainlab.svg" alt="BRAIn Lab"></div></footer>
   <noscript><p>Для переключения сценариев и расчёта бизнес-эффекта включите JavaScript в браузере.</p></noscript>
