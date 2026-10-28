@@ -46,7 +46,7 @@
       <div class="scale-range"><input id="launches" type="range" min="1" max="50" step="1" value="10"><div class="landmarks"><button data-launches="1">1 пилот</button><button data-launches="10">10</button><button data-launches="25">25</button><button data-launches="50">50 пилотов</button></div></div>
       <p class="scale-note" id="scale-note"></p>
     </section>
-    <div class="kpi-caption"><span>Планируем эффект PFN-подхода</span><span class="scenario-badge">Бизнес-сценарий</span></div>
+    <div class="kpi-caption"><span>Расчёт эффекта PFN-подхода</span></div>
     <section class="kpis" aria-label="Бизнес-эффект">
       <article class="kpi highlight"><span class="label">Экономия бюджета / год</span><strong id="saving"></strong><small id="saving-note"></small></article>
       <article class="kpi"><span class="label">Освобождаем время экспертов</span><strong id="expert-saving"></strong><small>человеко-часов / год</small></article>
@@ -55,7 +55,7 @@
     </section>
     <div class="panels">
       <section class="panel budget-panel" aria-labelledby="budget-title">
-        <div class="panel-heading"><h3 id="budget-title">Бюджет одного пилота</h3><span>Расчёт сценария</span></div>
+        <div class="panel-heading"><h3 id="budget-title">Бюджет одного пилота</h3></div>
         <div id="cost-comparison"></div>
         <div class="cost-legend"><span><i class="legend-common"></i>Подготовка данных</span><span><i class="legend-expert"></i>Экспертиза / испытания</span><span><i class="legend-setup"></i>Настройка модели</span></div>
         <div class="time-heading"><span class="label">Путь до первого пилота</span><span class="label">дни</span></div>
@@ -63,15 +63,15 @@
         <p class="panel-note" id="budget-note"></p>
       </section>
       <section class="panel example-panel" aria-labelledby="example-title">
-        <div class="panel-heading"><h3 id="example-title">От опыта эксперта к прогнозу</h3><span>Иллюстрация</span></div>
+        <div class="panel-heading"><h3 id="example-title">От опыта эксперта к прогнозу</h3></div>
         <div id="example"></div>
         <div class="example-bottom"><p id="example-explanation"></p><button class="predict-button" id="predict" type="button">Показать прогноз <span>→</span></button></div>
       </section>
     </div>
-    <section class="evidence-strip" aria-label="Результат исследования">
+    <section class="evidence-strip" aria-label="Сравнение моделей">
       <span class="evidence-icon" aria-hidden="true">↗</span><div><span class="label" id="evidence-label"></span><p id="evidence-text"></p><small id="evidence-note"></small></div><button id="evidence-open" class="quiet" aria-haspopup="dialog">Подробнее ↗</button>
     </section>
-    <div class="bottom-line"><p>Экономика — расчёт по условиям сценария. Прогнозы в иллюстрации условные. <button id="assumptions-open">Изменить условия</button></p><span>Качественные ответы + разнообразные примеры</span></div>
+    <div class="bottom-line"><p><button id="assumptions-open">Изменить параметры расчёта</button></p><span>Качественные ответы + разнообразные примеры</span></div>
   </main>
 
   <main id="explain-view">
@@ -86,6 +86,6 @@
   <footer class="footer"><span>Таблицы и графы. <b>Один подход к новым задачам.</b></span><div class="logos"><img class="lg-iii" src="logos/iii-white.png" alt="Институт искусственного интеллекта МФТИ"><img class="lg-mipt" src="logos/mipt.png" alt="МФТИ"><img class="lg-brain" src="logos/brainlab.svg" alt="BRAIn Lab"></div></footer>
   <noscript><p>Для переключения сценариев и расчёта бизнес-эффекта включите JavaScript в браузере.</p></noscript>
 </div>
-<dialog id="details" aria-labelledby="details-title"><div class="dialog-top"><div><span class="eyebrow">Источники · примеры · экономика</span><h2 id="details-title">Условия сценария</h2></div><button class="quiet" id="details-close" aria-label="Закрыть окно">Закрыть ×</button></div><div id="details-content"></div></dialog>
+<dialog id="details" aria-labelledby="details-title"><div class="dialog-top"><div><span class="eyebrow">Источники · методика · экономика</span><h2 id="details-title">Условия сценария</h2></div><button class="quiet" id="details-close" aria-label="Закрыть окно">Закрыть ×</button></div><div id="details-content"></div></dialog>
 </body>
 </html>

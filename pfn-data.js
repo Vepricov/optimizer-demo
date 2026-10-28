@@ -11,7 +11,6 @@ globalThis.PFN_DATA = (() => {
   };
   const icons = {
     steel:'<path d="M5 8h22v17H5zM10 8v17M17 8l-3 7 6 3-4 7"/>',
-    documents:'<path d="M9 4h12l5 5v19H9zM21 4v6h5M13 14h9M13 18h5M13 22h9"/><path d="M5 8v20"/>',
     wine:'<path d="M10 4h12l2 9a8 8 0 0 1-16 0zM16 21v7M10 28h12M9 12h14"/>',
     concrete:'<path d="M4 11l12-7 12 7v13l-12 6-12-6zM4 11l12 7 12-7M16 18v12M10 8l12 7"/>',
     yacht:'<path d="M16 3v19H5L16 3zM19 8l8 14h-8M4 25h24l-4 4H8z"/>',
@@ -24,17 +23,11 @@ globalThis.PFN_DATA = (() => {
   const estimate=(name,score,source)=>({name,score,sd:null,source,status:'estimate'});
   const cases = [
     {id:'steel',name:'Дефекты стали',tag:'Контроль качества',type:'table',title:'Находим дефекты на производстве',
-      description:'По геометрии и яркости дефекта определяем его тип. Эксперт проверяет примеры для новой линии или продукции.',scale:'Новые линии, материалы или типы продукции',unit:'проверок дефектов',expert:'Инженер по качеству',predict:'Дефект: царапина',
-      columns:['Площадь, пикс.','Толщина, мм','Ответ эксперта'],rows:[['128','1,2','Царапина'],['340','2,0','Пятно'],['86','1,0','Царапина']],query:['114','1,2'],
+      description:'Определяем тип дефекта по табличным признакам, дополняющим изображение: марке и толщине стали, геометрии и яркости дефекта. Эксперт проверяет опорные ответы для новой линии или продукции.',scale:'Новые линии, материалы или типы продукции',unit:'проверок дефектов',expert:'Инженер по качеству',predict:'Дефект: царапина',
+      columns:['Площадь, пикс.','Толщина стали, мм','Ответ эксперта'],rows:[['128','1,2','Царапина'],['340','2,0','Пятно'],['86','1,0','Царапина']],query:['114','1,2'],
       metric:{name:'ROC-AUC ↑',unit:'',digits:3,lower:false,baseName:'CatBoost + отбор примеров',base:.884,note:'100 размеченных примеров · среднее по 10 повторам'},
       models:[estimate('TabICLv2',.905,'active'),estimate('Kumo Tabular',.910,'active')],
       econ:{baseLabels:1000,pfnLabels:100,minutes:3,expertRate:2000,testCost:0,experts:1,waitDays:0,commonDays:2,commonCost:30000,baseSetupHours:60,pfnSetupHours:12,engineerRate:3000}},
-    {id:'documents',name:'Документы',tag:'Оцифровка',type:'table',title:'Размечаем структуру документов',
-      description:'Определяем тип блока страницы: текст, линия, графика или изображение. Признаки блоков уже извлечены.',scale:'Новые шаблоны и коллекции документов',unit:'блоков страницы',expert:'Специалист по документам',predict:'Тип блока: текст',
-      columns:['Высота, пикс.','Доля чёрного','Ответ эксперта'],rows:[['24','0,18','Текст'],['2','0,82','Линия'],['180','0,46','Изображение']],query:['28','0,21'],
-      metric:{name:'ROC-AUC ↑',digits:3,lower:false,baseName:'CatBoost + отбор примеров',base:.952,note:'100 размеченных блоков · среднее по 10 повторам'},
-      models:[estimate('TabICLv2',.976,'active'),estimate('Kumo Tabular',.980,'active')],
-      econ:{baseLabels:2000,pfnLabels:150,minutes:2,expertRate:1500,testCost:0,experts:1,waitDays:0,commonDays:3,commonCost:45000,baseSetupHours:72,pfnSetupHours:12,engineerRate:3000}},
     {id:'wine',name:'Качество вина',tag:'Экспертная оценка',type:'table',title:'Оцениваем качество новой партии',
       description:'По составу и физико-химическим показателям прогнозируем сенсорную оценку. Опорные ответы дают дегустаторы.',scale:'Новые линейки, урожаи и производственные площадки',unit:'экспертных оценок',expert:'Дегустационная комиссия',predict:'Оценка качества: 6,4',
       columns:['Алкоголь, %','Кислотность pH','Оценка эксперта'],rows:[['10,5','3,2','6'],['12,0','3,4','7'],['9,5','3,1','5']],query:['11,2','3,3'],
