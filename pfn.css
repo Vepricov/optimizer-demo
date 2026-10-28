@@ -34,6 +34,11 @@ body.light{color-scheme:light;--bg:#f3f5f9;--panel:#fff;--deep:#eaf0f7;--text:#1
 #explain-view .explain-bottom{padding:22px 0;gap:35px}
 #explain-view .explain-bottom p{font-size:12px;line-height:1.6}
 #explain-view .explain-bottom .predict-button{margin-top:12px}
+.footer{padding-top:18px;gap:28px}
+.footer .logos{gap:34px;flex-shrink:0}
+.footer .logos img{width:auto;height:64px;opacity:1}
+.footer .logos .lg-mipt{height:56px;filter:invert(1)}
+body.light .footer .logos .lg-mipt{filter:none}
 @media(max-width:800px){
   .experiment-brief{grid-template-columns:1fr;gap:6px;padding:12px}
   .experiment-brief p{font-size:11px}
@@ -47,5 +52,8 @@ body.light{color-scheme:light;--bg:#f3f5f9;--panel:#fff;--deep:#eaf0f7;--text:#1
   .intro-examples .network{height:175px}
   .intro-examples .graph-context .graph-answer{font-size:12px}
   #explain-view .explain-bottom{gap:22px}
+  .footer .logos{display:grid;grid-template-columns:1fr 1fr 1.1fr;align-items:center;gap:16px}
+  .footer .logos img{width:100%;max-width:100%;height:46px}
+  .footer .logos .lg-mipt{height:40px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
